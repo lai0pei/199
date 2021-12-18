@@ -17,8 +17,7 @@ class CreateRole extends Migration
         Schema::create('role', function (Blueprint $table) {
             $table->id()->comment('编号')->autoIncrement();
             $table->string('role',100)->comment('角色名称');
-            $table->dateTime('updated_at', $precision = 0)->comment('更新时间');
-            $table->dateTime('created_at', $precision = 0)->comment('创建时间');
+            $table->timestamps();
         });
 
         $prefix = env('DB_PREFIX')."role";

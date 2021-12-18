@@ -18,8 +18,7 @@ class CreateAuthGroup extends Migration
             $table->id()->comment('编号')->autoIncrement();
             $table->unsignedSmallInteger('role_id')->nullable()->comment('角色编号');
             $table->string('auth_id',200)->nullable()->comment('权限');
-            $table->dateTime('updated_at', $precision = 0)->comment('更新时间');
-            $table->dateTime('created_at', $precision = 0)->comment('创建时间');
+            $table->timestamps();
         });
 
         $prefix = env('DB_PREFIX')."auth_group";

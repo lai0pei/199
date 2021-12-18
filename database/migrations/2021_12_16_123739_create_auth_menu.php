@@ -23,8 +23,7 @@ class CreateAuthMenu extends Migration
             $table->unsignedTinyInteger('status')->comment('0 关闭, 1 开启')->default(0);
             $table->unsignedTinyInteger('is_shortcut')->comment('0 不是, 1 是快捷')->default(0);
             $table->unsignedMediumInteger('sort')->comment('排序')->default(0);
-            $table->dateTime('updated_at', $precision = 0)->comment('更新时间');
-            $table->dateTime('created_at', $precision = 0)->comment('创建时间');
+            $table->timestamps();
         });
 
         

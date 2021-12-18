@@ -19,8 +19,7 @@ class CreateActiveClassification extends Migration
             $table->string('name',200)->nullable()->comment('活动类型');
             $table->tinyInteger('status')->nullable()->comment('1=正常，0=禁止')->default(1);
             $table->unsignedSmallInteger('sort')->nullable()->comment('排序')->default(0);
-            $table->dateTime('updated_at', $precision = 0)->comment('更新时间');
-            $table->dateTime('created_at', $precision = 0)->comment('创建时间');
+            $table->timestamps();
         });
 
         $prefix = env('DB_PREFIX')."active_classification";

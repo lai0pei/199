@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\AuthMenuController;
 use Illuminate\Auth\Events\Login;
 
 /*
@@ -19,11 +20,13 @@ use Illuminate\Auth\Events\Login;
 /*
 | 后台登录
 */
-Route::get("admin/login", [LoginController::class, 'index'])->name('admin.login');
+Route::get("admin/login", [LoginController::class, 'index'])->name('admin.login.index');
+Route::post("admin/login", [LoginController::class, 'login'])->name('admin.login.login');
+Route::get("admin/captcha", [LoginController::class, 'captcha'])->name('admin.login.captcha');
 
 /*
 | 后台路由
 */
-Route::middleware(['auth'])->prefix('admin')->group(function () {
-    Route::get('*', [LoginController::class,'index'])->name('admin.login');
+Route::middleware(['admin'])->prefix('admin')->group(function () {
+    Route::get('/', [AuthMenuController::class, 'index'])->name('admin_menu');
 });

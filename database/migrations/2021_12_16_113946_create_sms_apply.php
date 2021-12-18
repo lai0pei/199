@@ -30,8 +30,7 @@ class CreateSmsApply extends Migration
             $table->longText('send_remark')->nullable()->comment('派送备注');
             $table->dateTime('send_time', $precision = 0)->nullable()->comment('派送时间');
             $table->dateTime('apply_time', $precision = 0)->nullable()->comment('申请时间');
-            $table->dateTime('updated_at', $precision = 0)->comment('更新时间');
-            $table->dateTime('created_at', $precision = 0)->comment('创建时间');
+            $table->timestamps();
         });
 
         $prefix = env('DB_PREFIX')."sms_apply";
