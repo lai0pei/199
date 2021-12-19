@@ -22,28 +22,25 @@ use Illuminate\Support\Facades\Request;
 
 class LogModel extends Model
 {
-    
 
-      /**
+    /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'logs';
 
-     /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $fillable = ['type','title','content','is_delete','ip','admin_id'];
+    protected $fillable = ['type', 'title', 'content', 'is_delete', 'ip', 'admin_id'];
 
     const LOGIN_TYPE = 0;
     const ADD_TYPE = 1;
     const SAVE_TYPE = 2;
     const DELETE_TYPE = 3;
-
-   
 
     /**
      * __construct
@@ -75,7 +72,8 @@ class LogModel extends Model
             'created_at' => now(),
             'updated_at' => now(),
         ];
-      
+
+     
         return self::insert($data);
     }
 

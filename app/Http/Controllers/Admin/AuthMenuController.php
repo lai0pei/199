@@ -17,32 +17,83 @@
 
 namespace App\Http\Controllers\Admin;
 
+use app\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
+use App\Models\Admin\AuthMenuModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AuthMenuController extends Controller
-{   
-    
+{
+
     /**
      * __construct
      *
      * @param  mixed $request
      * @return void
      */
-    public function __construct(Request $request){
+    public function __construct(Request $request)
+    {
         $this->request = $request;
     }
-     
+
     /**
-     * index
+     * 登录成功后 首页入口
      *
      * @return void
      */
-    public function index(){
+    public function index()
+    {
         return view('admin.authmenu.index');
     }
 
-    public function init(){
-        
+    /**
+     * 添加菜单
+     *
+     * @return void
+     */
+    public function addAuthMenu()
+    {
+        $request = $this->request->all();
+        $validator = Validator::make($request, [
+            'p_id' => 'required',
+            'title' => 'required',
+            'auth_name' => 'required',
+            'icon' => 'required',
+            'href' => 'required',
+        ], );
+        if ($validator->fails()) {
+            return self::json_fail();
+        }
+        try {
+            if ((new AuthMenuModel($request))->createAuthMenu()) {
+                return self::json_return(self::SUCCESS, '添加成功', []);
+            }
+        } catch (LogicException $e) {
+            return self::json_fail($e->getMessage());
+        }
+
+    }
+
+    /**
+     * 清除系统缓存
+     *
+     * @return void
+     */
+    public function clear()
+    {
+        return self::json_success();
+    }
+
+    /**
+     * 系统菜单首页
+     *
+     * @return void
+     */
+    public function init()
+    {
+
+        return self::json((new AuthMenuModel())->menuInit());
+
     }
 }

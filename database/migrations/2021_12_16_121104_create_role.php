@@ -16,7 +16,8 @@ class CreateRole extends Migration
     {
         Schema::create('role', function (Blueprint $table) {
             $table->id()->comment('编号')->autoIncrement();
-            $table->string('role',100)->comment('角色名称');
+            $table->string('role_name',100)->comment('角色名称');
+            $table->tinyInteger('status')->comment('1=正常，0=禁止')->default(1);
             $table->timestamps();
         });
 

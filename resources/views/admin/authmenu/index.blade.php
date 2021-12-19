@@ -1,5 +1,4 @@
 @extends('common.template')
-@section('body_class','layui-layout-body layuimini-all')
 @section('content')
 <div class="layui-layout layui-layout-admin">
 
@@ -39,10 +38,10 @@
                     <a href="javascript:;">admin</a>
                     <dl class="layui-nav-child">
                         <dd>
-                            <a href="javascript:;" layuimini-content-href="admin/user/setting" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
+                            <a href="javascript:;" layuimini-content-href="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
                         </dd>
                         <dd>
-                            <a href="javascript:;" layuimini-content-href="admin/user/password" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
+                            <a href="javascript:;" layuimini-content-href="page/user-password.html" data-title="修改密码" data-icon="fa fa-gears">修改密码</a>
                         </dd>
                         <dd>
                             <hr>
@@ -76,15 +75,29 @@
 
     <div class="layui-body">
 
-        <div class="layui-card layuimini-page-header layui-hide">
-            <div class="layui-breadcrumb layuimini-page-title">
-                <a lay-href="" href="/">主页</a><span lay-separator="">/</span>
-                <a><cite>常规管理</cite></a><span lay-separator="">/</span>
-                <a><cite>系统设置</cite></a>
+        <div class="layuimini-tab layui-tab-rollTool layui-tab" lay-filter="layuiminiTab" lay-allowclose="true">
+            <ul class="layui-tab-title">
+                <li class="layui-this" id="layuiminiHomeTabId" lay-id=""></li>
+            </ul>
+            <div class="layui-tab-control">
+                <li class="layuimini-tab-roll-left layui-icon layui-icon-left"></li>
+                <li class="layuimini-tab-roll-right layui-icon layui-icon-right"></li>
+                <li class="layui-tab-tool layui-icon layui-icon-down">
+                    <ul class="layui-nav close-box">
+                        <li class="layui-nav-item">
+                            <a href="javascript:;"><span class="layui-nav-more"></span></a>
+                            <dl class="layui-nav-child">
+                                <dd><a href="javascript:;" layuimini-tab-close="current">关 闭 当 前</a></dd>
+                                <dd><a href="javascript:;" layuimini-tab-close="other">关 闭 其 他</a></dd>
+                                <dd><a href="javascript:;" layuimini-tab-close="all">关 闭 全 部</a></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </li>
             </div>
-        </div>
-
-        <div class="layuimini-content-page">
+            <div class="layui-tab-content">
+                <div id="layuiminiHomeTabIframe" class="layui-tab-item layui-show"></div>
+            </div>
         </div>
 
     </div>
@@ -92,46 +105,38 @@
 @endsection
 @section('footer')
 <script>
-    console.log(new Date())
-    function layer_module_tips(module) {
-        var index = layer.open({
-            title: '',
-            type: 2,
-            shade: 0.2,
-            maxmin: false,
-            shadeClose: false,
-            area: ['920px', '670px'],
-            content: '/admin/manuals?module=' + module,
-        });
-    }
-
-    layui.use(['element', 'layer', 'miniAdmin'], function () {
+    layui.use(['jquery', 'layer', 'miniAdmin','miniTongji'], function () {
         var $ = layui.jquery,
-            element = layui.element,
+            layer = layui.layer,
             miniAdmin = layui.miniAdmin,
-            layer = layui.layer;
+            miniTongji = layui.miniTongji;
+
         var options = {
-            iniUrl: '{{route ('admin.main.init')}}',    // 初始化接口
-            clearUrl: "{{route ('admin.main.clear')}}", // 缓存清理接口
+            iniUrl: "{{route('admin.init')}}",    // 初始化接口
+            clearUrl: "{{route('admin.clear')}}", // 缓存清理接口
             urlHashLocation: true,      // 是否打开hash定位
-            renderPageVersion: true,
-            bgColorDefault: 7,      // 主题默认配置
+            bgColorDefault: false,      // 主题默认配置
             multiModule: true,          // 是否开启多模块
             menuChildOpen: false,       // 是否默认展开菜单
             loadingTime: 0,             // 初始化加载时间
             pageAnim: true,             // iframe窗口动画
             maxTabNum: 20,              // 最大的tab打开数量
         };
-        console.log(new Date())
         miniAdmin.render(options);
-        //
+
+        // 百度统计代码，只统计指定域名
+        miniTongji.render({
+            specific: true,
+            domains: [
+                '99php.cn',
+                'layuimini.99php.cn',
+                'layuimini-onepage.99php.cn',
+            ],
+        });
+
         $('.login-out').on("click", function () {
-            layer.msg('退出登录成功', {
-                icon: 1,
-                time: SUCCESS_TIME
-                , shade: 0.2
-            }, function () {
-                window.location = '{{route ('admin.main.logout')}}';
+            layer.msg('退出登录成功', function () {
+                window.location = 'page/login-3.html';
             });
         });
     });

@@ -77,4 +77,14 @@ class Controller extends BaseController
     
         return response()->json($result);
     }
+    
+    /**
+     * json
+     *
+     * @param  mixed $data
+     * @return void
+     */
+    protected static function json($data = []){
+        return response()->json($data);
+    }
 }

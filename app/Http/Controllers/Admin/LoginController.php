@@ -44,8 +44,8 @@ class LoginController extends Controller
      * @return void
      */
     public function index()
-    {   
-        if(!empty(session('user_id'))){
+    {
+        if (!empty(session('user_id'))) {
             return redirect(route('admin_menu'));
         }
         return view('admin.login.index');
@@ -71,7 +71,7 @@ class LoginController extends Controller
         // if (!captcha_check($input['captcha'])) {
         //     return self::json_fail('验证码不正确');
         // }
-      
+
         try {
             $admin = new AdminModel($input);
             if ($admin->adminLogin()) {
