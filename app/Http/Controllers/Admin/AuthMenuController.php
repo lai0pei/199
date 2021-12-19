@@ -22,6 +22,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\AuthMenuModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cache;
 
 class AuthMenuController extends Controller
 {
@@ -81,7 +82,8 @@ class AuthMenuController extends Controller
      * @return void
      */
     public function clear()
-    {
+    {   
+        Cache::flush();
         return self::json_success();
     }
 

@@ -87,7 +87,7 @@ class AuthMenuModel extends Model
      * @return void
      */
     public function menuInit(){
-        $key = 'admin_menu'.session('user_id');
+        $key = 'admin_menu_'.session('user_id');
         $menus = Cache::get($key);
         if(!empty($menus)){
             return $menus;
@@ -112,7 +112,7 @@ class AuthMenuModel extends Model
         }
         
         $init['menuInfo'] = $top_menu;
-        Cache::put($key,$init, now()->addMinute(15));
+        Cache::put($key,$init, now()->addMinute(30));
         return $init;
     }
 

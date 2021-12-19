@@ -57,7 +57,7 @@ class Controller extends BaseController
      */
     protected static function json_success($msg='操作成功',$data=[]){
          $result['code'] = self::SUCCESS;
-         $result['message'] = $msg;
+         $result['msg'] = $msg;
          $reuslt['data'] = $data;
          
          return response()->json($result);
@@ -72,7 +72,7 @@ class Controller extends BaseController
      */
     protected static function json_fail($msg='操作失败',$data=[]){
         $result['code'] = self::FAIL;
-        $result['message'] = $msg;
+        $result['msg'] = $msg;
         $reuslt['data'] = $data;
     
         return response()->json($result);

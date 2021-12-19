@@ -86,6 +86,6 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/auth_permission', [AuthPermissionController::class, 'auth'])->name('admin_auth_permission');
 
     // 接口
-    Route::post('/clear', [AuthMenuController::class, 'clear'])->name('admin.clear');
     Route::get('/clear', [AuthMenuController::class, 'clear'])->name('admin.clear');
+    Route::get('/init', [AuthMenuController::class, 'init'])->name('admin.init');
 });

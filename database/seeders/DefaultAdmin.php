@@ -19,6 +19,7 @@ class DefaultAdmin extends Seeder
             'password' => '$2y$10$nEzpUIAng7BIu1lPQv5HfenD149pNFDOEPDM9U0Yd3JDWW7JBbdJ2',
             'user_name' => 'admin',
             'status' => 1,
+            'role_id' =>1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

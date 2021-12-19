@@ -103,7 +103,7 @@ layui.use('form', function() {
             },
             success: function(data) {
                 if (data.code === 1) {
-                    layer.msg(data.message, {
+                    layer.msg(data.msg, {
                         icon: 6,
                         time: SUCCESS_TIME,
                         shade: 0.2
@@ -112,7 +112,7 @@ layui.use('form', function() {
                         window.location = admin_Menu;
                     }, SUCCESS_TIME);
                 } else {
-                    top.layer.msg(data.message, {
+                    top.layer.msg(data.msg, {
                         icon: 2,
                         time: FAIL_TIME,
                         shade: 0.3
