@@ -5,31 +5,49 @@
  * |-----------------------------------------------------------------------------------------------------------
  * | 开发者: 云飞
  * |-----------------------------------------------------------------------------------------------------------
- * | 文件: RoleController.php
+ * | 文件: RoleModel.php
  * |-----------------------------------------------------------------------------------------------------------
  * | 项目: VIP活动申请
  * |-----------------------------------------------------------------------------------------------------------
- * | 创建时间: Sunday, 19th December 2021 5:06:04 pm
+ * | 创建时间: Monday, 20th December 2021 10:39:45 am
  * |-----------------------------------------------------------------------------------------------------------
  * | Copyright 2021 - 2025
  * |-----------------------------------------------------------------------------------------------------------
  */
 
-namespace App\Http\Controllers\Admin;
+namespace App\Models\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Admin\RoleModel;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 
-class RoleController extends Controller
+class RoleModel extends Model
 {
-    //
 
-    public function __construct(Request $request){
-        $this->request = $request;
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'role';
+
+    public function __construct($data = [])
+    {
+        $this->data = $data;
     }
-    
-    public function getRole(){
-        return self::json_success((new RoleModel($this->request))->getAllRole());
+
+    public function getAllRole(){
+        $data = $this->data;
+        
+        $column = ['id','role_name'];
+        if(!empty($data['id'])){
+
+            $result =  self::where('status',1)->where('id',$data['id'])->get($column)->toArray();
+
+        }else{
+        
+            $result =  self::where('status',1)->get($column)->toArray();
+        }
+
+        return $result;
+        
     }
 }

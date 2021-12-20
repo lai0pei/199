@@ -31,7 +31,7 @@ class AdminAuthendication
      */
     public function handle(Request $request, Closure $next)
     {   
-      
+    
         if(empty(session('user_id'))){
             return redirect( route('admin.login.index') );
         }

@@ -40,11 +40,11 @@ class Controller extends BaseController
      * @param  mixed $data
      * @return void
      */
-    protected static function json_return($status = self::SUCCESS, $msg = '', $data = []){
+    protected static function json_return($data = [], $msg = '操作成功', $status = self::SUCCESS ){
          $result['code'] = $status;
-         $result['message'] = $msg;
-         $reuslt['data'] = $data;
-         
+         $result['msg'] = $msg;
+         $result['data'] = $data;
+    
          return response()->json($result);
     }
     
@@ -55,10 +55,10 @@ class Controller extends BaseController
      * @param  mixed $data
      * @return void
      */
-    protected static function json_success($msg='操作成功',$data=[]){
+    protected static function json_success($data=[],$msg='操作成功'){
          $result['code'] = self::SUCCESS;
          $result['msg'] = $msg;
-         $reuslt['data'] = $data;
+         $result['data'] = $data;
          
          return response()->json($result);
     }
@@ -70,10 +70,10 @@ class Controller extends BaseController
      * @param  mixed $data
      * @return void
      */
-    protected static function json_fail($msg='操作失败',$data=[]){
+    protected static function json_fail($data=[],$msg='操作失败'){
         $result['code'] = self::FAIL;
         $result['msg'] = $msg;
-        $reuslt['data'] = $data;
+        $result['data'] = $data;
     
         return response()->json($result);
     }

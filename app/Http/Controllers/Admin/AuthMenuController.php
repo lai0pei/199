@@ -20,6 +20,7 @@ namespace App\Http\Controllers\Admin;
 use app\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AuthMenuModel;
+use App\Models\Admin\AdminModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
@@ -44,8 +45,8 @@ class AuthMenuController extends Controller
      * @return void
      */
     public function index()
-    {
-        return view('admin.authmenu.index');
+    {   
+        return view('admin.authmenu.index',['admin_name' => (new AdminModel())->getName() ?? '昵称' ]);
     }
 
     /**
@@ -68,10 +69,10 @@ class AuthMenuController extends Controller
         }
         try {
             if ((new AuthMenuModel($request))->createAuthMenu()) {
-                return self::json_return(self::SUCCESS, '添加成功', []);
+                return self::json_return([], '添加成功');
             }
         } catch (LogicException $e) {
-            return self::json_fail($e->getMessage());
+            return self::json_fail([],$e->getMessage());
         }
 
     }
@@ -84,7 +85,7 @@ class AuthMenuController extends Controller
     public function clear()
     {   
         Cache::flush();
-        return self::json_success();
+        return self::json_success([],'缓存已清除');
     }
 
     /**

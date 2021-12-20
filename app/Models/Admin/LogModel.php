@@ -18,7 +18,6 @@
 namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Request;
 
 class LogModel extends Model
 {
@@ -67,7 +66,7 @@ class LogModel extends Model
             'title' => $log['title'],
             'content' => '',
             'is_delete' => 0,
-            'ip' => Request::ip(),
+            'ip' => request()->ip(),
             'admin_id' => $admin_id,
             'created_at' => now(),
             'updated_at' => now(),

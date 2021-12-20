@@ -35,7 +35,7 @@
                     <a href="javascript:;" data-check-screen="full"><i class="fa fa-arrows-alt"></i></a>
                 </li>
                 <li class="layui-nav-item layuimini-setting">
-                    <a href="javascript:;">admin</a>
+                    <a href="javascript:;">{{$admin_name}}</a>
                     <dl class="layui-nav-child">
                         <dd>
                             <a href="javascript:;" layuimini-content-href="page/user-setting.html" data-title="基本资料" data-icon="fa fa-gears">基本资料<span class="layui-badge-dot"></span></a>
@@ -120,7 +120,7 @@
             menuChildOpen: false,       // 是否默认展开菜单
             loadingTime: 0,             // 初始化加载时间
             pageAnim: true,             // iframe窗口动画
-            maxTabNum: 20,              // 最大的tab打开数量
+            maxTabNum: 10,              // 最大的tab打开数量
         };
         miniAdmin.render(options);
 
@@ -133,11 +133,26 @@
                 'layuimini-onepage.99php.cn',
             ],
         });
-
+      
         $('.login-out').on("click", function () {
-            layer.msg('退出登录成功', function () {
-                window.location = 'page/login-3.html';
-            });
+           
+            $.ajax({
+                url : "{{route('admin_logout')}}",
+                method : "POST",
+                success : function(data){
+                    if(data.code == 1){
+                        layer.msg('退出登录成功');
+                        window.location.href = ("{{route('admin.login.index')}}");
+                    }else{
+                        layer.msg('退出失败');
+                    }
+                },
+                error : function(){
+                    layer.msg("退出失败");
+                }
+
+            })
+          
         });
     });
 </script>

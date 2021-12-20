@@ -58,22 +58,24 @@ Route::get("admin/captcha", [LoginController::class, 'captcha'])->name('admin.lo
 | 后台路由
 */
 Route::middleware(['admin'])->prefix('admin')->group(function () {
-    //页面
+    //后台页面
     Route::get('/', [AuthMenuController::class, 'index'])->name('admin_menu'); 
     Route::get('/control', [ControlController::class, 'control'])->name('admin_control'); 
-
     Route::get('/add_event', [EventController::class, 'add'])->name('admin_add_event'); 
     Route::get('/event_lists', [EventController::class, 'list'])->name('admin_event_list');
     Route::get('/mobile_management', [MobileController::class, 'mobile'])->name('admin_mobile_management');
     Route::get('/user_apply', [UserController::class, 'user'])->name('admin_user_apply');
     Route::get('/sms_apply', [SmsController::class, 'sms'])->name('admin_sms_apply');
 
+    //管理员 页面
     Route::get('/person', [AdminController::class, 'person'])->name('admin_person');
+    Route::get('/add_person', [AdminController::class, 'addPerson'])->name('admin_person_add');
+    Route::get('/edit_person/{id}', [AdminController::class, 'editPerson'])->name('admin_person_edit');
+    Route::get('/edit_person', [AdminController::class, 'editPerson'])->name('admin_person_edit');
+
     Route::get('/admin_group', [AdminGroupController::class, 'group'])->name('admin_group');
     Route::get('/change_password', [ChangePasswordController::class, 'password'])->name('admin_password');
-
     Route::get('/log', [LogController::class, 'log'])->name('admin_log');
-
     Route::get('/announcement', [AnnouncementController::class, 'announcement'])->name('admin_announcement');
     Route::get('/sms_config', [SmsConfigController::class, 'sms_config'])->name('admin_sms_config');
     Route::get('/bulk_refuse', [ConfigsController::class, 'refuse'])->name('admin_bulk_refuse');
@@ -81,11 +83,24 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/link_management', [LinkController::class, 'link'])->name('admin_link_management');
     Route::get('/game_management', [GameConfigController::class, 'game'])->name('admin_game_management');
     Route::get('/allow_ip', [IpController::class, 'allow_ip'])->name('admin_allow_ip');
-
     Route::get('/common_settings', [CommonSettingController::class, 'common'])->name('admin_common_settings');
     Route::get('/auth_permission', [AuthPermissionController::class, 'auth'])->name('admin_auth_permission');
 
-    // 接口
+// |------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //get 接口
     Route::get('/clear', [AuthMenuController::class, 'clear'])->name('admin.clear');
     Route::get('/init', [AuthMenuController::class, 'init'])->name('admin.init');
+    Route::get('/edit_admin', [AdminController::class, 'addNewAdmin'])->name('admin_edit_person');
+    Route::get('/get_role/{id?}', [RoleController::class, 'getRole'])->name('admin_get_role');
+    Route::get('/list_admin', [AdminController::class, 'listAdmin'])->name('admin.admin_list');
+    
+
+    //post 接口
+    Route::post('/logout', [LoginController::class, 'logout'])->name('admin_logout');
+    Route::post('/add_person', [AdminController::class, 'addNewAdmin'])->name('admin_add_person');
+    Route::post('/save_admin', [AdminController::class, 'saveAdmin'])->name('admin_save_admin');
+    
+    
+
 });

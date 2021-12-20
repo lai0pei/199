@@ -19,8 +19,10 @@ namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
 use App\Models\Admin\LogModel;
+use App\Models\Admin\RoleModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class AdminModel extends Model
 {
@@ -33,9 +35,27 @@ class AdminModel extends Model
      */
     protected $table = 'admin';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['account', 'password', 'role_id', 'reg_ip', 'status', 'login_count', 'last_date', 'user_name'];
+
     public function __construct($data = [])
     {
+
         $this->adminData = $data;
+    }
+
+    /**
+     * 链表获取 角色名称
+     *
+     * @return void
+     */
+    public function role_name()
+    {
+        return $this->hasOne(RoleModel::class, 'id', 'role_id')->select('role_name');
     }
 
     /**
@@ -46,6 +66,7 @@ class AdminModel extends Model
     public function adminLogin()
     {
         $data = $this->adminData;
+
         $admin = AdminModel::where('account', $data['username'])->first();
 
         if (empty($admin)) {
@@ -66,6 +87,8 @@ class AdminModel extends Model
 
         $admin->last_date = now();
 
+        $admin->last_ip = request()->ip();
+
         $admin->save();
 
         $log_data = ['type' => LogModel::LOGIN_TYPE, 'title' => '登录后台'];
@@ -79,13 +102,154 @@ class AdminModel extends Model
     }
 
     /**
-     * 植入管理员session
+     * 管理员session
      *
      * @return void
      */
     private function setAdminSession($user_id)
     {
         return session()->put('user_id', $user_id);
+    }
+
+    /**
+     * 登出
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        $log_data = ['type' => LogModel::LOGIN_TYPE, 'title' => '登出后台'];
+
+        $log = new LogModel($log_data);
+
+        $log->createLog();
+
+        session()->flush();
+    }
+
+    /**
+     * 获取用户名
+     *
+     * @return void
+     */
+    public function getName()
+    {
+        return self::where('id', session('user_id'))
+            ->where('status', 1)
+            ->value('user_name');
+    }
+
+    public function listAdmin()
+    {
+        $limit = $this->data['limit'] ?? 15;
+        $page = $this->data['page'] ?? 1;
+        $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id'];
+        $item = self::select($column)->with('role_name')->paginate($limit, "*", "page", $page);
+
+        foreach ($item->items() as &$v) {
+            if ($v['status'] == 1) {
+                $v['status'] = "正常";
+            } else {
+                $v['status'] = "禁用";
+            }
+
+            if (empty($v['role_name'])) {
+                $v['role_name'] = "无";
+            }
+            unset($v['role_id']);
+
+        }
+        $result['data'] = $item->items();
+        $result['count'] = $item->count();
+        return $result;
+    }
+
+    public function addAdmin()
+    {$data = $this->adminData;
+        $account = self::where('account', $data['account'])->value('account');
+        $user_name = self::where('user_name', $data['username'])->value('user_name');
+
+        if ($data['account'] == $account) {
+            throw new LogicException('账号已存在');
+        }
+
+        if ($data['username'] == $user_name) {
+            throw new LogicException('昵称存在');
+        }
+
+        $admin_password = password_hash($data['password'], PASSWORD_DEFAULT);
+
+        $new_admin = [
+            'account' => $data['account'],
+            'password' => $admin_password,
+            'user_name' => $data['username'],
+            'role_id' => $data['role'],
+            'reg_ip' => request()->ip(),
+            'status' => $data['status'],
+            'login_count' => 0,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+
+        DB::beginTransaction();
+
+        $status = self::insert($new_admin);
+
+        if (false === $status) {
+            DB::rollBack();
+            throw new LogicException('添加失败');
+        } else {
+
+            $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '创建新管理员'];
+
+            (new LogModel($log_data))->createLog();
+
+            DB::commit();
+
+            return true;
+        }
+
+    }
+
+    public function editAdmin(){
+
+        $data = $this->adminData;
+        $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id'];
+        return self::where('id',1)->get($column);
+      
+
+    }
+
+    public function saveAdmin(){
+        $data = $this->adminData;
+    
+        $save = [
+            'account' => $data['account'],
+            'user_name' => $data['username'],
+            'role_id' => $data['role'],
+            'updated_at' => now(),
+            'status' => $data['status'],
+        ];
+
+          
+        DB::beginTransaction();
+
+        $status =  self::where("id",$data['id'])->update($save);
+
+        if (false === $status) {
+            DB::rollBack();
+            throw new LogicException('编辑失败');
+        } else {
+
+        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑管理员'];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+            return true;
+        }
+
     }
 
 }

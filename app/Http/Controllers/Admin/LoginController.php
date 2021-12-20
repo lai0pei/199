@@ -75,10 +75,10 @@ class LoginController extends Controller
         try {
             $admin = new AdminModel($input);
             if ($admin->adminLogin()) {
-                return self::json_return(self::SUCCESS, '登录成功', []);
+                return self::json_success([],'登录成功');
             }
         } catch (LogicException $e) {
-            return self::json_fail($e->getMessage());
+            return self::json_fail([],$e->getMessage());
         }
 
     }
@@ -91,6 +91,18 @@ class LoginController extends Controller
     public function captcha()
     {
         return captcha('admin_login');
+    }
+
+    /**
+     * logout
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        (new AdminModel())->logout();
+
+        return self::json_success([],'成功登出');
     }
 
 }
