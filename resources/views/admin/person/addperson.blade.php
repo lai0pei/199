@@ -1,20 +1,18 @@
 @extends('common.template')
-@section('style')
-@endsection
 @section('content')
 <div class="layui-form layuimini-form">
     <div class="layui-form-item">
         <label class="layui-form-label required">用户名</label>
         <div class="layui-input-block">
             <input type="text" name="account" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value="" class="layui-input">
-            <tip>填写自己管理账号的名称。</tip>
+            <tip>填写登录账号的名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">昵称</label>
         <div class="layui-input-block">
             <input type="text" name="username" lay-verify="required" lay-reqtext="昵称名不能为空" placeholder="请输入昵称" value="" class="layui-input">
-            <tip>填写自己管理账号昵称。</tip>
+            <tip>填写管理员显示的名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
@@ -87,22 +85,13 @@ var get_role = "{{route('admin_get_role')}}";
             success : function(data){
                 if(data.code == 1){
                    layer.msg(data.msg);
+                   window.parent.location.reload();
                 }else{
                     layer.msg(data.msg);
                 }
             }
         });
-            // var index = layer.alert(JSON.stringify(data.field), {
-            //     title: '最终的提交信息'
-            // }, function () {
 
-            //     // 关闭弹出层
-            //     layer.close(index);
-
-            //     var iframeIndex = parent.layer.getFrameIndex(window.name);
-            //     parent.layer.close(iframeIndex);
-
-            // });
 
             return false;
         });

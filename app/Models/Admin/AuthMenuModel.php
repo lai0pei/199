@@ -87,12 +87,17 @@ class AuthMenuModel extends Model
      * @return void
      */
     public function menuInit()
-    {
+    {   
+        $user_id = session('user_id');
         $key = 'admin_menu_' . session('user_id');
         $menus = Cache::get($key);
         if (!empty($menus)) {
             return $menus;
         }
+        // $role_id = AdminModel::where('id',$user_id)->value('role_id');
+        // $permission = PermissionMenuModel::where('role_id',$role_id)->value('auth_id');
+        // $list = explode(',', $permission);
+        // dd($list);
         $init = [];
         $init['homeInfo'] = ['title' => '活动分析', 'href' => ''];
         $init['logoInfo'] = ['title' => '活动页面', 'image' => asset('image/logo.png'), 'href' => ''];

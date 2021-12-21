@@ -46,11 +46,6 @@
 @endsection
 @section('footer')
 <script>
-      $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
 layui.use('form', function() {
     var form = layui.form;
     layer = layui.layer;

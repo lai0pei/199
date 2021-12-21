@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class Menu extends Seeder
+class DefaultMenu extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +15,7 @@ class Menu extends Seeder
     public function run()
     {
         $config = [
-            0 => ['id' => 1, 'p_id' => 0, 'title' => '控制台', 'auth_name' => 'control', 'icon' => '', 'href' => 'admin/control', 'sort' => 0, 'created_at' => now(), 'updated_at' => now()],
+            // 0 => ['id' => 1, 'p_id' => 0, 'title' => '控制台', 'auth_name' => 'control', 'icon' => '', 'href' => 'admin/control', 'sort' => 0, 'created_at' => now(), 'updated_at' => now()],
             1 => ['id' => 2, 'p_id' => 0, 'title' => '活动管理', 'auth_name' => 'event_management', 'icon' => '', 'href' => 'admin/event_management', 'sort' => 1, 'created_at' => now(), 'updated_at' => now()],
             2 => ['id' => 3, 'p_id' => 0, 'title' => '系统管理', 'auth_name' => 'system_management', 'icon' => '', 'href' => 'admin/system_management', 'sort' => 2, 'created_at' => now(), 'updated_at' => now()],
 
@@ -46,7 +46,7 @@ class Menu extends Seeder
             21 => ['id' => 22, 'p_id' => 3, 'title' => '短信配置', 'auth_name' => 'sms_config', 'icon' => 'fa fa-commenting', 'href' => 'admin/sms_config', 'sort' => 6, 'created_at' => now(), 'updated_at' => now()],
             22 => ['id' => 23, 'p_id' => 3, 'title' => '允许IP', 'auth_name' => 'allow_ip', 'icon' => 'fa fa-server', 'href' => 'admin/allow_ip', 'sort' => 7, 'created_at' => now(), 'updated_at' => now()],
             23 => ['id' => 24, 'p_id' => 3, 'title' => '公共配置', 'auth_name' => 'common_settings', 'icon' => 'fa fa-wrench', 'href' => 'admin/common_settings', 'sort' => 8, 'created_at' => now(), 'updated_at' => now()],
-            24 => ['id' => 25, 'p_id' => 3, 'title' => '权限设置', 'auth_name' => 'auth_permission', 'icon' => 'fa fa-user-circle', 'href' => 'admin/auth_permission', 'sort' => 4, 'created_at' => now(), 'updated_at' => now()],
+            24 => ['id' => 25, 'p_id' => 3, 'title' => '所有权限', 'auth_name' => 'auth_permission', 'icon' => 'fa fa-user-circle', 'href' => 'admin/auth_permission', 'sort' => 4, 'created_at' => now(), 'updated_at' => now()],
 
 
           

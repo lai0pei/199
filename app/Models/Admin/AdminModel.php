@@ -55,7 +55,7 @@ class AdminModel extends Model
      */
     public function role_name()
     {
-        return $this->hasOne(RoleModel::class, 'id', 'role_id')->select('role_name');
+        return $this->hasOne(RoleModel::class, 'id', 'role_id');
     }
 
     /**
@@ -141,27 +141,58 @@ class AdminModel extends Model
 
     public function listAdmin()
     {
-        $limit = $this->data['limit'] ?? 15;
-        $page = $this->data['page'] ?? 1;
+        $data = $this->adminData;
+        $limit = $data['limit'] ?? 15;
+        $page = $data['page'] ?? 1;
+
         $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id'];
-        $item = self::select($column)->with('role_name')->paginate($limit, "*", "page", $page);
-
-        foreach ($item->items() as &$v) {
-            if ($v['status'] == 1) {
-                $v['status'] = "正常";
-            } else {
-                $v['status'] = "禁用";
+        $where = [];
+        if (!empty($data['searchParams'])) {
+            $param = json_decode($data['searchParams'], true);
+            switch (true) {
+                case (!empty($param['role_id'])): $where['role_id'] = $param['role_id'];
+                    break;
+                case (!empty($param['accoun'])): $where['account'] = $param['account'];
+                    break;
+                case (!empty($param['user_name'])): $where['user_name'] = $param['user_name'];
+                    break;
+                case (!empty($param['status'])): $where['status'] = $param['status'];
+                    break;
+                default:$where = [];
             }
-
-            if (empty($v['role_name'])) {
-                $v['role_name'] = "无";
-            }
-            unset($v['role_id']);
 
         }
-        $result['data'] = $item->items();
-        $result['count'] = $item->count();
-        return $result;
+
+        $item = self::select($column)->where($where)->with(['role_name' => function ($query) {
+            $query->select(['id', 'role_name']);
+        }])->paginate($limit, "*", "page", $page);
+
+        $result = [];
+        foreach ($item->items() as $k => $v) {
+            $result[$k]['id'] = $v['id'];
+            $result[$k]['account'] = $v['account'];
+            $result[$k]['user_name'] = $v['user_name'];
+            $result[$k]['last_ip'] = $v['last_ip'];
+            $result[$k]['login_count'] = $v['login_count'];
+            $result[$k]['last_date'] = $v['last_date'];
+            $result[$k]['login_count'] = $v['login_count'];
+
+            if ($v['status'] == 1) {
+                $result[$k]['status'] = "正常";
+            } else {
+                $result[$k]['status'] = "禁用";
+            }
+
+            if (empty($v['role_name']['role_name'])) {
+                $result[$k]['role_name'] = "无";
+            } else {
+                $result[$k]['role_name'] = $v['role_name']['role_name'];
+            }
+
+        }
+        $res['data'] = $result;
+        $res['count'] = $item->count();
+        return $res;
     }
 
     public function addAdmin()
@@ -211,45 +242,76 @@ class AdminModel extends Model
 
     }
 
-    public function editAdmin(){
-
+    public function editAdmin()
+    {
         $data = $this->adminData;
         $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id'];
-        return self::where('id',1)->get($column);
-      
+        return self::where('id', $data['id'])->get($column);
 
     }
 
-    public function saveAdmin(){
+    public function saveAdmin()
+    {
         $data = $this->adminData;
-    
-        $save = [
-            'account' => $data['account'],
-            'user_name' => $data['username'],
-            'role_id' => $data['role'],
-            'updated_at' => now(),
-            'status' => $data['status'],
-        ];
 
-          
+        $save['account'] = $data['account'];
+        $save['user_name'] = $data['username'];
+        $save['role_id'] = $data['role'];
+        $save['updated_at'] = now();
+        $save['status'] = $data['status'];
+
+        if (!empty($data['password'])) {
+            $save['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+
         DB::beginTransaction();
 
-        $status =  self::where("id",$data['id'])->update($save);
+        $status = self::where("id", $data['id'])->update($save);
 
         if (false === $status) {
             DB::rollBack();
             throw new LogicException('编辑失败');
         } else {
 
-        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑管理员'];
+            $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑管理员'];
 
-        (new LogModel($log_data))->createLog();
+            (new LogModel($log_data))->createLog();
 
-        DB::commit();
+            DB::commit();
 
             return true;
         }
 
+    }
+
+    public function deleteAdmin()
+    {
+
+        $data = $this->adminData;
+
+        DB::beginTransaction();
+
+        $admin = self::find($data['id']);
+
+        if (empty($admin)) {
+            throw new LogicException('此管理员不存在');
+        }
+
+        $status = self::where("id", $data['id'])->delete();
+
+        if (false === $status) {
+            DB::rollBack();
+            throw new LogicException('删除失败');
+        } else {
+
+            $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除管理员 ' . $admin->user_name];
+
+            (new LogModel($log_data))->createLog();
+
+            DB::commit();
+
+            return true;
+        }
     }
 
 }

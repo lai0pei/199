@@ -7,27 +7,27 @@
         <label class="layui-form-label required">用户名</label>
         <div class="layui-input-block">
             <input type="text" name="account" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value="{{$edit_admin->account}}" class="layui-input">
-            <tip>填写自己管理账号的名称。</tip>
+            <tip>填写登录账号的名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">昵称</label>
         <div class="layui-input-block">
             <input type="text" name="username" lay-verify="required" lay-reqtext="昵称名不能为空" placeholder="请输入昵称" value="{{$edit_admin->user_name}}" class="layui-input">
-            <tip>填写自己管理账号昵称。</tip>
+            <tip>填写管理员显示的名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">密码</label>
         <div class="layui-input-block">
-            <input type="text" name="password" lay-verify="required" lay-reqtext="密码不能为空" placeholder="请输入密码" value="" class="layui-input">
+            <input type="text" name="password"  placeholder="密码空为不更新" value="" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item" pane="">
         <label class="layui-form-label">状态</label>
-        <div class="layui-input-block">
-            <input type="radio" name="status" value="1" title="开启" checked="checked">
-            <input type="radio" name="status" value="0" title="禁用" >
+        <div class="layui-input-block" >
+            <input type="radio" name="status" value="1"  id="radioOpen" title="开启">
+            <input type="radio" name="status" value="0" id="radioClose" title="禁用" >
         </div>
     </div>
     <div class="layui-form-item">
@@ -81,6 +81,15 @@
             }
         });
     });
+
+    //check status
+    var status = "{{$edit_admin->status}}";
+    if(status == 1){
+        $('#radioOpen').attr('checked',true);
+    }else{
+        $('#radioClose').attr('checked',true);
+    }
+    
         //监听提交
         form.on('submit(saveBtn)', function (data) {
             $.ajax({
@@ -90,6 +99,7 @@
             success : function(data){
                 if(data.code == 1){
                    layer.msg(data.msg);
+                   window.parent.location.reload();
                 }else{
                     layer.msg(data.msg);
                 }

@@ -19,6 +19,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AdminModel;
+use App\Models\Admin\RoleModel;
 use App\Exceptions\LogicException;
 use Illuminate\Http\Request;
 
@@ -37,11 +38,13 @@ class AdminController extends Controller
     }
 
     public function person(){
-        return view('admin.person.person');
+        $res['role'] = (new RoleModel($this->request))->getAllRole();
+        $res['status'] = ['禁用', '正常'];
+        return view('admin.person.person', ['data'=>$res]);
     }
 
     public function listAdmin(){
-
+     
         $data = (new AdminModel($this->request->all()))->listAdmin();
         $result['code'] = self::FAIL;
          $result['msg'] = '操作成功';
@@ -67,8 +70,7 @@ class AdminController extends Controller
     }
 
     public function editPerson(){
-      
-        $data = (new AdminModel($this->request->all()))->editAdmin();
+        $data = (new AdminModel($this->request->route()->parameters()))->editAdmin();
         return view('admin.person.editperson', ['edit_admin'=>$data[0]]);
     }
 
@@ -80,5 +82,17 @@ class AdminController extends Controller
         } catch (LogicException $e) {
             return self::json_fail([],$e->getMessage());
         }
+    }
+
+    public function deleteAdmin(){
+        try {
+            if ((new AdminModel($this->request->all()))->deleteAdmin()) {
+                return self::json_return([],'删除成功');
+            }
+        } catch (LogicException $e) {
+            return self::json_fail([],$e->getMessage());
+        }
+
+     
     }
 }

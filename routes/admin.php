@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SmsConfigController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PermissionMenuController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,13 +68,28 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/user_apply', [UserController::class, 'user'])->name('admin_user_apply');
     Route::get('/sms_apply', [SmsController::class, 'sms'])->name('admin_sms_apply');
 
-    //管理员 页面
+    //管理员 页面 和 接口
     Route::get('/person', [AdminController::class, 'person'])->name('admin_person');
     Route::get('/add_person', [AdminController::class, 'addPerson'])->name('admin_person_add');
-    Route::get('/edit_person/{id}', [AdminController::class, 'editPerson'])->name('admin_person_edit');
-    Route::get('/edit_person', [AdminController::class, 'editPerson'])->name('admin_person_edit');
+    Route::get('/edit_person/{id?}', [AdminController::class, 'editPerson'])->name('admin_person_edit');
+    Route::post('/add_person', [AdminController::class, 'addNewAdmin'])->name('admin_add_person');
+    Route::post('/save_admin', [AdminController::class, 'saveAdmin'])->name('admin_save_admin');
+    Route::post('/delete_admin', [AdminController::class, 'deleteAdmin'])->name('admin_person_delete');
+    Route::get('/list_admin', [AdminController::class, 'listAdmin'])->name('admin.admin_list');
+    Route::get('/edit_admin', [AdminController::class, 'addNewAdmin'])->name('admin_edit_person');
 
+    //管理组
     Route::get('/admin_group', [AdminGroupController::class, 'group'])->name('admin_group');
+    Route::get('/group_add/{id?}', [AdminGroupController::class, 'groupAdd'])->name('group_add');
+    Route::post('/group_add/{id?}', [AdminGroupController::class, 'newGroup'])->name('group_add');
+    Route::post('/group_delete/{id?}', [AdminGroupController::class, 'deleteGroup'])->name('group_delete');
+    Route::get('/permission/{role_id?}', [PermissionMenuController::class, 'getPermission'])->name('admin_permission');
+    Route::post('/permissionList', [PermissionMenuController::class, 'permissionList'])->name('admin_permission_list');
+    Route::post('/submitList', [PermissionMenuController::class, 'submitList'])->name('admin_submit_list');
+
+    Route::get('/get_role_permission', [RoleController::class, 'getRoleByPermission'])->name('admin_get_role_permission');
+    Route::get('/get_role/{id?}', [RoleController::class, 'getRole'])->name('admin_get_role');
+
     Route::get('/change_password', [ChangePasswordController::class, 'password'])->name('admin_password');
     Route::get('/log', [LogController::class, 'log'])->name('admin_log');
     Route::get('/announcement', [AnnouncementController::class, 'announcement'])->name('admin_announcement');
@@ -91,16 +107,8 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     //get 接口
     Route::get('/clear', [AuthMenuController::class, 'clear'])->name('admin.clear');
     Route::get('/init', [AuthMenuController::class, 'init'])->name('admin.init');
-    Route::get('/edit_admin', [AdminController::class, 'addNewAdmin'])->name('admin_edit_person');
-    Route::get('/get_role/{id?}', [RoleController::class, 'getRole'])->name('admin_get_role');
-    Route::get('/list_admin', [AdminController::class, 'listAdmin'])->name('admin.admin_list');
-    
-
     //post 接口
     Route::post('/logout', [LoginController::class, 'logout'])->name('admin_logout');
-    Route::post('/add_person', [AdminController::class, 'addNewAdmin'])->name('admin_add_person');
-    Route::post('/save_admin', [AdminController::class, 'saveAdmin'])->name('admin_save_admin');
-    
-    
+
 
 });
