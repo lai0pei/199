@@ -57,7 +57,6 @@ class PermissionMenuModel extends Model
                 $sub_menu[$menu_key]['checked'] = false;
                 if (in_array($menu_value['id'], $auth_list)) {
                     $sub_menu[$menu_key]['checked'] = true;
-                    $menu[$i]['checked'] = true;
                 }
                 $sub_menu[$menu_key]['id'] = $menu_value['id'];
                 $sub_menu[$menu_key]['title'] = $menu_value['title'];

@@ -32,7 +32,7 @@ class AuthGroupModel extends Model
         $ids = [];
         $i = 0;
         foreach($menus as $v ){
-            foreach($v['children'] as $k => $vv){
+            foreach($v['children'] as $vv){
                 $ids[$i] = $vv['id'];
                 $i ++;
             }

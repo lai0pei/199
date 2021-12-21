@@ -94,9 +94,12 @@ class DefaultPermission extends Seeder
             36 => ['id' => 37, 'name' => 'accouncement_edit', 'title' => '编辑', 'grand_auth_id' => '2', 'parent_auth_id' => '11', 'current_auth_id' => '16', 'created_at' => now(), 'updated_at' => now()],
 
         ];
-
-        foreach ($config as $configValue) {
+        $index = 25;
+    
+        foreach ($config as &$configValue) {
+            $configValue['id'] = $index;
             DB::table('permission_menu')->insert($configValue);
+            $index ++;
         }
     }
 }
