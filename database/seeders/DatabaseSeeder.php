@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
             DefaultAdmin::class,
             DefaultMenu::class,
             DefaultPermission::class,
+            DefaultRole::class,
+            DefaultAuthGroup::class,
+            DefaultConfig::class,
         ]);
     }
 }

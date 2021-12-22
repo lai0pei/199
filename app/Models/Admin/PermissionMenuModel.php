@@ -14,7 +14,7 @@ class PermissionMenuModel extends Model
      *
      * @var string
      */
-    protected $table = 'permission_menu';
+    protected $table = 'permission';
 
     public function __construct($data = [])
     {
@@ -35,7 +35,6 @@ class PermissionMenuModel extends Model
 
         $auth_list = [];
         if (!empty($auth)) {
-            //todo permissi related
             $auth_list = explode(",", $auth); 
         }
 
@@ -71,5 +70,44 @@ class PermissionMenuModel extends Model
         return $menu;
 
     }
+    
+    public function authList(){
+      
+        $data = $this->data;
+        $limit = $data['limit'] ?? 15;
+        $page = $data['page'] ?? 1;
 
+        $where = [];
+        if (!empty($data['searchParams'])) {
+            $param = json_decode($data['searchParams'], true);
+            if (!empty($param['name'])) {
+                $where['title'] = $param['name'];
+            }
+        }
+
+        $item = self::where($where)->paginate($limit, "*", "page", $page);
+        $auth_menu = new AuthMenuModel();
+
+        $result = [];
+        foreach ($item->items() as $k => $v) {
+            $result[$k]['id'] = $v['id'];
+            $result[$k]['name'] = $v['name'];
+            $result[$k]['title'] = $v['title'];
+            $result[$k]['menu_title'] = $auth_menu::where('id',$v['current_auth_id'])->value('title');
+            $result[$k]['updated_at'] = $v['updated_at'];
+            $result[$k]['created_at'] = $v['created_at'];
+
+        }
+        $res['data'] = $result;
+        $res['count'] = $item->count();
+
+        return $res;
+    }
+
+    public function viewPermission(){
+        
+        $data = $this->data;
+
+        return self::find($data['id']);
+    }
 }

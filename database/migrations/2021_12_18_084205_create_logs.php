@@ -22,7 +22,8 @@ class CreateLogs extends Migration
             $table->longText('content')->comment('日志内容')->nullable();
             $table->unsignedTinyInteger('is_delete')->comment('0 未删除, 1 已删除')->default(0);
             $table->unsignedMediumInteger('admin_id')->comment('管理员编号')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at',$precision = 0)->comment('创建时间')->nullable();
+            $table->timestamp('updated_at',$precision = 0)->comment('更新时间')->nullable();
         });
 
         $prefix = env('DB_PREFIX') . "logs";

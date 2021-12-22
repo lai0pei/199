@@ -18,7 +18,8 @@ class CreateRole extends Migration
             $table->id()->comment('编号')->autoIncrement();
             $table->string('role_name',100)->comment('角色名称');
             $table->tinyInteger('status')->comment('1=正常，0=禁止')->default(1);
-            $table->timestamps();
+            $table->timestamp('created_at',$precision = 0)->comment('创建时间')->nullable();
+            $table->timestamp('updated_at',$precision = 0)->comment('更新时间')->nullable();
         });
 
         $prefix = env('DB_PREFIX')."role";

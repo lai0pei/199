@@ -40,13 +40,15 @@ class DefaultMenu extends Seeder
             18 => ['id' => 19, 'p_id' => 17, 'title' => '管理组', 'auth_name' => 'admin_group', 'icon' => 'fa fa-users', 'href' => 'admin/admin_group', 'sort' => 1, 'created_at' => now(), 'updated_at' => now()],
             19 => ['id' => 20, 'p_id' => 17, 'title' => '修改密码', 'auth_name' => 'change_password', 'icon' => 'fa fa-key', 'href' => 'admin/change_password', 'sort' => 2, 'created_at' => now(), 'updated_at' => now()],
 
+            20 => ['id' => 21, 'p_id' => 3, 'title' => '日志与权限', 'auth_name' => 'log', 'icon' => 'fa fa-crosshairs', 'href' => '', 'sort' => 5, 'created_at' => now(), 'updated_at' => now()],
+            21 => ['id' => 22, 'p_id' => 21, 'title' => '系统日志', 'auth_name' => 'log', 'icon' => 'fa fa-history', 'href' => 'admin/log', 'sort' => 5, 'created_at' => now(), 'updated_at' => now()],
+            22 => ['id' => 23, 'p_id' => 21, 'title' => '所有权限', 'auth_name' => 'auth_permission', 'icon' => 'fa fa-user-circle', 'href' => 'admin/auth_permission', 'sort' => 4, 'created_at' => now(), 'updated_at' => now()],
 
+            23 => ['id' => 24, 'p_id' => 3, 'title' => '配置', 'auth_name' => 'log', 'icon' => 'fa fa-sliders', 'href' => '', 'sort' => 5, 'created_at' => now(), 'updated_at' => now()],
+            24 => ['id' => 25, 'p_id' => 24, 'title' => '公共配置', 'auth_name' => 'common_settings', 'icon' => 'fa fa-wrench', 'href' => 'admin/common_settings', 'sort' => 8, 'created_at' => now(), 'updated_at' => now()],
+            25 => ['id' => 26, 'p_id' => 24, 'title' => '短信配置', 'auth_name' => 'sms_config', 'icon' => 'fa fa-commenting', 'href' => 'admin/sms_config', 'sort' => 6, 'created_at' => now(), 'updated_at' => now()],
+            26 => ['id' => 27, 'p_id' => 24, 'title' => '允许IP', 'auth_name' => 'allow_ip', 'icon' => 'fa fa-server', 'href' => 'admin/allow_ip', 'sort' => 7, 'created_at' => now(), 'updated_at' => now()],
 
-            20 => ['id' => 21, 'p_id' => 3, 'title' => '系统日志', 'auth_name' => 'log', 'icon' => 'fa fa-history', 'href' => 'admin/log', 'sort' => 5, 'created_at' => now(), 'updated_at' => now()],
-            21 => ['id' => 22, 'p_id' => 3, 'title' => '短信配置', 'auth_name' => 'sms_config', 'icon' => 'fa fa-commenting', 'href' => 'admin/sms_config', 'sort' => 6, 'created_at' => now(), 'updated_at' => now()],
-            22 => ['id' => 23, 'p_id' => 3, 'title' => '允许IP', 'auth_name' => 'allow_ip', 'icon' => 'fa fa-server', 'href' => 'admin/allow_ip', 'sort' => 7, 'created_at' => now(), 'updated_at' => now()],
-            23 => ['id' => 24, 'p_id' => 3, 'title' => '公共配置', 'auth_name' => 'common_settings', 'icon' => 'fa fa-wrench', 'href' => 'admin/common_settings', 'sort' => 8, 'created_at' => now(), 'updated_at' => now()],
-            24 => ['id' => 25, 'p_id' => 3, 'title' => '所有权限', 'auth_name' => 'auth_permission', 'icon' => 'fa fa-user-circle', 'href' => 'admin/auth_permission', 'sort' => 4, 'created_at' => now(), 'updated_at' => now()],
 
 
           

@@ -26,7 +26,8 @@ class CreateAdmin extends Migration
             $table->rememberToken()->nullable()->comment('登录token储存');
             $table->unsignedBigInteger('login_count')->nullable()->comment('登录次数')->default(0);
             $table->dateTime('last_date', $precision = 0)->nullable()->comment('最后登录时间');
-            $table->timestamps();
+            $table->timestamp('created_at',$precision = 0)->comment('创建时间')->nullable();
+            $table->timestamp('updated_at',$precision = 0)->comment('更新时间')->nullable();
         });
         
         $prefix = env('DB_PREFIX')."admin";

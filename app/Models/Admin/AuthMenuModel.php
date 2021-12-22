@@ -87,64 +87,136 @@ class AuthMenuModel extends Model
      * @return void
      */
     public function menuInit()
-    {   
+    {
         $user_id = session('user_id');
         $key = 'admin_menu_' . session('user_id');
-        // $menus = Cache::get($key);
-        // if (!empty($menus)) {
-        //     return $menus;
-        // }
-        $role_id = AdminModel::where('id',$user_id)->value('role_id');
-        $permission = AuthGroupModel::where('role_id',$role_id)->value('auth_id');
+        $menus = Cache::get($key);
+        if (!empty($menus)) {
+            return $menus;
+        }
+        $permissions = $this->getPermission($user_id);
 
-        if(empty($permission)){
+        if ($permissions == []) {
+            return [];
+        }
+        $this->setPermission($user_id);
+        $init = [];
+        $init['homeInfo'] = ['title' => '活动分析', 'href' => ''];
+        $init['logoInfo'] = ['title' => '活动页面', 'image' => asset('image/logo.png'), 'href' => ''];
+
+        $main_menu = $this->topChild($permissions['top_permission'], $permissions['child_permission'], $permissions['grand_permission']);
+
+        $init['menuInfo'] = $main_menu;
+        Cache::put($key, $init, now()->addMinute(60));
+        return $init;
+    }
+    
+    /**
+     * getMenu
+     *
+     * @param  mixed $pid
+     * 
+     */
+    private function getMenu($pid)
+    {
+        $columns = ['id', 'p_id', 'title', 'href', 'icon', 'target', 'is_shortcut'];
+        $where = [];
+        $where['p_id'] = $pid;
+        $where['status'] = 1;
+        return self::where($where)->orderBy('sort')->get($columns)->toArray();
+    }
+    
+    private function setPermission($user_id){
+        $role_id = AdminModel::where('id', $user_id)->value('role_id');
+        $permission = AuthGroupModel::where('role_id', $role_id)->value('auth_id');
+        if (empty($permission)) {
+            return [];
+        }
+        $list = explode(',', $permission);
+        $column = ['id','name'];
+        $permission_menu = PermissionMenuModel::whereIn('id', $list)->get($column)->toArray();
+        session(['permission' => $permission_menu]);
+    }   
+    /**
+     * getPermission
+     *
+     * @param  mixed $user_id
+     * @return void
+     */
+    private function getPermission($user_id)
+    {
+        $role_id = AdminModel::where('id', $user_id)->value('role_id');
+        $permission = AuthGroupModel::where('role_id', $role_id)->value('auth_id');
+
+        if (empty($permission)) {
             return [];
         }
         $list = explode(',', $permission);
         $permission_menu = PermissionMenuModel::whereIn('id', $list)->get()->toArray();
 
-        $top_menu_permission = array_unique(array_column($permission_menu,'grand_auth_id'));
-        $child_menu_permission = array_unique(array_column($permission_menu,'parent_auth_id'));
-        $grand_menu_permission = array_unique(array_column($permission_menu,'current_auth_id'));
-      
-        $init = [];
-        $init['homeInfo'] = ['title' => '活动分析', 'href' => ''];
-        $init['logoInfo'] = ['title' => '活动页面', 'image' => asset('image/logo.png'), 'href' => ''];
+        $res['top_permission'] = array_unique(array_column($permission_menu, 'grand_auth_id'));
+        $res['child_permission'] = array_unique(array_column($permission_menu, 'parent_auth_id'));
+        $res['grand_permission'] = array_unique(array_column($permission_menu, 'current_auth_id'));
 
-        $columns = ['id', 'p_id', 'title', 'href', 'icon', 'target'];
-        $where = [];
-        $where['p_id'] = 0;
-        $where['status'] = 1;
-        $top_menu = self::where($where)->orderBy('sort')->get($columns)->toArray();
+        return $res;
+    }
+    
+    /**
+     * topChild
+     *
+     * @param  mixed $top_permission
+     * @param  mixed $child_permission
+     * @param  mixed $grand_permission
+     * @return void
+     */
+    private function topChild($top_permission, $child_permission, $grand_permission)
+    {
+        $top_menu = [];
+        $child_menu = [];
+        $grand_menu = [];
+        foreach ($this->getMenu(0) as $topK => $topV) {
+            if (in_array($topV['id'], $top_permission)) {
+                $top_menu[$topK] = $this->groupData($topV);
 
-        foreach ($top_menu as &$child_menu) {
-            if(!in_array($child_menu['id'],$top_menu_permission)){
-                continue;
-            }
-            
-            $where['p_id'] = $child_menu['id'];
-            $child_menu['child'] = self::where($where)->orderBy('sort')->get($columns)->toArray();
-            foreach ($child_menu['child'] as &$grand_menu) {
-                if(!in_array($grand_menu['id'],$child_menu_permission)){
-                    continue;
-                }
-                $where['p_id'] = $grand_menu['id'];
-                $grand = self::where($where)->orderBy('sort')->get($columns)->toArray();
-                foreach($grand as $vv){
-                   
-                    if(in_array($vv['id'], $grand_menu_permission)){
-                        $grand_menu['child'] = $vv;
+                foreach ($this->getMenu($topV['id']) as $childK => $childV) {
+                    if (in_array($childV['id'], $child_permission)) {
+                        $child_menu[$childK] = $this->groupData($childV);
+
+                        foreach ($this->getMenu($childV['id']) as $grandK => $grandV) {
+
+                            if (in_array($grandV['id'], $grand_permission)) {
+
+                                $grand_menu[$grandK] = $this->groupData($grandV);
+                            }
+                        }
+
+                        $child_menu[$childK]['child'] = array_values($grand_menu);
+                        unset($grand_menu);
                     }
 
                 }
+
+                $top_menu[$topK]['child'] = array_values($child_menu);
+                unset($child_menu);
             }
+
         }
-        unset($child_menu);
-        unset($grand_menu);
-       
-        $init['menuInfo'] = $top_menu;
-        Cache::put($key, $init, now()->addMinute(30));
-        return $init;
+
+        return $top_menu;
     }
 
+    private function groupData($data)
+    {
+
+        return [
+            'id' => $data['id'],
+            'p_id' => $data['p_id'],
+            'title' => $data['title'],
+            'icon' => $data['icon'],
+            'target' => $data['target'],
+            'href' => $data['href'],
+            'is_shorcut' => $data['is_shortcut'],
+        ];
+
+    }
 }

@@ -14,17 +14,19 @@ class CreatePermission extends Migration
      */
     public function up()
     {
-        Schema::create('permission_menu', function (Blueprint $table) {
+        Schema::create('permission', function (Blueprint $table) {
             $table->id()->comment('编号')->autoIncrement();
             $table->string('name', 200)->comment('名称')->nullable();
             $table->string('title', 200)->comment('操作权限')->nullable();
+            $table->string('content', 200)->comment('内容')->nullable();
             $table->unsignedTinyInteger('grand_auth_id')->comment('一级菜单类型');
             $table->unsignedTinyInteger('parent_auth_id')->comment('二级菜单类型');
             $table->unsignedTinyInteger('current_auth_id')->comment('三级菜单类型');
-            $table->timestamps();
+            $table->timestamp('created_at',$precision = 0)->comment('创建时间')->nullable();
+            $table->timestamp('updated_at',$precision = 0)->comment('更新时间')->nullable();
         });
 
-        $prefix = env('DB_PREFIX') . "permission_menu";
+        $prefix = env('DB_PREFIX') . "permission";
         DB::statement("alter table $prefix comment '授权菜单表'");
     }
 

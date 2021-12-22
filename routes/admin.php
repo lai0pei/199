@@ -36,6 +36,8 @@ use App\Http\Controllers\Admin\SmsConfigController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PermissionMenuController;
+use App\Http\Controllers\Admin\LogController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -90,17 +92,33 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/get_role_permission', [RoleController::class, 'getRoleByPermission'])->name('admin_get_role_permission');
     Route::get('/get_role/{id?}', [RoleController::class, 'getRole'])->name('admin_get_role');
 
+    //修改密码
     Route::get('/change_password', [ChangePasswordController::class, 'password'])->name('admin_password');
+    Route::post('/change_password', [ChangePasswordController::class, 'changePassword'])->name('admin_password_change');
+
+    //权限列表
+    Route::get('/auth_permission', [AuthPermissionController::class, 'auth'])->name('admin_auth_permission');
+    Route::get('/permission_show', [AuthPermissionController::class, 'authList'])->name('admin_permission_show');
+    Route::get('/view_permission/{id?}', [AuthPermissionController::class, 'viewPermission'])->name('admin_view_permission');
+
+    //日志列表
     Route::get('/log', [LogController::class, 'log'])->name('admin_log');
-    Route::get('/announcement', [AnnouncementController::class, 'announcement'])->name('admin_announcement');
+    Route::get('/getLog', [LogController::class, 'getLog'])->name('admin_getLog');
+    Route::get('/detailLog/{id?}', [LogController::class, 'detailLog'])->name('admin_detailLog');
+
+    //短信配置
     Route::get('/sms_config', [SmsConfigController::class, 'sms_config'])->name('admin_sms_config');
+    Route::post('/save_sms', [SmsConfigController::class, 'saveSms'])->name('admin_save_sms');
+    
+    Route::get('/announcement', [AnnouncementController::class, 'announcement'])->name('admin_announcement');
+  
     Route::get('/bulk_refuse', [ConfigsController::class, 'refuse'])->name('admin_bulk_refuse');
     Route::get('/bulk_pass', [ConfigsController::class, 'pass'])->name('admin_bulk_pass');
     Route::get('/link_management', [LinkController::class, 'link'])->name('admin_link_management');
     Route::get('/game_management', [GameConfigController::class, 'game'])->name('admin_game_management');
     Route::get('/allow_ip', [IpController::class, 'allow_ip'])->name('admin_allow_ip');
     Route::get('/common_settings', [CommonSettingController::class, 'common'])->name('admin_common_settings');
-    Route::get('/auth_permission', [AuthPermissionController::class, 'auth'])->name('admin_auth_permission');
+    
 
 // |------------------------------------------------------------------------------------------------------------------------------------------------------
 

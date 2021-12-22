@@ -17,7 +17,8 @@ class CreateVipMobile extends Migration
         Schema::create('vip_mobile', function (Blueprint $table) {
             $table->id()->comment('编号')->autoIncrement();
             $table->string('mobile',50)->comment('手机号')->default(0);
-            $table->timestamps();
+            $table->timestamp('created_at',$precision = 0)->comment('创建时间')->nullable();
+            $table->timestamp('updated_at',$precision = 0)->comment('更新时间')->nullable();
         });
 
         

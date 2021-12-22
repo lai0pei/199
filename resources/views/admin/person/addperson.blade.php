@@ -4,21 +4,21 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">用户名</label>
         <div class="layui-input-block">
-            <input type="text" name="account" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value="" class="layui-input">
+            <input type="text" name="account" lay-verify="required" lay-reqtext="用户名不能为空" placeholder="请输入用户名" value="" class="layui-input" maxlength="12">
             <tip>填写登录账号的名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label required">昵称</label>
         <div class="layui-input-block">
-            <input type="text" name="username" lay-verify="required" lay-reqtext="昵称名不能为空" placeholder="请输入昵称" value="" class="layui-input">
+            <input type="text" name="username" lay-verify="required" lay-reqtext="昵称名不能为空" placeholder="请输入昵称" value="" class="layui-input" maxlength="12">
             <tip>填写管理员显示的名称。</tip>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">密码</label>
         <div class="layui-input-block">
-            <input type="text" name="password" lay-verify="required" lay-reqtext="密码不能为空" placeholder="请输入密码" value="" class="layui-input">
+            <input type="text" name="password" lay-verify="required" lay-reqtext="密码不能为空" placeholder="请输入密码" value="" class="layui-input" maxlength="12">
         </div>
     </div>
     <div class="layui-form-item" pane="">
