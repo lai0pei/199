@@ -43,8 +43,8 @@ class PermissionMenuModel extends Model
         $current_id = array_unique(array_column($permission, 'current_auth_id'));
         $menu = [];
         $sub_menu = [];
-        $i = 0;
-        foreach ($current_id as $v) {
+
+        foreach ($current_id as $i => $v) {
             $menu[$i]['id'] = $i;
             $menu[$i]['title'] = $auth_menu::where('id', $v)->where('status', 1)->value('title');
             $menu[$i]['checked'] = false;
@@ -57,7 +57,6 @@ class PermissionMenuModel extends Model
                 $sub_menu[$menu_key]['checked'] = false;
                 if (in_array($menu_value['id'], $auth_list)) {
                     $sub_menu[$menu_key]['checked'] = true;
-                    $menu[$i]['checked'] = true;
                 }
                 $sub_menu[$menu_key]['id'] = $menu_value['id'];
                 $sub_menu[$menu_key]['title'] = $menu_value['title'];
@@ -66,7 +65,6 @@ class PermissionMenuModel extends Model
             }
 
             $menu[$i]['children'] = $sub_menu;
-            $i ++;
             unset($sub_menu);
         }
 

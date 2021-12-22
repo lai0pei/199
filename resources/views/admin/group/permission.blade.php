@@ -49,7 +49,7 @@
                         "id": id,
                     },
                     success: function(data) {
-                        let list = data.data;
+                        var list = data.data;
                         console.log(list);
                         if (data.code == 1) {}
                         //基本演示
@@ -66,7 +66,7 @@
                 });
             });
 
-
+        
             //按钮事件
             util.event('lay-demo', {
                 getChecked: function(othis) {
