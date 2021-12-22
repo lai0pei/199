@@ -90,14 +90,23 @@ class AuthMenuModel extends Model
     {   
         $user_id = session('user_id');
         $key = 'admin_menu_' . session('user_id');
-        $menus = Cache::get($key);
-        if (!empty($menus)) {
-            return $menus;
+        // $menus = Cache::get($key);
+        // if (!empty($menus)) {
+        //     return $menus;
+        // }
+        $role_id = AdminModel::where('id',$user_id)->value('role_id');
+        $permission = AuthGroupModel::where('role_id',$role_id)->value('auth_id');
+
+        if(empty($permission)){
+            return [];
         }
-        // $role_id = AdminModel::where('id',$user_id)->value('role_id');
-        // $permission = PermissionMenuModel::where('role_id',$role_id)->value('auth_id');
-        // $list = explode(',', $permission);
-        // dd($list);
+        $list = explode(',', $permission);
+        $permission_menu = PermissionMenuModel::whereIn('id', $list)->get()->toArray();
+
+        $top_menu_permission = array_unique(array_column($permission_menu,'grand_auth_id'));
+        $child_menu_permission = array_unique(array_column($permission_menu,'parent_auth_id'));
+        $grand_menu_permission = array_unique(array_column($permission_menu,'current_auth_id'));
+      
         $init = [];
         $init['homeInfo'] = ['title' => '活动分析', 'href' => ''];
         $init['logoInfo'] = ['title' => '活动页面', 'image' => asset('image/logo.png'), 'href' => ''];
@@ -109,15 +118,30 @@ class AuthMenuModel extends Model
         $top_menu = self::where($where)->orderBy('sort')->get($columns)->toArray();
 
         foreach ($top_menu as &$child_menu) {
+            if(!in_array($child_menu['id'],$top_menu_permission)){
+                continue;
+            }
+            
             $where['p_id'] = $child_menu['id'];
             $child_menu['child'] = self::where($where)->orderBy('sort')->get($columns)->toArray();
             foreach ($child_menu['child'] as &$grand_menu) {
+                if(!in_array($grand_menu['id'],$child_menu_permission)){
+                    continue;
+                }
                 $where['p_id'] = $grand_menu['id'];
-                $grand_menu['child'] = self::where($where)->orderBy('sort')->get($columns)->toArray();
+                $grand = self::where($where)->orderBy('sort')->get($columns)->toArray();
+                foreach($grand as $vv){
+                   
+                    if(in_array($vv['id'], $grand_menu_permission)){
+                        $grand_menu['child'] = $vv;
+                    }
+
+                }
             }
         }
         unset($child_menu);
         unset($grand_menu);
+       
         $init['menuInfo'] = $top_menu;
         Cache::put($key, $init, now()->addMinute(30));
         return $init;

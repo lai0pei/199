@@ -233,7 +233,14 @@ class RoleModel extends Model
         $data = $this->data;
 
         $role_id = $data['role_id'];
-        
-        return self::where('id', $role_id)->select('id', 'role_name')->get()->toArray()[0];
+
+        $role = self::where('id', $role_id)->select('id', 'role_name')->get()->toArray();
+    
+        if(empty($role)){
+            $res = [];
+        }else{
+            $res = $role[0];
+        }
+        return $res ;
     }
 }
