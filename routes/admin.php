@@ -109,6 +109,9 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     //短信配置
     Route::get('/sms_config', [SmsConfigController::class, 'sms_config'])->name('admin_sms_config');
     Route::post('/save_sms', [SmsConfigController::class, 'saveSms'])->name('admin_save_sms');
+
+    //ip
+    Route::get('/allow_ip', [IpController::class, 'allow_ip'])->name('admin_allow_ip');
     
     Route::get('/announcement', [AnnouncementController::class, 'announcement'])->name('admin_announcement');
   
@@ -116,7 +119,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/bulk_pass', [ConfigsController::class, 'pass'])->name('admin_bulk_pass');
     Route::get('/link_management', [LinkController::class, 'link'])->name('admin_link_management');
     Route::get('/game_management', [GameConfigController::class, 'game'])->name('admin_game_management');
-    Route::get('/allow_ip', [IpController::class, 'allow_ip'])->name('admin_allow_ip');
+    
     Route::get('/common_settings', [CommonSettingController::class, 'common'])->name('admin_common_settings');
     
 

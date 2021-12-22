@@ -15,11 +15,11 @@ class SmsConfigController extends Controller
     }
 
     public function sms_config(){
-        return view('admin.sms_config.sms_config');
+        $sms = (new ConfigModel($this->request->all()))->getSms();
+        return view('admin.sms_config.sms_config',['sms'=>$sms]);
     }
 
     public function saveSms(){
-       
         return self::json_success((new ConfigModel($this->request->all()))->saveSms());
     }
 }
