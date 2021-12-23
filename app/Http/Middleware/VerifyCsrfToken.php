@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Hamcrest\Core\HasToString;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
 
 class VerifyCsrfToken extends Middleware
@@ -13,6 +14,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         //
-        
+        '/admin/uploadPhoto',
     ];
 }

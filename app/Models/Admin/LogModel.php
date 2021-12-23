@@ -75,15 +75,7 @@ class LogModel extends Model
         return self::insert($data);
     }
 
-    public function logType()
-    {
-        return [
-            self::LOGIN_TYPE => '登录',
-            self::ADD_TYPE => '添加',
-            self::SAVE_TYPE => '编辑',
-            self::DELETE_TYPE => '删除',
-        ];
-    }
+    
 
     public function log()
     {
@@ -101,7 +93,7 @@ class LogModel extends Model
                 case (!empty($param['user'])):
                     $where['admin_id'] = AdminModel::where('account', $param['user'])->value('id');
                     break;
-                case (!empty($param['type'])): $where['type'] = $param['type'];
+                case ($param['type'] !== ''): $where['type'] = $param['type'];
                     break;
                 case (!empty($param['ip'])): $where['ip'] = $param['ip'];
                     break;
@@ -110,7 +102,7 @@ class LogModel extends Model
                 default : $where = [];
             }
         }
-     
+  
         $item = self::where($where)->paginate($limit, "*", "page", $page);
 
         $result = [];
@@ -143,6 +135,16 @@ class LogModel extends Model
             default:$name = '其他操作';
         }
         return $name;
+    }
+
+    public function logType()
+    {
+        return [
+            self::LOGIN_TYPE => '登录相关',
+            self::ADD_TYPE => '添加相关',
+            self::SAVE_TYPE => '保存相关',
+            self::DELETE_TYPE => '删除相关',
+        ];
     }
 
     private function getName($admin_id)

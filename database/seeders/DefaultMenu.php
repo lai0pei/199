@@ -49,6 +49,9 @@ class DefaultMenu extends Seeder
             25 => ['id' => 26, 'p_id' => 24, 'title' => '短信配置', 'auth_name' => 'sms_config', 'icon' => 'fa fa-commenting', 'href' => 'admin/sms_config', 'sort' => 6, 'created_at' => now(), 'updated_at' => now()],
             26 => ['id' => 27, 'p_id' => 24, 'title' => '允许IP', 'auth_name' => 'allow_ip', 'icon' => 'fa fa-server', 'href' => 'admin/allow_ip', 'sort' => 7, 'created_at' => now(), 'updated_at' => now()],
 
+            27 => ['id' => 28, 'p_id' => 4, 'title' => '活动类型', 'auth_name' => 'event_type', 'icon' => 'fa fa-object-group', 'href' => 'admin/event_type', 'sort' => 1, 'created_at' => now(), 'updated_at' => now()],
+
+
 
 
           

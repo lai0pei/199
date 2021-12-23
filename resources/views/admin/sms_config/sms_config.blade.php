@@ -15,19 +15,19 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">API Key</label>
                     <div class="layui-input-block">
-                        <input type="text" name="cloud_key" autocomplete="off" placeholder="填入接口钥" value="{{$sms['cloud_key']}}" class="layui-input">
+                        <input type="text" name="cloud_key" autocomplete="off" placeholder="填入接口钥" value="{{$sms['cloud_key'] ?? ''}}" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">签名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="cloud_sign" placeholder="填入签名" autocomplete="off" value="{{$sms['cloud_sign']}}" class="layui-input">
+                        <input type="text" name="cloud_sign" placeholder="填入签名" autocomplete="off" value="{{$sms['cloud_sign'] ?? ''}}" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label"> 验证码内容</label>
                     <div class="layui-input-block">
-                        <input type="text" name="cloud_temp" placeholder="填入验证码内容" value="{{$sms['cloud_temp']}}" autocomplete="off"
+                        <input type="text" name="cloud_temp" placeholder="填入验证码内容" value="{{$sms['cloud_temp'] ?? ''}}" autocomplete="off"
                             class="layui-input">
                     </div>
                 </div>
@@ -38,19 +38,19 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">API Key</label>
                     <div class="layui-input-block">
-                        <input type="text" name="ju_key" autocomplete="off" placeholder="填入接口钥" value="{{$sms['ju_key']}}" class="layui-input">
+                        <input type="text" name="ju_key" autocomplete="off" placeholder="填入接口钥" value="{{$sms['ju_key'] ?? ''}}" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">签名</label>
                     <div class="layui-input-block">
-                        <input type="text" name="ju_sign" placeholder="填入签名" autocomplete="off" value="{{$sms['ju_sign']}}" class="layui-input">
+                        <input type="text" name="ju_sign" placeholder="填入签名" autocomplete="off" value="{{$sms['ju_sign'] ?? ''}}" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">模板ID</label>
                     <div class="layui-input-block">
-                        <input type="text" name="ju_id" placeholder="填入短信模板ID" autocomplete="off" value="{{$sms['ju_id']}}" class="layui-input">
+                        <input type="text" name="ju_id" placeholder="填入短信模板ID" autocomplete="off" value="{{$sms['ju_id'] ?? ''}}" class="layui-input">
                     </div>
                 </div>
 
@@ -75,19 +75,22 @@
 @section('footer')
     <script>
         var saveSms = "{{route('admin_save_sms')}}";
-        var status = value="{{$sms['status'] }}"
-        console.log(status);
-        layui.use(['form'], function() {
-            var form = layui.form,
-                layer = layui.layer
+        var status = "{{$sms['status'] ?? 0}}";
 
-            //check status
-    if(status == 1){
+                  //check status
+    if(status == 0){
         $('#cloud').attr('checked',true);
     }else{
+        console.log(status);
         $('#ju').attr('checked',true);
     }
 
+    
+        layui.use(['form'], function() {
+            var form = layui.form,
+                layer = layui.layer;
+
+  
 
             //监听提交
             form.on('submit(save)', function(data) {

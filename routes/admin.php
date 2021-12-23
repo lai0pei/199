@@ -27,16 +27,16 @@ use App\Http\Controllers\Admin\ChangePasswordController;
 use App\Http\Controllers\Admin\CommonSettingController;
 use App\Http\Controllers\Admin\ConfigsController;
 use App\Http\Controllers\Admin\EventController;
-use App\Http\Controllers\Admin\GameConfigController;
 use App\Http\Controllers\Admin\IpController;
-use App\Http\Controllers\Admin\LinkController;
-use App\Http\Controllers\Admin\MobileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SmsConfigController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PermissionMenuController;
 use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Admin\EventTypeController;
+use App\Http\Controllers\Admin\UploadController;
+
 
 
 /*
@@ -63,8 +63,7 @@ Route::get("admin/captcha", [LoginController::class, 'captcha'])->name('admin.lo
 Route::middleware(['admin'])->prefix('admin')->group(function () {
     //后台页面
     Route::get('/', [AuthMenuController::class, 'index'])->name('admin_menu'); 
-    Route::get('/control', [ControlController::class, 'control'])->name('admin_control'); 
-    Route::get('/add_event', [EventController::class, 'add'])->name('admin_add_event'); 
+    Route::get('/control', [ControlController::class, 'control'])->name('admin_control');  
     Route::get('/event_lists', [EventController::class, 'list'])->name('admin_event_list');
     Route::get('/mobile_management', [MobileController::class, 'mobile'])->name('admin_mobile_management');
     Route::get('/user_apply', [UserController::class, 'user'])->name('admin_user_apply');
@@ -74,11 +73,13 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/person', [AdminController::class, 'person'])->name('admin_person');
     Route::get('/add_person', [AdminController::class, 'addPerson'])->name('admin_person_add');
     Route::get('/edit_person/{id?}', [AdminController::class, 'editPerson'])->name('admin_person_edit');
+    Route::get('/view_person/{id?}', [AdminController::class, 'viewPerson'])->name('admin_person_view');
     Route::post('/add_person', [AdminController::class, 'addNewAdmin'])->name('admin_add_person');
     Route::post('/save_admin', [AdminController::class, 'saveAdmin'])->name('admin_save_admin');
     Route::post('/delete_admin', [AdminController::class, 'deleteAdmin'])->name('admin_person_delete');
     Route::get('/list_admin', [AdminController::class, 'listAdmin'])->name('admin.admin_list');
     Route::get('/edit_admin', [AdminController::class, 'addNewAdmin'])->name('admin_edit_person');
+   
 
     //管理组
     Route::get('/admin_group', [AdminGroupController::class, 'group'])->name('admin_group');
@@ -110,17 +111,54 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/sms_config', [SmsConfigController::class, 'sms_config'])->name('admin_sms_config');
     Route::post('/save_sms', [SmsConfigController::class, 'saveSms'])->name('admin_save_sms');
 
-    //ip
+    //ip地址
     Route::get('/allow_ip', [IpController::class, 'allow_ip'])->name('admin_allow_ip');
+    Route::post('/mani_ip', [IpController::class, 'mani_ip'])->name('admin_mani_ip');
+    Route::get('/add_ip/{id?}', [IpController::class, 'add_ip'])->name('admin_add_ip');
+    Route::get('/ip_list', [IpController::class, 'ip_list'])->name('admin_ip_list');
+    Route::post('/delete_ip', [IpController::class, 'ip_delete'])->name('admin_delete_ip');
     
-    Route::get('/announcement', [AnnouncementController::class, 'announcement'])->name('admin_announcement');
-  
-    Route::get('/bulk_refuse', [ConfigsController::class, 'refuse'])->name('admin_bulk_refuse');
-    Route::get('/bulk_pass', [ConfigsController::class, 'pass'])->name('admin_bulk_pass');
-    Route::get('/link_management', [LinkController::class, 'link'])->name('admin_link_management');
-    Route::get('/game_management', [GameConfigController::class, 'game'])->name('admin_game_management');
-    
+    //公共配置
     Route::get('/common_settings', [CommonSettingController::class, 'common'])->name('admin_common_settings');
+
+    //拒绝
+    Route::get('/bulk_refuse', [ConfigsController::class, 'refuse'])->name('admin_bulk_refuse');
+    Route::post('/refuse_save', [ConfigsController::class, 'refuseSave'])->name('admin_bulk_save');
+
+    //通过
+    Route::get('/bulk_pass', [ConfigsController::class, 'pass'])->name('admin_bulk_pass');
+    Route::post('/pass_save', [ConfigsController::class, 'passSave'])->name('admin_pass_save');
+
+    //链接
+    Route::get('/link_management', [ConfigsController::class, 'link'])->name('admin_link_management');
+    Route::post('/link_save', [ConfigsController::class, 'linkSave'])->name('admin_link_save');
+
+    //游戏        
+    Route::get('/game_management', [ConfigsController::class, 'game'])->name('admin_game_management');
+    Route::post('/game_save', [ConfigsController::class, 'gameSave'])->name('admin_game_save');
+
+    //公告
+    Route::get('/announcement', [ConfigsController::class, 'announcement'])->name('admin_announcement');
+    Route::post('/announcement_save', [ConfigsController::class, 'announcementSave'])->name('admin_announcement_save');
+
+    //活动类型
+    Route::get('/event_type', [EventTypeController::class, 'type'])->name('admin_event_type');
+    Route::post('/mani_type', [EventTypeController::class, 'maniType'])->name('admin_mani_type');
+    Route::get('/add_type/{id?}', [EventTypeController::class, 'addType'])->name('admin_add_type');
+    Route::get('/type_list', [EventTypeController::class, 'typeList'])->name('admin_type_list');
+    Route::post('/delete_type', [EventTypeController::class, 'typeDelete'])->name('admin_delete_type');
+
+    //活动add_event
+    Route::get('/add_event/{id?}', [EventController::class, 'event'])->name('admin_add_event');
+    Route::post('/uploadContent', [UploadController::class, 'eventContent'])->name('admin_upload');
+    Route::post('/uploadPhoto', [UploadController::class, 'eventPhotoUpload'])->name('admin_upload_content');
+
+
+    
+
+
+    
+    
     
 
 // |------------------------------------------------------------------------------------------------------------------------------------------------------

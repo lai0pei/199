@@ -74,6 +74,13 @@ class AdminController extends Controller
         return view('admin.person.editperson', ['edit_admin'=>$data[0]]);
     }
 
+    public function  viewPerson(){
+        $data = (new AdminModel($this->request->route()->parameters()))->editAdmin();
+        return view('admin.person.viewperson', ['edit_admin'=>$data[0]]);
+    }
+
+   
+
     public function saveAdmin(){
         try {
             if ((new AdminModel($this->request->all()))->saveAdmin()) {

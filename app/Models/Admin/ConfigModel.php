@@ -22,47 +22,34 @@ class ConfigModel extends Model
     
     }
 
-    public function saveConfig($id){
-        $data = $this->data;
-        $config = json_decode($data, true);
-    }
+    public function saveConfig($name,$title){
 
-    public function getConfig($id){
         $data = $this->data;
-        $config = json_decode($data, true);
-    }
 
-    public function saveSms(){
-        $data = $this->data;
-        dd($data);
         $smsConfig = json_decode($data['data'], true);
 
         $update = [
             'json_data' =>  serialize($smsConfig),
             'updated_at' => now(),
         ];
-        
-        return self::where('name','smsConfig')->update($update);
+
+        $status = self::where('name',$name)->update($update);
+
+        if($status){
+
+        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => $title];
+
+        (new LogModel($log_data))->createLog();
+
+        }
+
+
+        return true;
     }
 
-    public function getSms(){
-        $sms = self::where('name','smsConfig')->value('json_data');
-        $faker = [
-            'cloud_key' => '',
-            'cloud_sign' => '',
-            'cloud_temp' => '',
-            'ju_key' => '',
-            'ju_sign' => '',
-            'ju_id' => '',
-            'status' => 0,
-        ];
-        if(!empty($sms)){
-            $data = unserialize($sms);
-        }else{
-            $data = $faker;
-        }
-        
-        return $data;
+    public function getConfig($name){
+      
+        return unserialize(self::where('name',$name)->value('json_data'));
 
     }
 

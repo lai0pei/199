@@ -147,6 +147,7 @@ class AdminModel extends Model
 
         $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id'];
         $where = [];
+        $where['is_delete'] = 1;
         if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             switch (true) {
@@ -158,7 +159,7 @@ class AdminModel extends Model
                     break;
                 case (!empty($param['status'])): $where['status'] = $param['status'];
                     break;
-                default:$where = [];
+                default: $where['is_delete'] = 1;
             }
 
         }
@@ -217,6 +218,8 @@ class AdminModel extends Model
             'role_id' => $data['role'],
             'reg_ip' => request()->ip(),
             'status' => $data['status'],
+            'is_delete' => 1,
+            'number' => $data['number'],
             'login_count' => 0,
             'created_at' => now(),
             'updated_at' => now(),
@@ -245,7 +248,7 @@ class AdminModel extends Model
     public function editAdmin()
     {
         $data = $this->adminData;
-        $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id'];
+        $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id','number'];
         return self::where('id', $data['id'])->get($column);
 
     }
@@ -259,6 +262,7 @@ class AdminModel extends Model
         $save['role_id'] = $data['role'];
         $save['updated_at'] = now();
         $save['status'] = $data['status'];
+        $save['number'] = $data['number'];
 
         if (!empty($data['password'])) {
             $save['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -269,8 +273,11 @@ class AdminModel extends Model
         $status = self::where("id", $data['id'])->update($save);
 
         if (false === $status) {
+
             DB::rollBack();
+
             throw new LogicException('编辑失败');
+            
         } else {
 
             $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑管理员'];
@@ -294,14 +301,23 @@ class AdminModel extends Model
         $admin = self::find($data['id']);
 
         if (empty($admin)) {
+
             throw new LogicException('此管理员不存在');
+
         }
 
-        $status = self::where("id", $data['id'])->delete();
+        $delete = [
+            'is_delete' => 0,
+        ];
+
+        $status = self::where("id", $data['id'])->update( $delete);
 
         if (false === $status) {
+
             DB::rollBack();
+
             throw new LogicException('删除失败');
+
         } else {
 
             $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除管理员 ' . $admin->user_name];

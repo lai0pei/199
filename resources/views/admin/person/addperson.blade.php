@@ -21,6 +21,12 @@
             <input type="text" name="password" lay-verify="required" lay-reqtext="密码不能为空" placeholder="请输入密码" value="" class="layui-input" maxlength="12">
         </div>
     </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">联系号码</label>
+        <div class="layui-input-block">
+            <input type="text" name="number" placeholder="请输入飞机联系号" value="" class="layui-input">
+        </div>
+    </div>
     <div class="layui-form-item" pane="">
         <label class="layui-form-label">状态</label>
         <div class="layui-input-block">

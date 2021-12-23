@@ -51,6 +51,9 @@ class DefaultPermission extends Seeder
             //创建活动
             ['name' => 'event_add', 'title' => '添加', 'grand_auth_id' => '2', 'parent_auth_id' => '4', 'content'=>'添加此权限, 管理员可 添加新活动','current_auth_id' => '5', 'created_at' => now(), 'updated_at' => now()],
 
+            //创建分类
+            ['name' => 'type_add', 'title' => '添加', 'grand_auth_id' => '2', 'parent_auth_id' => '4', 'content'=>'添加此权限, 管理员可 添加新活动分类','current_auth_id' => '28', 'created_at' => now(), 'updated_at' => now()],
+
             //活动列表
             ['name' => 'event_list', 'title' => '预览', 'grand_auth_id' => '2', 'parent_auth_id' => '4','content'=>'添加此权限, 管理员仅可 预览活动列表', 'current_auth_id' => '6', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'event_edit', 'title' => '编辑', 'grand_auth_id' => '2', 'parent_auth_id' => '4', 'content'=>'添加此权限, 管理员仅可 预览 和 编辑活动列表','current_auth_id' => '6', 'created_at' => now(), 'updated_at' => now()],

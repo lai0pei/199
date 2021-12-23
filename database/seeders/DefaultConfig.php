@@ -21,7 +21,6 @@ class DefaultConfig extends Seeder
             ['name' => 'linkConfig', 'title' => '链接管理', 'json_data' => "", 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'gameConfig', 'title' => '游戏链接', 'json_data' => "", 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'accouncement', 'title' => '公告', 'json_data' => "", 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'ip', 'title' => 'ip访问', 'json_data' => "", 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'site', 'title' => '网站管理', 'json_data' => "", 'created_at' => now(), 'updated_at' => now()],
 
         ];

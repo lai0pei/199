@@ -91,13 +91,16 @@ class RoleModel extends Model
 
         $item = self::where($where)->paginate($limit, "*", "page", $page);
 
+       
+
         $result = [];
+
         foreach ($item->items() as $k => $v) {
             $result[$k]['id'] = $v['id'];
             $result[$k]['role_name'] = $v['role_name'];
             $result[$k]['created_at'] = $v['created_at'];
             $result[$k]['updated_at'] = $v['updated_at'];
-            $result[$k]['auth_count'] = 1;
+            $result[$k]['auth_count'] = $this->countPermission($v['id']);
 
             if ($v['status'] == 1) {
                 $result[$k]['status'] = "开启";
@@ -110,6 +113,12 @@ class RoleModel extends Model
         $res['count'] = $item->count();
 
         return $res;
+    }
+
+    private function countPermission($id){
+        $auth_group = new AuthGroupModel();
+        $list = $auth_group::where('role_id',$id)->value('auth_id');
+        return count(explode(',',$list));
     }
 
     public function maniRole()

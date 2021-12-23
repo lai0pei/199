@@ -61,6 +61,7 @@
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="currentTableBar">
+                <a class="layui-btn layui-btn-xs layui-btn-warm data-count-view" lay-event="view">查看</a>
                 <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
                 <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
             </script>
@@ -71,6 +72,7 @@
 @section('footer')
     <script>
         var edit_page = "{{ route('admin_person_edit') }}";
+        var view_page = "{{ route('admin_person_view') }}";
         var add_page = "{{ route('admin_person_add') }}";
         var delete_page = "{{ route('admin_person_delete') }}";
         var api_url = "{{ route('admin.admin_list') }}";
@@ -109,7 +111,7 @@
                         },
                         {
                             field: 'last_ip',
-                            width: 100,
+                            width: 150,
                             title: '最后登录Ip',
                             align: "center"
                         },
@@ -122,13 +124,13 @@
                         },
                         {
                             field: 'role_name',
-                            width: 100,
+                            width: 150,
                             title: '角色',
                             align: "center"
                         },
                         {
                             field: 'login_count',
-                            width: 100,
+                            width: 150,
                             title: '登录次数',
                             sort: true,
                             align: "center"
@@ -142,7 +144,7 @@
                         },
                         {
                             title: '操作',
-                            minWidth: 200,
+                            minWidth: 100,
                             toolbar: '#currentTableBar',
                             align: "center"
                         }
@@ -214,7 +216,23 @@
                         layer.full(index);
                     });
                     return false;
-                } else if (obj.event === 'delete') {
+                } else if (obj.event === 'view'){
+
+                    var index = layer.open({
+                        title: '查看用户',
+                        type: 2,
+                        shade: 0.2,
+                        maxmin: true,
+                        shadeClose: true,
+                        area: ['100%', '100%'],
+                        content: view_page + '/' + data.id,
+                    });
+                    $(window).on("resize", function() {
+                        layer.full(index);
+                    });
+                    return false;
+                }
+                    else if (obj.event === 'delete') {
                     layer.confirm('确认删除?', function(index) {
                         var id = obj.data.id;
                         axios({
