@@ -36,6 +36,8 @@ use App\Http\Controllers\Admin\PermissionMenuController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\EventTypeController;
 use App\Http\Controllers\Admin\UploadController;
+use App\Http\Controllers\Admin\FormController;
+use App\Http\Controllers\Admin\MobileController;
 
 
 
@@ -64,7 +66,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     //后台页面
     Route::get('/', [AuthMenuController::class, 'index'])->name('admin_menu'); 
     Route::get('/control', [ControlController::class, 'control'])->name('admin_control');  
-    Route::get('/event_lists', [EventController::class, 'list'])->name('admin_event_list');
+    
     Route::get('/mobile_management', [MobileController::class, 'mobile'])->name('admin_mobile_management');
     Route::get('/user_apply', [UserController::class, 'user'])->name('admin_user_apply');
     Route::get('/sms_apply', [SmsController::class, 'sms'])->name('admin_sms_apply');
@@ -150,9 +152,27 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
 
     //活动add_event
     Route::get('/add_event/{id?}', [EventController::class, 'event'])->name('admin_add_event');
-    Route::post('/uploadContent', [UploadController::class, 'eventContent'])->name('admin_upload');
-    Route::post('/uploadPhoto', [UploadController::class, 'eventPhotoUpload'])->name('admin_upload_content');
+    Route::post('/uploadContent', [UploadController::class, 'eventContent'])->name('admin_upload_content');
+    Route::post('/uploadPhoto', [UploadController::class, 'eventPhotoUpload'])->name('admin_upload');
+    Route::post('/mani_event', [EventController::class, 'maniEvent'])->name('admin_mani_event');
 
+    //活动列表
+    Route::get('/event_lists', [EventController::class, 'list'])->name('admin_event_list');
+    Route::get('/get_list', [EventController::class, 'getEventList'])->name('admin_get_event');
+    Route::post('/delete_event/{id?}', [EventController::class, 'deleteEvent'])->name('admin_delete_event');
+    //活动表单
+    Route::get('/form/{id?}', [FormController::class, 'form'])->name('admin_form');
+    Route::get('/form_list', [FormController::class, 'getFormList'])->name('admin_form_list');
+    Route::post('/delete_form/{id?}', [FormController::class, 'formDelete'])->name('admin_form_delete');
+    Route::get('/form_detail/{event_id?}/{id?}', [FormController::class, 'formDetail'])->name('admin_form_detail');
+    Route::post('/form_add', [FormController::class, 'formAdd'])->name('admin_form_add');
+
+    //手机管理
+    Route::get('/mobile_management', [MobileController::class, 'mobile'])->name('admin_mobile_management');
+    Route::post('/importExcel', [UploadController::class, 'importExcel'])->name('admin_import_excel');
+    Route::post('/exportExcel', [UploadController::class, 'exportExcel'])->name('admin_export_excel');
+
+    
 
     
 

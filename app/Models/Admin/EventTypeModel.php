@@ -179,4 +179,6 @@ class EventTypeModel extends Model
     public function getAllType(){
         return self::where('status',1)->get()->toArray();
     }
+
+   
 }

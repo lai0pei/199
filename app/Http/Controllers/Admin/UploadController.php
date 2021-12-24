@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Admin\MobileModel;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UploadController extends Controller
 {
@@ -14,18 +16,32 @@ class UploadController extends Controller
         $this->request = $request;
     }
 
-    public function eventPhotoUpload(){
+    /**
+     * eventPhotoUpload
+     *
+     * @return void
+     */
+    public function eventPhotoUpload()
+    {
         $path = config("filesystems.path");
-       $url =  Storage::putFile($path, $this->request->file('file')); 
-       return self::json_success($url);
-       
+        $url = Storage::disk('public')->put($path, $this->request->file('file'));
+        $result['code'] = self::FAIL;
+        $result['msg'] = '上传成功';
+        $result['data'] = ['src' => asset('storage/' . $url)];
+
+        return response()->json($result);
+
+    }
+
+    public function importExcel(){
+           $res = Excel::import(new MobileModel(), $this->request->file('file'));
+         die;
+            return back();
     }
 
  
-    public function  eventContent(){
-        $path = config("filesystems.path");
-       $url =  Storage::putFile($path, $this->request->file('file')); 
-       return self::json_success($url);
-       
+    public function exportExcel() 
+    {
+        return Excel::download(new UsersExport, 'users-collection.xlsx');
     }
 }

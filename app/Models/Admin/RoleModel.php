@@ -153,6 +153,9 @@ class RoleModel extends Model
             'status' => $data['status'],
             'updated_at' => now(),
         ];
+
+        
+        DB::beginTransaction();
         //添加
         if ($data['id'] == -1) {
 
@@ -165,6 +168,7 @@ class RoleModel extends Model
             $status = self::insertGetId($insert);
 
             if (false == $status) {
+                DB::rollBack();
                 throw new LogicException('添加失败');
             }
 
@@ -191,6 +195,7 @@ class RoleModel extends Model
             $status = self::where('id', $data['id'])->update($insert);
 
             if (false == $status) {
+                DB::rollBack();
                 throw new LogicException('保存失败');
             }
 
@@ -199,6 +204,8 @@ class RoleModel extends Model
             (new LogModel($log_data))->createLog();
         }
 
+        DB::commit();
+        
         return true;
     }
 

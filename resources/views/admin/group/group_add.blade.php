@@ -39,10 +39,9 @@
         $('#radioClose').attr('checked',true);
     }
 
-        layui.use(['form', 'layedit', 'laydate', 'layarea', 'table', 'tableSelect'], function () {
+        layui.use(['form', 'laydate', 'layarea', 'table', 'tableSelect'], function () {
             var form = layui.form
                 , layer = layui.layer
-                , layedit = layui.layedit
                 , laydate = layui.laydate,
                 layarea = layui.layarea;
             table = layui.layarea;
