@@ -16,7 +16,7 @@ class CreateAuthMenu extends Migration
     {
         Schema::create('auth_menu', function (Blueprint $table) {
             $table->id()->comment('编号')->autoIncrement();
-            $table->unsignedSmallInteger('p_id')->comment('父级编号');
+            $table->unsignedMediumInteger('p_id')->comment('父级编号');
             $table->string('title', 100)->comment('权限名称');
             $table->string('icon', 100)->comment('菜单左边图标');
             $table->string('target', 100)->comment('跳转页面')->default('_self');

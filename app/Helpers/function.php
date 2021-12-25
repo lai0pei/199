@@ -1,38 +1,19 @@
 <?php
+use Illuminate\Support\Facades\Cache;
+ function checkAuth($name = ""){
 
-function list_to_tree ($list, $pk = 'id', $pid = 'pid', $child = '_child', $root = 0)
-{
-    // 创建Tree
-    $tree = array();
-    if (is_array ($list)) {
-        // 创建基于主键的数组引用
-        $refer = array();
-        foreach ($list as $key => $data) {
-            $refer[ $data[ $pk ] ] =& $list[ $key ];
-        }
-        foreach ($list as $key => $data) {
-            // 判断是否存在parent
-            $parentId = $data[ $pid ];
-            if ($root == $parentId) {
-                $tree[] =& $list[ $key ];
-            } else {
-                if (isset($refer[ $parentId ])) {
-                    $parent             =& $refer[ $parentId ];
-                    $parent[ $child ][] =& $list[ $key ];
-                }
-            }
-        }
+    $key = 'permission_' . session('user_id');
+    $permission = Cache::get($key);
+    if(empty($permission)){
+        $data = session('permission');
+        $permission = array_column($data,'name');
+        Cache::put($key, $permission, now()->addMinute(60));
+    }      
+  
+    if(in_array($name,$permission)){
+        return 1;
+    }else{
+        return 0;
     }
-    $tree = array_to_object ($tree);
-    $tree = collect ($tree);
-
-    return $tree;
-}
-
-function array_to_object ($arr)
-{
-    $json = json_encode ($arr);
-
-    return json_decode ($json);
 }
 ?>

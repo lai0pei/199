@@ -53,17 +53,23 @@
                 </div>
             </fieldset>
             <script type="text/html" id="toolbarDemo">
+                @if(checkAuth('admin_add'))
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加管理员 </button>
                 </div>
+                @endif
             </script>
 
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="currentTableBar">
                 <a class="layui-btn layui-btn-xs layui-btn-warm data-count-view" lay-event="view">查看</a>
+                @if(checkAuth('admin_edit'))
                 <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+                @endif
+                @if(checkAuth('admin_delete'))
                 <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+                @endif
             </script>
 
         </div>

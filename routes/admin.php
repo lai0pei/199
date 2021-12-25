@@ -67,9 +67,8 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/', [AuthMenuController::class, 'index'])->name('admin_menu'); 
     Route::get('/control', [ControlController::class, 'control'])->name('admin_control');  
     
-    Route::get('/mobile_management', [MobileController::class, 'mobile'])->name('admin_mobile_management');
-    Route::get('/user_apply', [UserController::class, 'user'])->name('admin_user_apply');
-    Route::get('/sms_apply', [SmsController::class, 'sms'])->name('admin_sms_apply');
+
+
 
     //管理员 页面 和 接口
     Route::get('/person', [AdminController::class, 'person'])->name('admin_person');
@@ -171,6 +170,38 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/mobile_management', [MobileController::class, 'mobile'])->name('admin_mobile_management');
     Route::post('/importExcel', [UploadController::class, 'importExcel'])->name('admin_import_excel');
     Route::post('/exportExcel', [UploadController::class, 'exportExcel'])->name('admin_export_excel');
+    Route::get('/getMobile', [MobileController::class, 'getMobile'])->name('admin_get_mobile');
+    Route::post('/deleteMobile', [MobileController::class, 'deleteMobile'])->name('admin_delete_mobile');
+    Route::get('/Mobile', [MobileController::class, 'addMobile'])->name('mobile_add');
+    Route::post('/addMobile', [MobileController::class, 'maniMobile'])->name('admin_mobile_add');
+    Route::post('/oneClick', [MobileController::class, 'oneClick'])->name('admin_ mobile_oneClick');
+   
+
+    //用户申请记录
+    Route::get('/user_apply', [UserController::class, 'user'])->name('admin_user_apply');
+    Route::get('/user_apply_list', [UserController::class, 'userList'])->name('admin_user_list');
+    Route::get('/userAuditIndex/{id?}', [UserController::class, 'userAuditIndex'])->name('admin_user_audit');
+    Route::post('/save_audit', [UserController::class, 'saveAudit'])->name('admin_save_audit');
+    Route::post('/bulk_delete', [UserController::class, 'delete'])->name('admin_delete_audit');
+    Route::post('/bulk_refuse', [UserController::class, 'refuse'])->name('admin_bulk_refuse');
+    Route::post('/bulk_pass', [UserController::class, 'pass'])->name('admin_bulk_pass');
+
+    //短信申请记录
+    Route::get('/sms_apply', [SmsController::class, 'sms'])->name('admin_sms_apply');
+    Route::get('/sms_list', [SmsController::class, 'smsEventList'])->name('admin_sms_list');
+    Route::get('/smsAuditIndex/{id?}', [SmsController::class, 'smsAuditIndex'])->name('admin_sms_audit');
+    Route::post('/save_audit', [SmsController::class, 'saveSms'])->name('admin_audit_sms');
+    Route::post('/bulksms_delete', [SmsController::class, 'deleteSms'])->name('admin_delete_sms');
+    Route::post('/bulksms_refuse', [SmsController::class, 'refuseSms'])->name('admin_sms_refuse');
+    Route::post('/bulksms_pass', [SmsController::class, 'passSms'])->name('admin_sms_pass');
+
+    
+  
+
+    
+    
+    
+    
 
     
 

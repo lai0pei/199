@@ -1,7 +1,4 @@
 @extends('common.template')
-@section('style')
-
-@endsection
 
 @section('content')
     <div class="layuimini-container">
@@ -13,31 +10,43 @@
                     <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action="">
                         <div class="layui-form-item">
                             <div class="layui-inline">
-                                <label class="layui-form-label">用户手机号码</label>
+                                <label class="layui-form-label">手机号码</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="user" autocomplete="off" class="layui-input">
+                                    <input type="text" name="mobile" autocomplete="off" class="layui-input"
+                                        placeholder="输入手机号码">
                                 </div>
                             </div>
 
                             <div class="layui-inline">
                                 <button type="submit" class="layui-btn layui-btn-primary" lay-submit
-                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                                    lay-filter="data-search-btn" title="点击搜索"><i class="layui-icon"></i> 搜 索
                                 </button>
                             </div>
 
-                            <div class="layui-inline upload-shift">
-                                <button type="button" class="layui-btn" id="exel_import">导入VIP用户手机号码</button>
+                            <div class="layui-inline">
+                                <button type="button" class="layui-btn" id="exel_import"
+                                    title="导入数据会添加到现有数据中">导入VIP用户手机号码</button>
                             </div>
+
 
                         </div>
 
                     </form>
                 </div>
             </fieldset>
+            <script type="text/html" id="toolbarFilter">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="batch-delete"> 批量删除 </button>
+                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加手机号 </button>
+                    <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" title="清除所有电话数据" lay-event="oneclick"> 一键清除
+                    </button>
+
+                </div>
+            </script>
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="currentTableBar">
-                <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="view">查看</a>
+                <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="delete">删除</a>
             </script>
         </div>
     </div>
@@ -45,9 +54,13 @@
 
 @section('footer')
     <script>
-        var getLog = "{{ route('admin_getLog') }}";
-        var viewLog = "{{ route('admin_detailLog') }}";
-        var uploadExcel = "{{route('admin_import_excel')}}";
+        var getMobile = "{{ route('admin_get_mobile') }}";
+        var deleteMobile = "{{ route('admin_delete_mobile') }}";
+        var uploadExcel = "{{ route('admin_import_excel') }}";
+        var addMobile = "{{ route('mobile_add') }}";
+        var oneClickDelete = "{{ route('admin_ mobile_oneClick') }}";
+
+
         layui.use(['form', 'table', 'upload', 'layer', 'element'], function() {
             var $ = layui.jquery,
                 upload = layui.upload,
@@ -59,19 +72,29 @@
 
             table.render({
                 elem: '#currentTableId',
-                url: getLog,
+                url: getMobile,
                 toolbar: '#toolbarFilter',
                 defaultToolbar: ['filter'],
                 cols: [
+
                     [{
+                            type: 'checkbox',
+                        },
+                        {
                             field: 'id',
                             title: '编号',
                             width: 250,
                             sort: true
                         },
                         {
-                            field: 'type',
+                            field: 'mobile',
                             title: '手机号',
+                            minWidth: 100,
+                            sort: true
+                        },
+                        {
+                            field: 'created_at',
+                            title: '导入时间',
                             minWidth: 100,
                             sort: true
                         },
@@ -121,31 +144,68 @@
                             maxmin: false,
                             shadeClose: false,
                             area: ['60%', '65%'],
-                            content: '/admin/' + MODULE_NAME + '/create',
+                            content: addMobile,
                         });
                         break;
                     case 'batch-delete':
                         var checkStatus = table.checkStatus('currentTableId'),
                             data = checkStatus.data;
                         layer.confirm('确认删除记录？', function(index) {
-                            layer.msg('删除' + data.length + '条记录', {
-                                icon: 6
-                            });
+                            axios({
+                                    method: 'post',
+                                    url: deleteMobile,
+                                    responseType: 'json',
+                                    data: {
+                                        'id': data,
+                                    }
+                                })
+                                .then(function(response) {
+                                    var res = response.data;
+                                    if (res.code == 1) {
+                                        layer.msg(res.msg);
+                                        location.reload();
+                                    } else {
+                                        layer.msg(res.msg);
+                                    }
+                                });
                             layer.close(index);
                         });
                         break;
-                    case 'link':
-                        setTimeout(function() {
-                            table.resize(); //
-                        }, TABLE_RESIZE_TIME)
-                        break;
-                    case 'export_data':
-                        window.location.href = '/admin/' + MODULE_NAME + '/export?searchParams=' +
-                            searchParams;
-                        break;
-                    case 'LAYTABLE_TIPS':
-                        top.layer_module_tips(MODULE_NAME)
-                        break;
+                    case 'oneclick': {
+                        layer.confirm('确认删除?', function(index) {
+
+                            axios({
+                                    method: 'post',
+                                    url: oneClickDelete,
+                                    responseType: 'json',
+                                })
+                                .then(function(response) {
+                                    var res = response.data;
+                                    if (res.code == 1) {
+                                        layer.msg('删除' + data.length + '条记录', {
+                                            icon: 6
+                                        });
+                                        location.reload();
+                                    } else {
+                                        layer.msg(res.msg);
+                                    }
+                                });
+                            layer.close(index);
+                        });
+                    }
+                    break;
+                case 'link':
+                    setTimeout(function() {
+                        table.resize(); //
+                    }, TABLE_RESIZE_TIME)
+                    break;
+                case 'export_data':
+                    window.location.href = '/admin/' + MODULE_NAME + '/export?searchParams=' +
+                        searchParams;
+                    break;
+                case 'LAYTABLE_TIPS':
+                    top.layer_module_tips(MODULE_NAME)
+                    break;
                 }
             });
             table.on('tool(currentTableFilter)', function(obj) {
@@ -162,9 +222,32 @@
                             content: viewLog + '/' + data.id,
                         });
                         break;
-                    case 'delete':
+                    case 'delete': {
+                        layer.confirm('确认删除?', function(index) {
+                            var id = obj.data;
+                            axios({
+                                    method: 'post',
+                                    url: deleteMobile,
+                                    responseType: 'json',
+                                    data: {
+                                        'id': new Array(id),
+                                    }
+                                })
+                                .then(function(response) {
+                                    var res = response.data;
+                                    if (res.code == 1) {
+                                        layer.msg(res.msg);
+                                        location.reload();
+                                    } else {
+                                        layer.msg(res.msg);
+                                    }
+                                });
+                            layer.close(index);
+                        });
+                    }
 
-                        break;
+                    break;
+
                 }
             });
 
@@ -173,7 +256,7 @@
                 elem: '#exel_import',
                 url: uploadExcel //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
                     ,
-                    accept: "file",
+                accept: "file",
                 //  exts: 'xls|xlsx|xlsm|xlt|xltx|xltm',
                 exts: 'xls|xlsx',
                 headers: {
@@ -190,22 +273,15 @@
                 },
                 done: function(res) {
                     //如果上传失败
-                    if (res.code > 0) {
-                        return layer.msg('上传失败');
-                    }
+                    layer.msg(res.msg);
+                    location.reload();
                     //上传成功的一些操作
                     //……
-                    $('#demoText').html(''); //置空上传失败的状态
+                    // $('#demoText').html(''); //置空上传失败的状态
                 },
                 error: function() {
                         //演示失败状态，并实现重传
-                        var demoText = $('#demoText');
-                        demoText.html(
-                            '<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>'
-                        );
-                        demoText.find('.demo-reload').on('click', function() {
-                            uploadInst.upload();
-                        });
+
                     }
                     //进度条
                     ,

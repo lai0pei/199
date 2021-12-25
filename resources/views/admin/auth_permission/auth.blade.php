@@ -28,7 +28,7 @@
                 </div>
             </fieldset>
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
-
+            
             <script type="text/html" id="currentTableBar">
                 <a class="layui-btn layui-btn-xs data-count-edit" lay-event="view">查看权限</a>
             </script>

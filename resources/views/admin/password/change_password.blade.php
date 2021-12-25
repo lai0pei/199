@@ -56,9 +56,11 @@
             </div>
 
             <div class="layui-form-item">
+                @if(checkAuth('password_change'))
                 <div class="layui-input-block">
                     <button type="submit" class="layui-btn" lay-submit="" lay-filter="save">立即提交</button>
                 </div>
+                @endif
             </div>
         </form>
     </div>

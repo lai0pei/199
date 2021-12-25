@@ -150,16 +150,18 @@ class AdminModel extends Model
         $where['is_delete'] = 1;
         if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            switch (true) {
-                case (!empty($param['role_id'])): $where['role_id'] = $param['role_id'];
-                    break;
-                case (!empty($param['accoun'])): $where['account'] = $param['account'];
-                    break;
-                case (!empty($param['user_name'])): $where['user_name'] = $param['user_name'];
-                    break;
-                case (!empty($param['status'])): $where['status'] = $param['status'];
-                    break;
-                default: $where['is_delete'] = 1;
+
+            if ($param['role_id'] !== '') {
+                $where['role_id'] = $param['role_id'];
+            }
+            if ($param['account'] !== '') {
+                $where['account'] = $param['account'];
+            }
+            if ($param['user_name'] !== '') {
+                $where['user_name'] = $param['user_name'];
+            }
+            if ($param['status'] !== '') {
+                $where['status'] = $param['status'];
             }
 
         }
@@ -248,7 +250,7 @@ class AdminModel extends Model
     public function editAdmin()
     {
         $data = $this->adminData;
-        $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id','number'];
+        $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id', 'number'];
         return self::where('id', $data['id'])->get($column);
 
     }
@@ -277,7 +279,7 @@ class AdminModel extends Model
             DB::rollBack();
 
             throw new LogicException('编辑失败');
-            
+
         } else {
 
             $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑管理员'];
@@ -310,7 +312,7 @@ class AdminModel extends Model
             'is_delete' => 0,
         ];
 
-        $status = self::where("id", $data['id'])->update( $delete);
+        $status = self::where("id", $data['id'])->update($delete);
 
         if (false === $status) {
 

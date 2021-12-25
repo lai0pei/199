@@ -95,8 +95,8 @@ class AuthMenuController extends Controller
      */
     public function init()
     {
-
-        return self::json((new AuthMenuModel())->menuInit());
+       
+       return self::json((new AuthMenuModel())->menuInit());
 
     }
 }

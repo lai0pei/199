@@ -89,21 +89,21 @@ class LogModel extends Model
        
         if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            switch (true) {
-                case (!empty($param['user'])):
-                    $where['admin_id'] = AdminModel::where('account', $param['user'])->value('id');
-                    break;
-                case ($param['type'] !== ''): $where['type'] = $param['type'];
-                    break;
-                case (!empty($param['ip'])): $where['ip'] = $param['ip'];
-                    break;
-                case (!empty($param['start'])): $where['created_at'] = $param['start'];
-                    break;
-                default : $where = [];
+            if($param['user'] !== ''){
+                $where['admin_id'] = AdminModel::where('account', $param['user'])->value('id');
+            }
+            if($param['type'] !== ''){
+                $where['type'] = $param['type'];
+            }
+            if($param['ip'] !== ''){
+                $where['ip'] = $param['ip'];
+            }
+            if($param['start'] !== ''){
+                $where['created_at'] = $param['start'];
             }
         }
-  
-        $item = self::where($where)->paginate($limit, "*", "page", $page);
+
+        $item = self::where($where)->orderbydesc('id')->paginate($limit, "*", "page", $page);
 
         $result = [];
         foreach ($item->items() as $k => $v) {

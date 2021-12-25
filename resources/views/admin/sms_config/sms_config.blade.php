@@ -64,7 +64,9 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block">
+                        @if(checkAuth('sms_config_edit'))
                         <button type="submit" class="layui-btn" lay-submit="" lay-filter="save">立即提交</button>
+                        @endif
                     </div>
                 </div>
             </form>

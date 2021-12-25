@@ -17,14 +17,14 @@ class CreateEvent extends Migration
         Schema::create('event', function (Blueprint $table) {
             $table->id()->comment('编号')->autoIncrement();
             $table->string('name', 200)->comment('活动名称')->nullable();
-            $table->unsignedSmallInteger('type_id')->comment('活动分类');
+            $table->unsignedMediumInteger('type_id')->comment('活动分类');
             $table->string('type_pic', 200)->comment('活动图片')->nullable();
             $table->string('external_url', 200)->comment('外链地址')->nullable();
-            $table->unsignedSmallInteger('sort')->comment('排序');
+            $table->unsignedMediumInteger('sort')->comment('排序');
             $table->unsignedTinyInteger('status')->comment('0 关闭, 1 开启')->default(1);
             $table->unsignedTinyInteger('display')->comment('0 屏蔽, 1 显示')->default(1);
-            $table->timestamp('start_time')->comment('活动开始时间')->nullable();
-            $table->timestamp('end_time')->comment('活动结束时间')->nullable();
+            $table->string('start_time',200)->comment('活动开始时间')->nullable();
+            $table->string('end_time',200)->comment('活动结束时间')->nullable();
             $table->string('daily_limit', 200)->comment('每日限制次数')->nullable();
             $table->unsignedTinyInteger('is_daily')->comment('是否限制每日申请')->default(1);
             $table->longText('content')->comment('活动内容')->nullable();

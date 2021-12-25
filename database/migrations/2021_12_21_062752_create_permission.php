@@ -19,9 +19,9 @@ class CreatePermission extends Migration
             $table->string('name', 200)->comment('名称')->nullable();
             $table->string('title', 200)->comment('操作权限')->nullable();
             $table->string('content', 200)->comment('内容')->nullable();
-            $table->unsignedTinyInteger('grand_auth_id')->comment('一级菜单类型');
-            $table->unsignedTinyInteger('parent_auth_id')->comment('二级菜单类型');
-            $table->unsignedTinyInteger('current_auth_id')->comment('三级菜单类型');
+            $table->unsignedMediumInteger('grand_auth_id')->comment('一级菜单类型');
+            $table->unsignedMediumInteger('parent_auth_id')->comment('二级菜单类型');
+            $table->unsignedMediumInteger('current_auth_id')->comment('三级菜单类型');
             $table->timestamp('created_at',$precision = 0)->comment('创建时间')->nullable();
             $table->timestamp('updated_at',$precision = 0)->comment('更新时间')->nullable();
         });

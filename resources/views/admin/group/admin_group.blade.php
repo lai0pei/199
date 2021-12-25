@@ -26,14 +26,22 @@
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="toolbarFilter">
+                @if(checkAuth('group_add'))
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加管理组</button>
                 </div>
+                @endif
             </script>
             <script type="text/html" id="currentTableBar">
+                @if(checkAuth('group_auth'))
                 <a class="layui-btn layui-btn-xs data-count-auth" lay-event="auth">授权</a>
+                @endif
+                @if(checkAuth('group_edit'))
                 <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">修改</a>
+                @endif
+                @if(checkAuth('group_delete'))
                 <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+                @endif
             </script>
         </div>
     </div>

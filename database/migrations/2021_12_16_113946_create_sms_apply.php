@@ -21,11 +21,11 @@ class CreateSmsApply extends Migration
             $table->string('mobile',50)->nullable()->comment('用户电话号码');
             $table->decimal('money', $precision = 12, $scale = 2)->default(0.00)->comment('申请金额');
             $table->string('game',100)->nullable()->comment('游戏类型');
-            $table->tinyInteger('is_delete')->comment('1=正常，0=删除')->default(1);
+            $table->tinyInteger('is_delete')->comment('1=正常，0=删除')->default(1)->nullable();
             $table->tinyInteger('state')->comment('0 = 未审核, 1=通过，2=失败')->default(0);
             $table->tinyInteger('is_send')->comment('1=已发，0=未发')->default(0);
-            $table->tinyInteger('is_audit')->comment('以后标注');
-            $table->tinyInteger('is_match')->comment('1=匹配，0=不匹配');
+            $table->tinyInteger('is_audit')->comment('以后标注')->nullable();
+            $table->tinyInteger('is_match')->comment('1=匹配，0=不匹配')->nullable();
             $table->string('ip', 100)->nullable()->comment('使用Ip');
             $table->longText('send_remark')->nullable()->comment('派送备注');
             $table->dateTime('send_time', $precision = 0)->nullable()->comment('派送时间');

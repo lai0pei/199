@@ -87,7 +87,7 @@ class AuthMenuModel extends Model
      * @return void
      */
     public function menuInit()
-    {
+    { 
         $user_id = session('user_id');
         $key = 'admin_menu_' . session('user_id');
         $menus = Cache::get($key);
@@ -106,7 +106,7 @@ class AuthMenuModel extends Model
 
         $main_menu = $this->topChild($permissions['top_permission'], $permissions['child_permission'], $permissions['grand_permission']);
 
-        $init['menuInfo'] = $main_menu;
+        $init['menuInfo'] = array_values($main_menu);
         Cache::put($key, $init, now()->addMinute(60));
         return $init;
     }
@@ -167,7 +167,7 @@ class AuthMenuModel extends Model
      * @param  mixed $top_permission
      * @param  mixed $child_permission
      * @param  mixed $grand_permission
-     * @return void
+     * 
      */
     private function topChild($top_permission, $child_permission, $grand_permission)
     {

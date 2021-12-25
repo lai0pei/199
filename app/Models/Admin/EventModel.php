@@ -53,7 +53,7 @@ class EventModel extends Model
         return $event;
     }
 
-    public function formAdd()
+    public function maniEvent()
     {
 
         $data = $this->data;
@@ -63,6 +63,17 @@ class EventModel extends Model
         if (-1 == $data['id']) {
             $add = [
                 'name' => $data['name'],
+                'type_id' => $data['type_id'],
+                'type_pic' => $data['type_pic'],
+                'sort' => $data['sort'],
+                'status' => ($data['status'] == 'on') ? 1 : 0,
+                'display' => ($data['display'] == 'on') ? 1 : 0,
+                'start_time' => $data['start'],
+                'end_time' => $data['end'],
+                'daily_limit' => $data['sort'],
+                'is_daily' => ($data['is_daily'] == 'on') ? 1 : 0,
+                'content' => $data['content'],
+                'external_url' => $data['external_url'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -137,19 +148,20 @@ class EventModel extends Model
 
         if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            switch (true) {
-                case (!empty($param['name'])):
-                    $where['name'] = $where['name'] = $param['name'];
-                    break;
-                case ($param['type_id'] !== ''): $where['type_id'] = $param['type_id'];
-                    break;
-                case ($param['status'] !== ''): $where['status'] = $param['status'];
-                    break;
-                case ($param['display'] !== ''): $where['display'] = $param['display'];
-                    break;
-                case ($param['is_daily'] !== ''): $where['is_daily'] = $param['is_daily'];
-                    break;
-                default:$where = [];
+            if($param['name'] !== ''){
+                $where['name'] = $where['name'] = $param['name'];
+            }
+            if($param['type_id'] !== ''){
+                $where['type_id'] = $param['type_id'];
+            }
+            if($param['status'] !== ''){
+                $where['status'] = $param['status'];
+            }
+            if($param['display'] !== ''){
+                $where['display'] = $param['display'];
+            }
+            if($param['is_daily'] !== ''){
+                $where['is_daily'] = $param['is_daily'];
             }
         }
 
@@ -176,6 +188,11 @@ class EventModel extends Model
     private function getEventName($id)
     {
         return EventTypeModel::where('id', $id)->value('name');
+    }
+
+    public function getEvent()
+    {
+        return self::select('id','name')->get()->toArray();
     }
 
     public function getStatus()

@@ -24,7 +24,7 @@ class CreateAdmin extends Migration
             $table->string('last_ip', 100)->nullable()->comment('登录Ip');
             $table->tinyInteger('status')->comment('1=正常，0=禁止')->default(1);
             $table->tinyInteger('is_delete')->comment('1=正常，0=禁止')->default(1);
-            $table->tinyInteger('role_id')->comment('角色编号');
+            $table->unsignedMediumInteger('role_id')->comment('角色编号');
             $table->rememberToken()->nullable()->comment('登录token储存');
             $table->unsignedBigInteger('login_count')->nullable()->comment('登录次数')->default(0);
             $table->dateTime('last_date')->nullable()->comment('最后登录时间');
