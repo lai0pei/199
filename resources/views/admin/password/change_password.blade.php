@@ -1,8 +1,16 @@
 @extends('common.template')
+@section('style')
+<style>
+.password-form{
+    padding-top : 3rem;
+}
+</style>
+@endsection
 @section('content')
-    <div class="layui-form layuimini-form">
-
-        <form class="layui-form" action="">
+<div class="layui-container">
+    <div class="layui-form layuimini-form password-form">
+        <div class="layuimini-main">
+        <form class="layui-form" action="" lay-filter="reset_form">
             <div class="layui-form-item">
                 <label class="layui-form-label">账号名称</label>
                 <div class="layui-input-block">
@@ -56,18 +64,20 @@
             </div>
 
             <div class="layui-form-item">
-                @if(checkAuth('password_change'))
-                <div class="layui-input-block">
-                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="save">立即提交</button>
-                </div>
+                @if (checkAuth('password_change'))
+                    <div class="layui-input-block">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="save">立即提交</button>
+                    </div>
                 @endif
             </div>
         </form>
+        </div>
     </div>
+</div>
 @endsection
 @section('footer')
     <script>
-        var savePassword = "{{route('admin_password_change')}}";
+        var savePassword = "{{ route('admin_password_change') }}";
         layui.use(['form'], function() {
             var form = layui.form,
                 layer = layui.layer
@@ -75,25 +85,39 @@
             //监听提交
             form.on('submit(save)', function(data) {
 
-                axios({
-                        method: 'post',
-                        url: savePassword,
-                        responseType: 'json',
-                        data: {
-                            'new' : data.field.new,
-                            'old' : data.field.old,
-                            're-new' : data.field.re_new,
-                        }
-                    })
-                    .then(function(response) {
-                        var res = response.data;
-                        if (res.code == 1) {
-                            layer.alert(res.msg)
+                $.ajax({
+                    url: savePassword,
+                    data: {
+                        'new': data.field.new,
+                        'old': data.field.old,
+                        're-new': data.field.re_new,
+                    },
+                    method: 'POST',
+                    beforeSend: function () {
+                        $("#button[lay-filter='save']").removeClass('disabled').prop('disabled', false);
+                        loading = layer.load(2)
+                    },
+                    complete: function () {
+                        $("#button[lay-filter='save']").removeClass('disabled').prop('disabled', false);
+                        layer.close(loading)
+                    },
+                    error: function () {
+                        layer.msg(AJAX_ERROR_TIP, {
+                            icon: 2,
+                            time: FAIL_TIME,
+                            shade: 0.3
+                        });
+                    },
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2});
+                            location.reload(1);
                         } else {
-                            layer.alert(res.msg)
+                            layer.msg(data.msg);
                         }
-                    });
-               
+                    }
+                });
+
                 return false;
             });
 

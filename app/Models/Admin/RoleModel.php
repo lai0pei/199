@@ -18,10 +18,10 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
-class RoleModel extends Model
+class RoleModel extends CommonModel
 {
 
     /**
@@ -91,15 +91,13 @@ class RoleModel extends Model
 
         $item = self::where($where)->paginate($limit, "*", "page", $page);
 
-       
-
         $result = [];
 
         foreach ($item->items() as $k => $v) {
             $result[$k]['id'] = $v['id'];
             $result[$k]['role_name'] = $v['role_name'];
-            $result[$k]['created_at'] = $v['created_at'];
-            $result[$k]['updated_at'] = $v['updated_at'];
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
+            $result[$k]['updated_at'] = $this->toTime($v['updated_at']);
             $result[$k]['auth_count'] = $this->countPermission($v['id']);
 
             if ($v['status'] == 1) {
@@ -115,10 +113,14 @@ class RoleModel extends Model
         return $res;
     }
 
-    private function countPermission($id){
+    private function countPermission($id)
+    {
         $auth_group = new AuthGroupModel();
-        $list = $auth_group::where('role_id',$id)->value('auth_id');
-        return count(explode(',',$list));
+        $list = $auth_group::where('role_id', $id)->value('auth_id');
+        if (null == $list) {
+            return 0;
+        }
+        return count(explode(',', $list));
     }
 
     public function maniRole()
@@ -154,7 +156,6 @@ class RoleModel extends Model
             'updated_at' => now(),
         ];
 
-        
         DB::beginTransaction();
         //添加
         if ($data['id'] == -1) {
@@ -205,7 +206,7 @@ class RoleModel extends Model
         }
 
         DB::commit();
-        
+
         return true;
     }
 
@@ -224,15 +225,24 @@ class RoleModel extends Model
         $admin = self::find($data['id']);
 
         if (empty($admin)) {
-            throw new LogicException('此管理员不存在');
+            throw new LogicException('此管理员组不存在');
+        }
+
+        if(1 == $data['id']){
+            throw new LogicException('总管理组不可删除');
         }
 
         $status = self::where("id", $data['id'])->delete();
 
         if (false === $status) {
+
             DB::rollBack();
+
             throw new LogicException('删除失败');
+
         } else {
+
+            AuthGroupModel::where('role_id', $data['id'])->delete();
 
             $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除管理组 ' . $admin->role_name];
 
@@ -251,12 +261,12 @@ class RoleModel extends Model
         $role_id = $data['role_id'];
 
         $role = self::where('id', $role_id)->select('id', 'role_name')->get()->toArray();
-    
-        if(empty($role)){
+
+        if (empty($role)) {
             $res = [];
-        }else{
+        } else {
             $res = $role[0];
         }
-        return $res ;
+        return $res;
     }
 }

@@ -19,13 +19,15 @@
 
                             <div class="layui-inline">
                                 <button type="submit" class="layui-btn layui-btn-primary" lay-submit
-                                    lay-filter="data-search-btn" title="点击搜索"><i class="layui-icon"></i> 搜 索
+                                    lay-filter="data-search-btn" title="点击搜索"><i class="layui-icon"></i> 搜索 或 快速刷新
                                 </button>
                             </div>
 
                             <div class="layui-inline">
-                                <button type="button" class="layui-btn" id="exel_import"
-                                    title="导入数据会添加到现有数据中">导入VIP用户手机号码</button>
+                                @if (checkAuth('mobile_import'))
+                                    <button type="button" class="layui-btn" id="exel_import"
+                                        title="导入数据会添加到现有数据中">导入VIP用户手机号码</button>
+                                @endif
                             </div>
 
 
@@ -36,17 +38,24 @@
             </fieldset>
             <script type="text/html" id="toolbarFilter">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="batch-delete"> 批量删除 </button>
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加手机号 </button>
-                    <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" title="清除所有电话数据" lay-event="oneclick"> 一键清除
-                    </button>
-
+                    @if (checkAuth('mobile_bulk'))
+                        <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="batch-delete"> 批量删除 </button>
+                    @endif
+                    @if (checkAuth('mobile_add'))
+                        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加手机号 </button>
+                    @endif
+                    @if (checkAuth('mobile_onclick'))
+                        <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" title="清除所有电话数据" lay-event="oneclick"> 一键清除
+                        </button>
+                    @endif
                 </div>
             </script>
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="currentTableBar">
-                <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="delete">删除</a>
+                @if (checkAuth('mobile_delete'))
+                    <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="delete">删除</a>
+                @endif
             </script>
         </div>
     </div>
@@ -151,45 +160,54 @@
                         var checkStatus = table.checkStatus('currentTableId'),
                             data = checkStatus.data;
                         layer.confirm('确认删除记录？', function(index) {
-                            axios({
-                                    method: 'post',
-                                    url: deleteMobile,
-                                    responseType: 'json',
-                                    data: {
-                                        'id': data,
-                                    }
-                                })
-                                .then(function(response) {
-                                    var res = response.data;
-                                    if (res.code == 1) {
-                                        layer.msg(res.msg);
-                                        location.reload();
+
+                            $.ajax({
+                                url: deleteMobile,
+                                data: {
+                                    'id': data,
+                                },
+                                method: 'POST',
+                                success: function(data) {
+                                    if (data.code == 1) {
+                                        layer.msg(data.msg);
+                                        window.parent.location.reload();
                                     } else {
-                                        layer.msg(res.msg);
+                                        layer.msg(data.msg);
                                     }
-                                });
+                                }
+                            });
                             layer.close(index);
                         });
                         break;
                     case 'oneclick': {
-                        layer.confirm('确认删除?', function(index) {
+                        layer.confirm('确认清除, 所有电话数据吗?', function(index) {
 
-                            axios({
-                                    method: 'post',
-                                    url: oneClickDelete,
-                                    responseType: 'json',
-                                })
-                                .then(function(response) {
-                                    var res = response.data;
-                                    if (res.code == 1) {
-                                        layer.msg('删除' + data.length + '条记录', {
-                                            icon: 6
+                            $.ajax({
+                                url: oneClickDelete,
+                                data: {
+                                    'id': data,
+                                },
+                                method: 'POST',
+                                success: function(data) {
+                                    if (data.code == 1) {
+                                        layer.msg(data.msg, {
+                                            icon: 6,
+                                            time: SUCCESS_TIME,
+                                            shade: 0.2
                                         });
-                                        location.reload();
+                                        setTimeout(function() {
+                                            var index = layer.getFrameIndex(
+                                                window.name); //先得到当前iframe层的索引
+                                            $('button[lay-filter="data-search-btn"]')
+                                                .click(); //刷新列表
+                                            layer.close(index); //再执行关闭
+
+                                        }, SUCCESS_TIME)
                                     } else {
-                                        layer.msg(res.msg);
+                                        layer.msg(data.msg);
                                     }
-                                });
+                                }
+                            });
                             layer.close(index);
                         });
                     }
@@ -225,23 +243,34 @@
                     case 'delete': {
                         layer.confirm('确认删除?', function(index) {
                             var id = obj.data;
-                            axios({
-                                    method: 'post',
-                                    url: deleteMobile,
-                                    responseType: 'json',
-                                    data: {
-                                        'id': new Array(id),
-                                    }
-                                })
-                                .then(function(response) {
-                                    var res = response.data;
-                                    if (res.code == 1) {
-                                        layer.msg(res.msg);
-                                        location.reload();
+
+                            $.ajax({
+                                url: deleteMobile,
+                                data: {
+                                    'id': new Array(id),
+                                },
+                                method: 'POST',
+                                success: function(data) {
+                                    if (data.code == 1) {
+                                        layer.msg(data.msg, {
+                                            icon: 6,
+                                            time: SUCCESS_TIME,
+                                            shade: 0.2
+                                        });
+                                        setTimeout(function() {
+                                            var index = layer.getFrameIndex(
+                                                window.name); //先得到当前iframe层的索引
+                                            $('button[lay-filter="data-search-btn"]')
+                                                .click(); //刷新列表
+                                            layer.close(index); //再执行关闭
+
+                                        }, SUCCESS_TIME)
                                     } else {
-                                        layer.msg(res.msg);
+                                        layer.msg(data.msg);
                                     }
-                                });
+                                }
+                            });
+
                             layer.close(index);
                         });
                     }
@@ -266,15 +295,24 @@
                     //预读本地文件示例，不支持ie8
 
                     element.progress('demo', '0%'); //进度条复位
-                    layer.msg('文件上传中', {
+                    layer.msg('文件导入中。。。', {
                         icon: 16,
                         time: 0
                     });
                 },
-                done: function(res) {
+                done: function(data) {
                     //如果上传失败
-                    layer.msg(res.msg);
-                    location.reload();
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: SUCCESS_TIME,
+                        shade: 0.2
+                    });
+                    setTimeout(function() {
+                        var index = layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        $('button[lay-filter="data-search-btn"]').click(); //刷新列表
+                        layer.close(index); //再执行关闭
+
+                    }, SUCCESS_TIME)
                     //上传成功的一些操作
                     //……
                     // $('#demoText').html(''); //置空上传失败的状态

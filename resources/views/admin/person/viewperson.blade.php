@@ -32,8 +32,8 @@
     <div class="layui-form-item" pane="">
         <label class="layui-form-label">状态</label>
         <div class="layui-input-block">
-            <input type="radio" name="status" value="1"  id="radioOpen" title="开启" disabled>
-            <input type="radio" name="status" value="0" id="radioClose" title="禁用" disabled>
+            <input type="radio" name="status" value="1"  id="radioOpen" title="开启" >
+            <input type="radio" name="status" value="0" id="radioClose" title="禁用" >
         </div>
     </div>
     <div class="layui-form-item">

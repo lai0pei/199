@@ -34,8 +34,8 @@
 @endsection
 @section('content')
     <div class="layuimini-container">
-        <div class="layui-form layuimini-form">
-            <form class="layui-form" action="">
+        <div class="layui-form layuimini-form" >
+            <form class="layui-form" action="" id="addGoodsForm">
                 <div class="layui-form-item">
                     <input type="hidden" name="id" value="{{ $type['id'] ?? -1 }}" class="layui-input">
                     <label class="layui-form-label required">活动名称</label>
@@ -49,7 +49,7 @@
                     <div class="layui-input-inline">
                         <select name="type_id" lay-verify="required" lay-reqtext="请选择活动类型" id="selectId">
                             @foreach ($event as $key => $value)
-                                <option value="{{ $key + 1}}">{{ $value['name'] }}</option>
+                                <option value="{{ $key + 1 }}">{{ $value['name'] }}</option>
                             @endforeach
 
                         </select>
@@ -74,31 +74,36 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">活动开始时间</label>
                     <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="start" id="start" value="{{ $type['start_time'] ?? '' }}" placeholder="请选择开始时间">
+                        <input type="text" class="layui-input" name="start" id="start"
+                            value="{{ $type['start_time'] ?? '' }}" placeholder="请选择开始时间">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">活动结束时间</label>
                     <div class="layui-input-inline">
-                        <input type="text" class="layui-input" id="end" name="end" value="{{ $type['end_time'] ?? '' }}" placeholder="请选择结束时间">
+                        <input type="text" class="layui-input" id="end" name="end"
+                            value="{{ $type['end_time'] ?? '' }}" placeholder="请选择结束时间">
                     </div>
                 </div>
                 <div class="layui-form-item spread">
                     <label class="layui-form-label">是否开启活动</label>
                     <div class="layui-input-inline">
-                        <input type="checkbox" name="status" lay-skin="switch"  lay-text="开启|关闭" {{$type['status_check']??""}}>
+                        <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|关闭"
+                            {{ $type['status_check'] ?? '' }}>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">是否显示</label>
                     <div class="layui-input-inline">
-                        <input type="checkbox" name="display" lay-skin="switch" id='display' lay-text="显示|屏蔽" {{$type['display_check'] ?? ""}}>
+                        <input type="checkbox" name="display" lay-skin="switch" id='display' lay-text="显示|屏蔽"
+                            {{ $type['display_check'] ?? '' }}>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label">是否显每日限制</label>
                     <div class="layui-input-inline">
-                        <input type="checkbox" name="is_daily" lay-skin="switch" id='is_daily' lay-text="限制|不限" {{$type['is_daily_check']?? ""}}>
+                        <input type="checkbox" name="is_daily" lay-skin="switch" id='is_daily' lay-text="限制|不限"
+                            {{ $type['is_daily_check'] ?? '' }}>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -117,7 +122,7 @@
                         <input type='hidden' id="type_pic" name="type_pic" value="">
                         <div class="layui-hide" id='uploadView'>
                             <hr>
-                            <img src="{{ $type['type_pic'] ?? "" }}" alt="活动图片" style="max-width: 196px">
+                            <img src="{{ $type['type_pic'] ?? '' }}" alt="活动图片" style="max-width: 196px">
                         </div>
                     </div>
                 </div>
@@ -126,13 +131,15 @@
                     <label class="layui-form-label required">活动内容</label>
                     <div class="layui-input-block">
                         <textarea class="layui-textarea" id="LAYEDITOR" style="display: none;" name='content'
-                            lay-verify="contentVerify">{{$type['content'] ?? "" }}</textarea>
+                            lay-verify="contentVerify">{{ $type['content'] ?? '' }}</textarea>
                     </div>
                 </div>
 
                 <div class="layui-form-item">
                     <div class="layui-input-block">
-                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认</button>
+                        @if (checkAuth('event_add'))
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认</button>
+                        @endif
                     </div>
                 </div>
             </form>
@@ -148,7 +155,7 @@
         var uploader = "{{ route('admin_upload') }}";
         var content = "{{ route('admin_upload_content') }}";
 
- 
+
 
         layui.use(['form', 'layedit', 'laydate', 'upload', 'element'], function() {
             var form = layui.form,
@@ -170,18 +177,18 @@
             });
 
             //编辑 赋值
-            var content = "{{ $type['content'] ?? "" }}";
-            var isEventPic = "{{ $type['type_pic'] ?? "" }}";
-            if("" !== isEventPic){
+            var content = "{{ $type['content'] ?? '' }}";
+            var isEventPic = "{{ $type['type_pic'] ?? '' }}";
+            if ("" !== isEventPic) {
                 layui.$('#uploadView').removeClass('layui-hide');
             }
 
-       
-       
+
+
 
             var editor = layedit.build('LAYEDITOR', {
                 hideTool: [
-                 'face'
+                    'face'
                 ],
                 height: 200,
 
@@ -196,7 +203,7 @@
                     layedit.sync(editor);
                 }
             });
-           
+
             //开启公历节日
             laydate.render({
                 elem: '#end',
@@ -213,14 +220,36 @@
 
             //监听提交
             form.on('submit(saveBtn)', function(data) {
-                
+
                 $.ajax({
                     url: mani_type,
                     data: data.field,
                     method: 'POST',
                     success: function(data) {
+                        let type_id = "{{ $type['id'] ?? -1 }}";
+
                         if (data.code == 1) {
-                            layer.msg(data.msg);
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: SUCCESS_TIME,
+                                shade: 0.2
+                            });
+                            if (-1 == type_id) {
+                                $("#addGoodsForm")[0].reset();
+                                layui.form.render();
+                            } else {
+                                setTimeout(function() {
+                                    var index = parent.layer.getFrameIndex(window
+                                    .name); //先得到当前iframe层的索引
+                                    parent.$('button[lay-filter="data-search-btn"]')
+                                        .click(); //刷新列表
+                                    parent.layer.close(index); //再执行关闭
+
+                                }, SUCCESS_TIME);
+                            }
+
+
+
                         } else {
                             layer.msg(data.msg);
                         }

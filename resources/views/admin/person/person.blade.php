@@ -45,7 +45,7 @@
                             </div>
                             <div class="layui-inline">
                                 <button type="submit" class="layui-btn layui-btn-primary" lay-submit
-                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜索 或 快速刷新
                                 </button>
                             </div>
                         </div>
@@ -53,22 +53,24 @@
                 </div>
             </fieldset>
             <script type="text/html" id="toolbarDemo">
-                @if(checkAuth('admin_add'))
-                <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加管理员 </button>
-                </div>
+                @if (checkAuth('admin_add'))
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加管理员 </button>
+                    </div>
                 @endif
             </script>
 
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="currentTableBar">
-                <a class="layui-btn layui-btn-xs layui-btn-warm data-count-view" lay-event="view">查看</a>
-                @if(checkAuth('admin_edit'))
-                <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+                @if (checkAuth('admin_view'))
+                    <a class="layui-btn layui-btn-xs layui-btn-warm data-count-view" lay-event="view">查看</a>
                 @endif
-                @if(checkAuth('admin_delete'))
-                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+                @if (checkAuth('admin_edit'))
+                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
+                @endif
+                @if (checkAuth('admin_delete'))
+                    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
                 @endif
             </script>
 
@@ -222,7 +224,7 @@
                         layer.full(index);
                     });
                     return false;
-                } else if (obj.event === 'view'){
+                } else if (obj.event === 'view') {
 
                     var index = layer.open({
                         title: '查看用户',
@@ -237,32 +239,39 @@
                         layer.full(index);
                     });
                     return false;
-                }
-                    else if (obj.event === 'delete') {
+                } else if (obj.event === 'delete') {
                     layer.confirm('确认删除?', function(index) {
                         var id = obj.data.id;
-                        axios({
-                                method: 'post',
-                                url: delete_page,
-                                responseType: 'json',
-                                data: {
-                                    'id': id,
-                                }
-                            })
-                            .then(function(response) {
-                                var res = response.data;
-                                if (res.code == 1) {
-                                    layer.msg(res.msg);
-                                    location.reload();
+
+
+                        $.ajax({
+                            url: delete_page,
+                            data: {
+                                'id': id,
+                            },
+                            method: 'POST',
+                            success: function(data) {
+                                if (data.code == 1) {
+                                    layer.msg(data.msg, {
+                                        icon: 6,
+                                        time: SUCCESS_TIME,
+                                        shade: 0.2
+                                    });
+                                    setTimeout(function() {
+                                        $('button[lay-filter="data-search-btn"]').click(); //刷新列表
+
+                                    }, SUCCESS_TIME)
+
                                 } else {
-                                    layer.msg(res.msg);
+                                    layer.msg(data.msg);
                                 }
-                            });
-                        layer.close(index);
+                            }
+                        });
+
+
                     });
                 }
             });
-
         });
     </script>
 @endsection

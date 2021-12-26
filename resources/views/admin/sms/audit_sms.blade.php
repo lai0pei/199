@@ -1,28 +1,30 @@
 @extends('common.template')
 @section('style')
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+    </style>
 @endsection
 @section('content')
     <div class="layui-form layuimini-form">
         <div class="layui-form-item">
             <form class="layui-form" action="">
-              
+
                 <input type="hidden" value="{{ $data['id'] ?? '' }}" class="layui-input" name="id" disabled>
                 <label class="layui-form-label required">会员账号</label>
                 <div class="layui-input-block">
@@ -41,7 +43,7 @@ tr:nth-child(even) {
                             {{ ($data['state'] ?? '') == 2 ? 'checked' : '' }}>
                     </div>
                 </div>
-             
+
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">派送信息</label>
                     <div class="layui-input-block">
@@ -121,12 +123,24 @@ tr:nth-child(even) {
                         url: save_audit,
                         data: data.field,
                         method: 'POST',
-                        success: function(data) {
-                            if (data.code == 1) {
-                                layer.msg(data.msg);
-                                parent.location.reload();
+                        success: function(res) {
+                           
+                            if (res.code == 1) {
+                                layer.msg(res.msg, {
+                                    icon: 6,
+                                    time: SUCCESS_TIME,
+                                    shade: 0.2
+                                });
+                            
+                            setTimeout(function () {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                               
+                                parent.$('button[lay-filter="data-search-btn"]').click();//刷新列表
+                                parent.layer.close(index); //再执行关闭
+
+                            }, SUCCESS_TIME);
                             } else {
-                                layer.msg(data.msg);
+                                layer.msg(res.msg);
                             }
                         }
                     });

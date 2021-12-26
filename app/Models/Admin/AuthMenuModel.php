@@ -18,11 +18,11 @@
 namespace App\Models\Admin;
 
 use App\Models\Admin\LogModel;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\Cache;
 use LogicException;
 
-class AuthMenuModel extends Model
+class AuthMenuModel extends CommonModel
 {
 
     /**
@@ -101,7 +101,7 @@ class AuthMenuModel extends Model
         }
         $this->setPermission($user_id);
         $init = [];
-        $init['homeInfo'] = ['title' => '活动分析', 'href' => ''];
+        $init['homeInfo'] = ['title' => '活动分析', 'href' => route('admin_control')];
         $init['logoInfo'] = ['title' => '活动页面', 'image' => asset('image/logo.png'), 'href' => ''];
 
         $main_menu = $this->topChild($permissions['top_permission'], $permissions['child_permission'], $permissions['grand_permission']);

@@ -28,8 +28,8 @@ class CreateEvent extends Migration
             $table->string('daily_limit', 200)->comment('每日限制次数')->nullable();
             $table->unsignedTinyInteger('is_daily')->comment('是否限制每日申请')->default(1);
             $table->longText('content')->comment('活动内容')->nullable();
-            $table->timestamp('created_at')->comment('创建时间')->nullable();
-            $table->timestamp('updated_at')->comment('更新时间')->nullable();
+            $table->dateTime('created_at')->comment('创建时间')->nullable();
+            $table->dateTime('updated_at')->comment('更新时间')->nullable();
         });
 
         $prefix = env('DB_PREFIX') . "event";

@@ -19,8 +19,8 @@ class CreateConfigs extends Migration
             $table->string('name', 100)->comment('菜单英文名称');
             $table->string('title', 100)->comment('菜单中文名称');
             $table->longText('json_data')->comment('菜单内容');
-            $table->timestamp('created_at',$precision = 0)->comment('创建时间')->nullable();
-            $table->timestamp('updated_at',$precision = 0)->comment('更新时间')->nullable();
+            $table->dateTime('created_at')->comment('创建时间')->nullable();
+            $table->dateTime('updated_at')->comment('更新时间')->nullable();
         });
 
         $prefix = env('DB_PREFIX') . "configs";

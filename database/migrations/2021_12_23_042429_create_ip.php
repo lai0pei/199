@@ -19,8 +19,8 @@ class CreateIp extends Migration
             $table->string('ip', 200)->comment('ip地址')->nullable();
             $table->string('admin_id', 200)->comment('管理员编号')->nullable();
             $table->string('description', 200)->comment('内容')->nullable();
-            $table->timestamp('created_at')->comment('创建时间')->nullable();
-            $table->timestamp('updated_at')->comment('更新时间')->nullable();
+            $table->dateTime('created_at')->comment('创建时间')->nullable();
+            $table->dateTime('updated_at')->comment('更新时间')->nullable();
         });
 
         $prefix = env('DB_PREFIX') . "ip";

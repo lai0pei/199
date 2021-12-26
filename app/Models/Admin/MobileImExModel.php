@@ -17,7 +17,7 @@
 
 namespace App\Models\Admin;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use LogicException;
@@ -25,7 +25,7 @@ use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class MobileImExModel extends Model implements ToCollection, WithChunkReading
+class MobileImExModel extends CommonModel implements ToCollection, WithChunkReading
 {
     /**
      * The table associated with the model.

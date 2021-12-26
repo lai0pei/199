@@ -16,7 +16,7 @@
                             </div>
                             <div class="layui-inline">
                                 <button type="submit" class="layui-btn layui-btn-primary" lay-submit
-                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜索 或 快速刷新
                                 </button>
                             </div>
                         </div>
@@ -26,21 +26,21 @@
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="toolbarFilter">
-                @if(checkAuth('group_add'))
-                <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加管理组</button>
-                </div>
+                @if (checkAuth('group_add'))
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加管理组</button>
+                    </div>
                 @endif
             </script>
             <script type="text/html" id="currentTableBar">
-                @if(checkAuth('group_auth'))
-                <a class="layui-btn layui-btn-xs data-count-auth" lay-event="auth">授权</a>
+                @if (checkAuth('group_auth'))
+                    <a class="layui-btn layui-btn-xs data-count-auth" lay-event="auth">授权</a>
                 @endif
-                @if(checkAuth('group_edit'))
-                <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">修改</a>
+                @if (checkAuth('group_edit'))
+                    <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">修改</a>
                 @endif
-                @if(checkAuth('group_delete'))
-                <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
+                @if (checkAuth('group_delete'))
+                    <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
                 @endif
             </script>
         </div>
@@ -51,8 +51,8 @@
     <script>
         var allRole = "{{ route('admin_get_role_permission') }}";
         var addPage = "{{ route('group_add') }}";
-        var delete_page = "{{route('group_delete')}}";
-        var permission = "{{route('admin_permission')}}";
+        var delete_page = "{{ route('group_delete') }}";
+        var permission = "{{ route('admin_permission') }}";
 
         layui.use(['form', 'table', 'laydate', 'miniAdmin'], function() {
             var $ = layui.jquery,
@@ -74,6 +74,11 @@
                         {
                             field: 'role_name',
                             title: '组合名称',
+                            sort: true
+                        },
+                        {
+                            field: 'status',
+                            title: '状态',
                             sort: true
                         },
                         {
@@ -142,7 +147,7 @@
             });
 
             table.on('toolbar(currentTableFilter)', function(obj) {
-            
+
                 var data = form.val("data-search-filter");
                 var searchParams = JSON.stringify(data);
                 switch (obj.event) {
@@ -233,94 +238,103 @@
                 }
             });
             table.on('tool(currentTableFilter)', function(obj) {
-                    var data = obj.data;
-                    console.log(data);
-                    switch (obj.event) {
-                        case 'edit':
-                            var index = layer.open({
-                                title: '编辑组合',
-                                type: 2,
-                                shade: 0.2,
-                                maxmin: true,
-                                shadeClose: true,
-                                area: ['60%', '65%'],
-                                content: addPage + '/' + data.id,
-                            });
-                            break;
-                        case 'delete':
-
-                            layer.confirm('确认删除?', function(index) {
-                                var id = obj.data.id;
-                                axios({
-                                        method: 'post',
-                                        url: delete_page,
-                                        responseType: 'json',
-                                        data: {
-                                            'id': id,
-                                        }
-                                    })
-                                    .then(function(response) {
-                                        var res = response.data;
-                                        if (res.code == 1) {
-                                            layer.msg(res.msg);
-                                      
-                                        } else {
-                                            layer.msg(res.msg);
-                                        }
-                                    });
-                                layer.close(index);
-                                      location.reload();
-                            });
-                    break;
-                    case 'view':
-                    var index = layer.open({
-                        title: '',
-                        type: 2,
-                        shade: 0.2,
-                        maxmin: false,
-                        shadeClose: false,
-                        area: ['60%', '65%'],
-                        content: '/admin/' + MODULE_NAME + '/' + data.id,
-                    });
-                    break;
-                    case 'auth':
-                    var role_id = obj.data.id;
-                    var index = layer.open({
-                        title: '选择权限',
+                var data = obj.data;
+                console.log(data);
+                switch (obj.event) {
+                    case 'edit':
+                        var index = layer.open({
+                            title: '编辑组合',
                             type: 2,
                             shade: 0.2,
                             maxmin: true,
                             shadeClose: true,
-                        area: ['90%', '90%'],
-                        content: permission + "/" + role_id,
-                    });
-                    break;
+                            area: ['60%', '65%'],
+                            content: addPage + '/' + data.id,
+                        });
+                        break;
                     case 'delete':
-                    console.log("delete!");
-                    break;
+
+                        layer.confirm('确认删除?', function(index) {
+                            var id = obj.data.id;
+
+                            $.ajax({
+                                url: delete_page,
+                                data: {
+                                    'id': id,
+                                },
+                                method: 'POST',
+                                success: function(data) {
+                                    if (data.code == 1) {
+                                        layer.msg(data.msg, {
+                                            icon: 6,
+                                            time: SUCCESS_TIME,
+                                            shade: 0.2
+                                        });
+                                        setTimeout(function() {
+                                            $('button[lay-filter="data-search-btn"]')
+                                                .click(); //刷新列表
+                                            layer.close(index); //再执行关闭
+
+                                        }, SUCCESS_TIME)
+                                    } else {
+                                        layer.msg(data.msg);
+                                    }
+                                }
+                            });
+
+                            layer.close(index);
+                        });
+                        break;
+                    case 'view':
+                        var index = layer.open({
+                            title: '',
+                            type: 2,
+                            shade: 0.2,
+                            maxmin: false,
+                            shadeClose: false,
+                            area: ['60%', '65%'],
+                            content: '/admin/' + MODULE_NAME + '/' + data.id,
+                        });
+                        break;
+                    case 'auth':
+                        var role_id = obj.data.id;
+                        var index = layer.open({
+                            title: '选择权限',
+                            type: 2,
+                            shade: 0.2,
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['90%', '90%'],
+                            content: permission + "/" + role_id,
+                        });
+                        break;
+                    case 'delete':
+                        console.log("delete!");
+                        break;
                 }
             });
 
-        //监听排序事件
-        table.on('sort(currentTableFilter)', function(obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
-            // console.log(obj.field); //当前排序的字段名
-            // console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
-            // console.log(this); //当前排序的 th 对象
+            //监听排序事件
+            table.on('sort(currentTableFilter)', function(
+                obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                // console.log(obj.field); //当前排序的字段名
+                // console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
+                // console.log(this); //当前排序的 th 对象
 
-            //尽管我们的 table 自带排序功能，但并没有请求服务端。
-            //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
-            table.reload('currentTableId', {
-                initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
-                    ,
-                where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
-                    field: obj.field //排序字段
+                //尽管我们的 table 自带排序功能，但并没有请求服务端。
+                //有些时候，你可能需要根据当前排序的字段，重新向服务端发送请求，从而实现服务端排序，如：
+                table.reload('currentTableId', {
+                    initSort: obj //记录初始排序，如果不设的话，将无法标记表头的排序状态。
                         ,
-                    order: obj.type //排序方式
-                }
-            });
+                    where: { //请求参数（注意：这里面的参数可任意定义，并非下面固定的格式）
+                        field: obj.field //排序字段
+                            ,
+                        order: obj.type //排序方式
+                    }
+                });
 
-            // layer.msg('服务端排序。order by '+ obj.field + ' ' + obj.type);
-        });
+                // layer.msg('服务端排序。order by '+ obj.field + ' ' + obj.type);
+            });
         });
     </script>
 @endsection

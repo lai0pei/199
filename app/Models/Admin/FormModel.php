@@ -18,10 +18,10 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
-class FormModel extends Model
+class FormModel extends CommonModel
 {
     const TEXT = '文本格式';
     const NUM = '数字框';
@@ -49,6 +49,14 @@ class FormModel extends Model
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
 
+       
+        if (!empty($data['searchParams'])) {
+            $param = json_decode($data['searchParams'], true);
+            if($param['id'] !== ''){
+                $data['id'] = $param['id'];
+            }
+        }
+
         $item = self::where('event_id', $data['id'])->paginate($limit, "*", "page", $page);
 
         $result = [];
@@ -60,7 +68,7 @@ class FormModel extends Model
             $result[$k]['event'] = $this->getEventName($v['event_id']);
             $result[$k]['sort'] = $v['sort'];
             $result[$k]['option'] = $this->getOptionName($v['type']);
-            $result[$k]['created_at'] = $v['created_at'];
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
 
         }
         $res['data'] = $result;

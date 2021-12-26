@@ -46,7 +46,7 @@
 
                             <div class="layui-inline">
                                 <button type="submit" class="layui-btn layui-btn-primary" lay-submit
-                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜索 或 快速刷新
                                 </button>
                             </div>
                         </div>

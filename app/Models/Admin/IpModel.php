@@ -2,11 +2,11 @@
 
 namespace App\Models\Admin;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use App\Exceptions\LogicException;
 use Illuminate\Support\Facades\DB;
 
-class IpModel extends Model
+class IpModel extends CommonModel
 {
 
      /**
@@ -104,9 +104,18 @@ class IpModel extends Model
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
 
+        $where = [];
+       
+        if (!empty($data['searchParams'])) {
+            $param = json_decode($data['searchParams'], true);
+            if($param['ip'] !== ''){
+                $where['ip'] = $param['ip'];
+            }
+        }
+
         $column = ['id', 'ip', 'admin_id', 'description','created_at','updated_at'];
 
-        $item = self::select($column)->paginate($limit, "*", "page", $page);
+        $item = self::select($column)->where($where)->paginate($limit, "*", "page", $page);
 
         $admin = new AdminModel();
 
@@ -117,8 +126,8 @@ class IpModel extends Model
             $result[$k]['ip'] = $v['ip'];
             $result[$k]['username'] = $admin::where('id',$v['admin_id'])->value('account');
             $result[$k]['description'] = $v['description'];
-            $result[$k]['created_at'] = $v['created_at'];
-            $result[$k]['updated_at'] = $v['updated_at'];
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
+            $result[$k]['updated_at'] = $this->toTime($v['updated_at']);
         }
 
         $res['data'] = $result;

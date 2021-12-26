@@ -4,10 +4,10 @@ namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
-class PasswordModel extends Model
+class PasswordModel extends CommonModel
 {
     use HasFactory;
 

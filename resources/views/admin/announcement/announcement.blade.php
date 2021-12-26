@@ -11,11 +11,13 @@
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">公告通知</label>
                     <div class="layui-input-block">
-                      <textarea name="announcement"  lay-verify="required" class="layui-textarea">{{$config['announcement'] ?? ''}}</textarea>
+                      <textarea name="announcement"  lay-verify="required" placeholder="填写公告通知" class="layui-textarea">{{$config['announcement'] ?? ''}}</textarea>
                     </div>
                   </div>
                   <div class="layui-form-item">
+                    @if (checkAuth('accouncement_edit'))
                     <button class="layui-btn" lay-submit="" lay-filter="save">提交</button>
+                    @endif
                   </div>
             </form>
         </div>
@@ -34,21 +36,23 @@
 
             //监听提交
             form.on('submit(save)', function(data) {
-                
-                axios({
-                        method: 'post',
-                        url: announcementPass,
-                        data: {
+
+
+                    $.ajax({
+                    url: announcementPass,
+                    data: {
                             'data': JSON.stringify(data.field),
+                        },
+                    method: 'POST',
+                    async : false,
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2})
+                        } else {
+                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2})
                         }
-                    })
-                    .then(function(response) {
-                        var res = response.data;
-                        if (res.code == 1) {
-                            layer.msg(res.msg);
-                        }
-                          
-                    });
+                    }
+                });
                    
 
             });

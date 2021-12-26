@@ -20,6 +20,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\ConfigModel;
 use Illuminate\Http\Request;
+use LogicException;
 
 class ConfigsController extends Controller
 {

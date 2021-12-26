@@ -18,10 +18,10 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
-class UserApplyModel extends Model
+class UserApplyModel extends CommonModel
 {   
 
     const PASS = 1;
@@ -74,8 +74,8 @@ class UserApplyModel extends Model
             $result[$k]['status_text'] = $this->statusToText($v['status']);
             $result[$k]['ip'] = $v['ip'];
             $result[$k]['description'] = $v['description'];
-            $result[$k]['created_at'] = $v['created_at'];
-            $result[$k]['updated_at'] = $v['updated_at'];
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
+            $result[$k]['updated_at'] = $this->toTime($v['updated_at']);
         }
 
         $res['data'] = $result;

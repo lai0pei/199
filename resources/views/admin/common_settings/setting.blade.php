@@ -95,21 +95,37 @@
             //监听提交
             form.on('submit(save)', function(data) {
                 
-                axios({
-                        method: 'post',
-                        url: saveSms,
-                        data: {
-                            'data': JSON.stringify(data.field),
-                        }
-                    })
-                    .then(function(response) {
-                        var res = response.data;
-                        if (res.code == 1) {
-                            layer.msg(res.msg);
-                        }
+                // axios({
+                //         method: 'post',
+                //         url: saveSms,
+                //         data: {
+                //             'data': JSON.stringify(data.field),
+                //         }
+                //     })
+                //     .then(function(response) {
+                //         var res = response.data;
+                //         if (res.code == 1) {
+                //             layer.msg(res.msg);
+                //         }
                           
-                    });
-                   
+                //     });
+                    
+                      
+                    $.ajax({
+                    url: saveSms,
+                    data: {
+                            'data': JSON.stringify(data.field),
+                        },
+                    method: 'POST',
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg);
+                               window.parent.location.reload();
+                        } else {
+                            layer.msg(data.msg);
+                        }
+                    }
+                });
 
             });
 

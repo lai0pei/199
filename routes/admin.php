@@ -15,31 +15,28 @@
  * |-----------------------------------------------------------------------------------------------------------
  */
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\AuthMenuController;
-use App\Http\Controllers\Admin\ControlController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminGroupController;
+use App\Http\Controllers\Admin\AuthMenuController;
 use App\Http\Controllers\Admin\AuthPermissionController;
 use App\Http\Controllers\Admin\ChangePasswordController;
 use App\Http\Controllers\Admin\CommonSettingController;
 use App\Http\Controllers\Admin\ConfigsController;
+use App\Http\Controllers\Admin\ControlController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\EventTypeController;
+use App\Http\Controllers\Admin\FormController;
 use App\Http\Controllers\Admin\IpController;
+use App\Http\Controllers\Admin\LogController;
+use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\MobileController;
+use App\Http\Controllers\Admin\PermissionMenuController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SmsConfigController;
 use App\Http\Controllers\Admin\SmsController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\PermissionMenuController;
-use App\Http\Controllers\Admin\LogController;
-use App\Http\Controllers\Admin\EventTypeController;
 use App\Http\Controllers\Admin\UploadController;
-use App\Http\Controllers\Admin\FormController;
-use App\Http\Controllers\Admin\MobileController;
-
-
+use App\Http\Controllers\Admin\UserController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,25 +47,22 @@ use App\Http\Controllers\Admin\MobileController;
 | routes are loaded by the RouteServiceProvider within a group which
 | is assigned the "Admin" middleware group. Enjoy building your Admin!
 |
-*/
+ */
 
 /*
 | 后台登录
-*/
+ */
 Route::get("admin/login", [LoginController::class, 'index'])->name('admin.login.index');
 Route::post("admin/login", [LoginController::class, 'login'])->name('admin.login.login');
 Route::get("admin/captcha", [LoginController::class, 'captcha'])->name('admin.login.captcha');
 
 /*
 | 后台路由
-*/
+ */
 Route::middleware(['admin'])->prefix('admin')->group(function () {
     //后台页面
-    Route::get('/', [AuthMenuController::class, 'index'])->name('admin_menu'); 
-    Route::get('/control', [ControlController::class, 'control'])->name('admin_control');  
-    
-
-
+    Route::get('/', [AuthMenuController::class, 'index'])->name('admin_menu');
+    Route::get('/control', [ControlController::class, 'control'])->name('admin_control');
 
     //管理员 页面 和 接口
     Route::get('/person', [AdminController::class, 'person'])->name('admin_person');
@@ -80,7 +74,6 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::post('/delete_admin', [AdminController::class, 'deleteAdmin'])->name('admin_person_delete');
     Route::get('/list_admin', [AdminController::class, 'listAdmin'])->name('admin.admin_list');
     Route::get('/edit_admin', [AdminController::class, 'addNewAdmin'])->name('admin_edit_person');
-   
 
     //管理组
     Route::get('/admin_group', [AdminGroupController::class, 'group'])->name('admin_group');
@@ -110,7 +103,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
 
     //短信配置
     Route::get('/sms_config', [SmsConfigController::class, 'sms_config'])->name('admin_sms_config');
-    Route::post('/save_sms', [SmsConfigController::class, 'saveSms'])->name('admin_save_sms');
+    Route::post('/save_sms', [SmsConfigController::class, 'saveSmsConfig'])->name('admin_save_sms');
 
     //ip地址
     Route::get('/allow_ip', [IpController::class, 'allow_ip'])->name('admin_allow_ip');
@@ -118,7 +111,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/add_ip/{id?}', [IpController::class, 'add_ip'])->name('admin_add_ip');
     Route::get('/ip_list', [IpController::class, 'ip_list'])->name('admin_ip_list');
     Route::post('/delete_ip', [IpController::class, 'ip_delete'])->name('admin_delete_ip');
-    
+
     //公共配置
     Route::get('/common_settings', [CommonSettingController::class, 'common'])->name('admin_common_settings');
 
@@ -134,7 +127,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/link_management', [ConfigsController::class, 'link'])->name('admin_link_management');
     Route::post('/link_save', [ConfigsController::class, 'linkSave'])->name('admin_link_save');
 
-    //游戏        
+    //游戏
     Route::get('/game_management', [ConfigsController::class, 'game'])->name('admin_game_management');
     Route::post('/game_save', [ConfigsController::class, 'gameSave'])->name('admin_game_save');
 
@@ -159,6 +152,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/event_lists', [EventController::class, 'list'])->name('admin_event_list');
     Route::get('/get_list', [EventController::class, 'getEventList'])->name('admin_get_event');
     Route::post('/delete_event/{id?}', [EventController::class, 'deleteEvent'])->name('admin_delete_event');
+    
     //活动表单
     Route::get('/form/{id?}', [FormController::class, 'form'])->name('admin_form');
     Route::get('/form_list', [FormController::class, 'getFormList'])->name('admin_form_list');
@@ -175,13 +169,12 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/Mobile', [MobileController::class, 'addMobile'])->name('mobile_add');
     Route::post('/addMobile', [MobileController::class, 'maniMobile'])->name('admin_mobile_add');
     Route::post('/oneClick', [MobileController::class, 'oneClick'])->name('admin_ mobile_oneClick');
-   
 
     //用户申请记录
     Route::get('/user_apply', [UserController::class, 'user'])->name('admin_user_apply');
     Route::get('/user_apply_list', [UserController::class, 'userList'])->name('admin_user_list');
     Route::get('/userAuditIndex/{id?}', [UserController::class, 'userAuditIndex'])->name('admin_user_audit');
-    Route::post('/save_audit', [UserController::class, 'saveAudit'])->name('admin_save_audit');
+    Route::post('/save_audit_user', [UserController::class, 'saveAudit'])->name('admin_save_audit');
     Route::post('/bulk_delete', [UserController::class, 'delete'])->name('admin_delete_audit');
     Route::post('/bulk_refuse', [UserController::class, 'refuse'])->name('admin_bulk_refuse');
     Route::post('/bulk_pass', [UserController::class, 'pass'])->name('admin_bulk_pass');
@@ -190,27 +183,10 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/sms_apply', [SmsController::class, 'sms'])->name('admin_sms_apply');
     Route::get('/sms_list', [SmsController::class, 'smsEventList'])->name('admin_sms_list');
     Route::get('/smsAuditIndex/{id?}', [SmsController::class, 'smsAuditIndex'])->name('admin_sms_audit');
-    Route::post('/save_audit', [SmsController::class, 'saveSms'])->name('admin_audit_sms');
+    Route::post('/save_audit_sms', [SmsController::class, 'saveSms'])->name('admin_audit_sms');
     Route::post('/bulksms_delete', [SmsController::class, 'deleteSms'])->name('admin_delete_sms');
     Route::post('/bulksms_refuse', [SmsController::class, 'refuseSms'])->name('admin_sms_refuse');
     Route::post('/bulksms_pass', [SmsController::class, 'passSms'])->name('admin_sms_pass');
-
-    
-  
-
-    
-    
-    
-    
-
-    
-
-    
-
-
-    
-    
-    
 
 // |------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -219,6 +195,5 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/init', [AuthMenuController::class, 'init'])->name('admin.init');
     //post 接口
     Route::post('/logout', [LoginController::class, 'logout'])->name('admin_logout');
-
 
 });

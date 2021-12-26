@@ -84,7 +84,7 @@ class AuthMenuController extends Controller
      */
     public function clear()
     {   
-        Cache::flush();
+        Cache::flush();  
         return self::json_success([],'缓存已清除');
     }
 

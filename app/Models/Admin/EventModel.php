@@ -18,10 +18,10 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
-class EventModel extends Model
+class EventModel extends CommonModel
 {
 
     /**
@@ -60,18 +60,19 @@ class EventModel extends Model
 
         DB::beginTransaction();
 
+
         if (-1 == $data['id']) {
             $add = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
                 'type_pic' => $data['type_pic'],
                 'sort' => $data['sort'],
-                'status' => ($data['status'] == 'on') ? 1 : 0,
-                'display' => ($data['display'] == 'on') ? 1 : 0,
+                'status' => ($data['status']?? "" == 'on') ? 1 : 0,
+                'display' => ($data['display'] ?? "" == 'on') ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
                 'daily_limit' => $data['sort'],
-                'is_daily' => ($data['is_daily'] == 'on') ? 1 : 0,
+                'is_daily' => ($data['is_daily'] ?? "" == 'on') ? 1 : 0,
                 'content' => $data['content'],
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
@@ -176,7 +177,7 @@ class EventModel extends Model
             $result[$k]['display'] = ($v['display'] == 1) ? '显示' : '隐藏';
             $result[$k]['status'] = ($v['status'] == 1) ? '开启' : '关闭';
             $result[$k]['is_daily'] = ($v['is_daily'] == 1) ? '限制' : '不限制';
-            $result[$k]['created_at'] = $v['created_at'];
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
 
         }
         $res['data'] = $result;

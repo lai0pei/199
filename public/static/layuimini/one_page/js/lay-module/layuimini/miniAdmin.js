@@ -267,7 +267,8 @@ layui.define(["jquery", "miniMenu", "element","miniTab", "miniTheme"], function 
                     });
                 } else {
                     layer.close(loading);
-                    return miniAdmin.success('清除缓存成功');
+                    location.reload();
+                    return miniAdmin.success('清除缓存成功,请刷新窗口');
                 }
             });
 

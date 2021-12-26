@@ -49,7 +49,7 @@
                                 <label class="layui-form-label">定时刷新</label>
                                 <div class="layui-input-inline">
                                     <select id="refresh" lay-filter="refresh">
-                                        <option value="0">请选择</option>
+                                        <option value="0">不刷新</option>
                                         <option value="5">5秒</option>
                                         <option value="10">10秒</option>
                                         <option value="15">15秒</option>
@@ -76,7 +76,7 @@
 
                             <div class="layui-inline">
                                 <button type="submit" class="layui-btn layui-btn-primary" lay-submit
-                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜索 或 快速刷新
                                 </button>
                             </div>
                         </div>
@@ -86,16 +86,24 @@
 
             <script type="text/html" id="toolbarFilter">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="batch-delete"> 批量删除 </button>
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="batch-pass"> 批量通过 </button>
-                    <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
+                    @if (checkAuth('sms_bulk_delete'))
+                        <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="batch-delete"> 批量删除 </button>
+                    @endif
+                    @if (checkAuth('sms_bulk_pass'))
+                        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="batch-pass"> 批量通过 </button>
+                    @endif
+                    @if (checkAuth('sms_bulk_refuse'))
+                        <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
+                    @endif
                 </div>
             </script>
 
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="currentTableBar">
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="audit">审核操作</a>
+                @if (checkAuth('admin_view'))
+                    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="audit">审核操作</a>
+                @endif
             </script>
         </div>
     </div>
@@ -109,26 +117,16 @@
         var refuse = "{{ route('admin_sms_refuse') }}";
         var pass = "{{ route('admin_sms_pass') }}";
 
-        //设置刷新 第二步
-        var time = localStorage.getItem('timeout');
-        if (time != 0 && time !== null) {
-            setTimeout(function() {
-                window.location.reload(1);
-            }, time * 1000);
-        } else {
-            time = 0;
-            localStorage.removeItem('timeout');
 
-        }
-        $(document).ready(function() {
-            let time = localStorage.getItem('timeout');
-            if (time !== 0) {
-                $("#refresh").val(time);
-            }
-        });
+        // $(document).ready(function() {
+        //     let time = localStorage.getItem('timeout');
+        //     if (time !== 0) {
+        //         $("#refresh").val(time);
+        //     }
+        // });
 
 
-      
+
         // document.cookie = $("#refresh").val();
         layui.use(['form', 'table', 'laydate'], function() {
             var $ = layui.jquery,
@@ -143,7 +141,15 @@
                 var val = data.value;
                 localStorage.removeItem('timeout');
                 localStorage.setItem('timeout', val);
-                window.location.reload(1);
+         
+                if (val == 0) {
+            
+                    clearInterval(id1) ;
+                } else {
+                    id1 = setInterval(() => {
+                        $('button[lay-filter="data-search-btn"]').click(); //刷新列表
+                    }, val * 1000);
+                }
             });
 
             table.render({
@@ -261,25 +267,36 @@
                         layer.confirm('确认删除?', function(index) {
                             var checkStatus = table.checkStatus('currentTableId'),
                                 data = checkStatus.data;
-                            axios({
-                                    method: 'post',
-                                    url: deleteUser,
-                                    responseType: 'json',
-                                    data: {
-                                        'data': data,
-                                    }
-                                })
-                                .then(function(response) {
-                                    var res = response.data;
+
+
+                            $.ajax({
+                                url: deleteUser,
+                                data: {
+                                    'id': id,
+                                },
+                                method: 'POST',
+                                success: function(res) {
                                     if (res.code == 1) {
+
                                         layer.msg('删除' + data.length + '条记录', {
-                                            icon: 6
+                                            icon: 6,
+                                            time: SUCCESS_TIME,
+                                            shade: 0.2
                                         });
-                                        location.reload();
+                                        setTimeout(function() {
+                                            var index = layer.getFrameIndex(
+                                                window.name); //先得到当前iframe层的索引
+                                            $('button[lay-filter="data-search-btn"]')
+                                                .click(); //刷新列表
+                                            layer.close(index); //再执行关闭
+
+                                        }, SUCCESS_TIME);
                                     } else {
-                                        layer.msg(res.msg);
+                                        layer.msg(data.msg);
                                     }
-                                });
+                                }
+                            });
+
 
 
                             layer.close(index);
@@ -289,27 +306,35 @@
                         layer.confirm('确认通过?', function(index) {
                             var checkStatus = table.checkStatus('currentTableId'),
                                 data = checkStatus.data;
-                            axios({
-                                    method: 'post',
-                                    url: pass,
-                                    responseType: 'json',
-                                    data: {
-                                        'data': data,
-                                    }
-                                })
-                                .then(function(response) {
-                                    var res = response.data;
+
+
+                            $.ajax({
+                                url: pass,
+                                data: {
+                                    'data': data,
+                                },
+                                method: 'POST',
+                                success: function(res) {
                                     if (res.code == 1) {
+
                                         layer.msg('审核通过' + data.length + '条记录', {
-                                            icon: 6
+                                            icon: 6,
+                                            time: SUCCESS_TIME,
+                                            shade: 0.2
                                         });
-                                        location.reload();
+                                        setTimeout(function() {
+                                            var index = layer.getFrameIndex(
+                                                window.name); //先得到当前iframe层的索引
+                                            $('button[lay-filter="data-search-btn"]')
+                                                .click(); //刷新列表
+                                            layer.close(index); //再执行关闭
+
+                                        }, SUCCESS_TIME);
                                     } else {
-                                        layer.msg(res.msg);
+                                        layer.msg(data.msg);
                                     }
-                                });
-
-
+                                }
+                            });
                             layer.close(index);
                         });
                         break;
@@ -317,26 +342,34 @@
                         layer.confirm('确认拒绝?', function(index) {
                             var checkStatus = table.checkStatus('currentTableId'),
                                 data = checkStatus.data;
-                            axios({
-                                    method: 'post',
-                                    url: refuse,
-                                    responseType: 'json',
-                                    data: {
-                                        'data': data,
-                                    }
-                                })
-                                .then(function(response) {
-                                    var res = response.data;
-                                    if (res.code == 1) {
-                                        layer.msg('审核拒绝' + data.length + '条记录', {
-                                            icon: 6
-                                        });
-                                        location.reload();
-                                    } else {
-                                        layer.msg(res.msg);
-                                    }
-                                });
 
+                            $.ajax({
+                                url: refuse,
+                                data: {
+                                    'data': data,
+                                },
+                                method: 'POST',
+                                success: function(res) {
+                                    if (res.code == 1) {
+
+                                        layer.msg('审核拒绝' + data.length + '条记录', {
+                                            icon: 6,
+                                            time: SUCCESS_TIME,
+                                            shade: 0.2
+                                        });
+                                        setTimeout(function() {
+                                            var index = layer.getFrameIndex(
+                                                window.name); //先得到当前iframe层的索引
+                                            $('button[lay-filter="data-search-btn"]')
+                                                .click(); //刷新列表
+                                            layer.close(index); //再执行关闭
+
+                                        }, SUCCESS_TIME);
+                                    } else {
+                                        layer.msg(data.msg);
+                                    }
+                                }
+                            });
 
                             layer.close(index);
                         });
@@ -384,23 +417,21 @@
                     case 'delete': {
                         layer.confirm('确认删除?', function(index) {
                             var id = obj.data.id;
-                            axios({
-                                    method: 'post',
-                                    url: deleteEvent,
-                                    responseType: 'json',
-                                    data: {
-                                        'id': id,
-                                    }
-                                })
-                                .then(function(response) {
-                                    var res = response.data;
-                                    if (res.code == 1) {
+                            $.ajax({
+                                url: deleteEvent,
+                                data: {
+                                    'id': id,
+                                },
+                                method: 'POST',
+                                success: function(data) {
+                                    if (data.code == 1) {
                                         layer.msg(res.msg);
                                         location.reload();
                                     } else {
-                                        layer.msg(res.msg);
+                                        layer.msg(data.msg);
                                     }
-                                });
+                                }
+                            });
                             layer.close(index);
                         });
                     }

@@ -21,8 +21,8 @@ class CreateForm extends Migration
             $table->string('name', 200)->comment('表单名称')->nullable();
             $table->unsignedSmallInteger('type')->comment('表单类型 0 文本格式, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框');
             $table->string('option', 200)->comment('对应类型 值')->nullable();            
-            $table->timestamp('created_at')->comment('创建时间')->nullable();
-            $table->timestamp('updated_at')->comment('更新时间')->nullable();
+            $table->dateTime('created_at')->comment('创建时间')->nullable();
+            $table->dateTime('updated_at')->comment('更新时间')->nullable();
         });
 
         $prefix = env('DB_PREFIX') . "form";

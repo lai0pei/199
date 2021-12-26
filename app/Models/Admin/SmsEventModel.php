@@ -17,11 +17,11 @@
 
 namespace App\Models\Admin;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 use LogicException;
 
-class SmsEventModel extends Model
+class SmsEventModel extends CommonModel
 {
 
     const PASS = 1;
@@ -82,8 +82,8 @@ class SmsEventModel extends Model
             $result[$k]['state'] = $this->stateName($v['state']);
             $result[$k]['is_match'] = $this->matchName($v['is_match']);
             $result[$k]['message'] = $v['message'];
-            $result[$k]['created_at'] = $v['created_at'];
-            $result[$k]['updated_at'] = $v['updated_at'];
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
+            $result[$k]['updated_at'] = $this->toTime($v['updated_at']);
         }
 
         $res['data'] = $result;

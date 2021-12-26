@@ -18,7 +18,7 @@
                                     <select name="type_id">
                                         <option value="">请选择</option>
                                         @foreach ($data as $ind => $item)
-                                            <option value="{{ $ind + 1}}">{{ $item['name'] }}</option>
+                                            <option value="{{ $ind + 1 }}">{{ $item['name'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -59,13 +59,14 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">活动名称</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="name" autocomplete="off" placeholder="请输入活动名称" class="layui-input">
+                                    <input type="text" name="name" autocomplete="off" placeholder="请输入活动名称"
+                                        class="layui-input">
                                 </div>
                             </div>
 
                             <div class="layui-inline">
                                 <button type="submit" class="layui-btn layui-btn-primary" lay-submit
-                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜索 或 快速刷新 或 刷新
                                 </button>
                             </div>
                         </div>
@@ -75,9 +76,15 @@
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="currentTableBar">
-                <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="view">表单配置</a>
-                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑活动</a>
-                <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="delete">删除</a>
+                @if (checkAuth('event_config'))
+                    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="view">表单配置</a>
+                @endif
+                @if (checkAuth('event_edit'))
+                    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑活动</a>
+                @endif
+                @if (checkAuth('event_delete'))
+                    <a class="layui-btn layui-btn-xs  layui-btn-danger" lay-event="delete">删除</a>
+                @endif
             </script>
         </div>
     </div>
@@ -239,10 +246,10 @@
                             maxmin: true,
                             shadeClose: true,
                             area: ['100%', '100%'],
-                            content: viewForm+ '/' + data.id,
+                            content: viewForm + '/' + data.id,
                         });
                         break;
-                        case 'edit':
+                    case 'edit':
                         var index = layer.open({
                             title: '编辑活动',
                             type: 2,
@@ -254,36 +261,46 @@
                         });
                         break;
                     case 'delete': {
-                    layer.confirm('确认删除?', function(index) {
-                        var id = obj.data.id;
-                        axios({
-                                method: 'post',
+                        layer.confirm('确认删除?', function(index) {
+                            var id = obj.data.id;
+
+                            $.ajax({
                                 url: deleteEvent,
-                                responseType: 'json',
                                 data: {
                                     'id': id,
-                                }
-                            })
-                            .then(function(response) {
-                                var res = response.data;
-                                if (res.code == 1) {
-                                    layer.msg(res.msg);
-                                    location.reload();
-                                } else {
-                                    layer.msg(res.msg);
+                                },
+                                method: 'POST',
+                                success: function(data) {
+                                    if (data.code == 1) {
+                                        layer.msg(data.msg, {
+                                            icon: 6,
+                                            time: SUCCESS_TIME,
+                                            shade: 0.2
+                                        });
+                                        setTimeout(function() {
+                                            var index = layer.getFrameIndex(
+                                                window.name); //先得到当前iframe层的索引
+                                            $('button[lay-filter="data-search-btn"]')
+                                                .click(); //刷新列表
+                                            layer.close(index); //再执行关闭
+
+                                        }, SUCCESS_TIME)
+                                    } else {
+                                        layer.msg(data.msg);
+                                    }
                                 }
                             });
-                        layer.close(index);
-                    });
-                }
+                            layer.close(index);
+                        });
+                    }
 
-                        break;
+                    break;
                 }
             });
-         
+
             //监听排序事件
             table.on('sort(currentTableFilter)', function(
-            obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
                 // console.log(obj.field); //当前排序的字段名
                 // console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
                 // console.log(this); //当前排序的 th 对象

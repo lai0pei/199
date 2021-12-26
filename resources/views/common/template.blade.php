@@ -30,11 +30,13 @@
         html * {
             font-family: productSan;
         }
+
         .layui-tab-item.layui-show {
-                overflow: hidden;
-            }
+            overflow: hidden;
+        }
+
     </style>
-    
+
     <style id="layuimini-bg-color">
     </style>
 
@@ -43,40 +45,36 @@
 
 <body class="layui-layout-body layuimini-all">
     @yield('content')
-    {{-- <script src="{{ asset('static/lib/layui-v2.6.3/layui.js') }}" charset="utf-8"></script> --}}
     <script src="{{ asset('static/layui/layui.js') }}" charset="utf-8"></script>
-    {{-- <script src="{{ asset('static/admin/admin.js') }}" charset="utf-8"></script> --}}
     <script src="{{ asset('static/jquery/jquery-3.6.0.js') }}" charset="utf-8"></script>
     <script src="{{ asset('static/layuimini/one_page/js/lay-config.js?v=2.0.0') }}" charset="utf-8"></script>
-    <script src="{{asset ('static/axios/axios.min.js')}}" charset="utf-8"></script>
-    {{-- <script type="text/javascript" charset="utf-8" src="{{asset ('static/umeditor/umeditor.config.js')}}"></script> --}}
-{{-- <script type="text/javascript" charset="utf-8" src="{{asset ('static/umeditor/umeditor.min.js')}}"></script> --}}
 
-<script type="text/javascript">
-    // ajax 接口返回 页面显示 窗口 配置
-    MODULE_NAME = '{{ $MODULE_NAME ?? '' }}';
-    SUCCESS_TIME = 800;
-    FAIL_TIME = 2000;
-    TABLE_RESIZE_TIME = 3500;
-    AJAX_ERROR_TIP = '访问失败';
-</script>
 
-<script>
-   
-    layui.use(['element', 'layer'], function () {
-        var $ = layui.jquery,
-            element = layui.element,
-            layer = layui.layer;
+    <script type="text/javascript">
+        // ajax 接口返回 页面显示 窗口 配置
+        MODULE_NAME = '{{ $MODULE_NAME ?? '' }}';
+        SUCCESS_TIME = 2000;
+        FAIL_TIME = 2000;
+        TABLE_RESIZE_TIME = 3500;
+        AJAX_ERROR_TIP = '访问失败';
+    </script>
 
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+    <script>
+        layui.use(['element', 'layer'], function() {
+            var $ = layui.jquery,
+                element = layui.element,
+                layer = layui.layer;
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            //记录浏览记录
+            // $.post('{{ url('view_browsing') }}');
         });
-        //记录浏览记录
-        // $.post('{{url('view_browsing')}}');
-    });
-</script>
-@yield('footer')
+    </script>
+    @yield('footer')
 </body>
+
 </html>

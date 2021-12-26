@@ -2,12 +2,10 @@
 
 namespace App\Models\Admin;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 
-class PermissionMenuModel extends Model
+class PermissionMenuModel extends CommonModel
 {
-    use HasFactory;
 
     /**
      * The table associated with the model.
@@ -37,13 +35,13 @@ class PermissionMenuModel extends Model
         if (!empty($auth)) {
             $auth_list = explode(",", $auth); 
         }
-
+     
         $auth_menu = new AuthMenuModel();
         $current_id = array_unique(array_column($permission, 'current_auth_id'));
         $menu = [];
         $sub_menu = [];
-
-        foreach ($current_id as $i => $v) {
+        $i = 0 ;
+        foreach ($current_id as $v) {
             $menu[$i]['id'] = $i;
             $menu[$i]['title'] = $auth_menu::where('id', $v)->where('status', 1)->value('title');
             $menu[$i]['checked'] = false;
@@ -65,6 +63,7 @@ class PermissionMenuModel extends Model
 
             $menu[$i]['children'] = $sub_menu;
             unset($sub_menu);
+            $i++;
         }
 
         return $menu;
@@ -81,7 +80,7 @@ class PermissionMenuModel extends Model
         if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if (!empty($param['name'])) {
-                $where['title'] = $param['name'];
+                $where['title'] = trim($param['name']);
             }
         }
 
@@ -94,8 +93,8 @@ class PermissionMenuModel extends Model
             $result[$k]['name'] = $v['name'];
             $result[$k]['title'] = $v['title'];
             $result[$k]['menu_title'] = $auth_menu::where('id',$v['current_auth_id'])->value('title');
-            $result[$k]['updated_at'] = $v['updated_at'];
-            $result[$k]['created_at'] = $v['created_at'];
+            $result[$k]['updated_at'] = $this->toTime($v['updated_at']);
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
 
         }
         $res['data'] = $result;

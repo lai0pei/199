@@ -18,13 +18,11 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
-class EventTypeModel extends Model
+class EventTypeModel extends CommonModel
 {
-    use HasFactory;
 
     /**
      * The table associated with the model.
@@ -119,9 +117,18 @@ class EventTypeModel extends Model
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
 
+        $where = [];
+       
+        if (!empty($data['searchParams'])) {
+            $param = json_decode($data['searchParams'], true);
+            if($param['name'] !== ''){
+                $where['name'] = $param['name'];
+            }
+        }
+
         $column = ['id', 'name','status', 'created_at', 'updated_at','sort'];
 
-        $item = self::select($column)->paginate($limit, "*", "page", $page);
+        $item = self::select($column)->where($where)->paginate($limit, "*", "page", $page);
 
         $result = [];
 
@@ -130,8 +137,8 @@ class EventTypeModel extends Model
             $result[$k]['name'] = $v['name'];
             $result[$k]['status'] = $this->getStatus($v['status']);
             $result[$k]['sort'] = $v['sort'];
-            $result[$k]['created_at'] = $v['created_at'];
-            $result[$k]['updated_at'] = $v['updated_at'];
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
+            $result[$k]['updated_at'] = $this->toTime($v['updated_at']);
         }
 
         $res['data'] = $result;

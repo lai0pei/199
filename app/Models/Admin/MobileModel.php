@@ -19,10 +19,10 @@ namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
-class MobileModel extends Model
+class MobileModel extends CommonModel
 {
     use HasFactory;
 
@@ -62,7 +62,7 @@ class MobileModel extends Model
         foreach ($item->items() as $k => $v) {
             $result[$k]['id'] = $v['id'];
             $result[$k]['mobile'] = $v['mobile'];
-            $result[$k]['created_at'] = $v['created_at'];
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
         }
 
         $res['data'] = $result;

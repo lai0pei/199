@@ -58,7 +58,7 @@
                                 parent.$('button[lay-filter="data-search-btn"]').click();//刷新列表
                                 parent.layer.close(index); //再执行关闭
 
-                            }, SUCCESS_TIME)
+                            }, SUCCESS_TIME);
                         } else {
                             layer.msg(data.msg, {
                                 icon: 2,

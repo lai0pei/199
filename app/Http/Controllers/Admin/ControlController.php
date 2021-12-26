@@ -10,6 +10,6 @@ class ControlController extends Controller
     //
 
     public function control(){
-        return view('control.control');
+        return view('admin.control.control');
     }
 }

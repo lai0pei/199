@@ -2,12 +2,11 @@
 
 namespace App\Models\Admin;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class ConfigModel extends Model
+use App\Models\Admin\CommonModel;
+
+class ConfigModel extends CommonModel
 {
-    use HasFactory;
 
     /**
      * The table associated with the model.
@@ -41,10 +40,12 @@ class ConfigModel extends Model
 
         (new LogModel($log_data))->createLog();
 
+        return true;
+
         }
 
-
-        return true;
+        return false;
+      
     }
 
     public function getConfig($name){
@@ -53,5 +54,9 @@ class ConfigModel extends Model
 
     }
 
+    public function __destruct()
+    {
+        unset($this->data);
+    }
  
 }

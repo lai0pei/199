@@ -2,14 +2,37 @@
 @section('content')
     <div class="layuimini-container">
         <div class="layuimini-main">
+            <fieldset class="table-search-fieldset" style="display: none">
+                <legend>搜索信息</legend>
+                <div style="margin: 10px 10px 10px 10px"> 
+                    <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action="">
+                        <div class="layui-form-item">
+                         
+                            <div class="layui-inline">
+                                <label class="layui-form-label">表单名称</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="id" value="{{ $id ?? -1 }}" class="layui-input">
+                                    <input type="text" name="name" autocomplete="off" placeholder="请输入活动名称"
+                                        class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-btn-container">
+                                <button type="submit" class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-submit
+                                lay-filter="data-search-btn">刷新列表</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </fieldset>
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加活动表单 </button>
+                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add" > 添加活动表单 </button>
                 </div>
+               
             </script>
-
-            <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
            
+            <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
             <script type="text/html" id="currentTableBar">
                 <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑表单</a>
                 <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
@@ -23,8 +46,8 @@
         var add_page = "{{ route('admin_form_detail') }}";
         var delete_ip = "{{ route('admin_form_delete') }}";
         var api_url = "{{ route('admin_form_list') }}";
-        var event_id = "{{$id}}";
-    
+        var event_id = "{{ $id }}";
+
 
 
         layui.use(['form', 'table'], function() {
@@ -35,8 +58,8 @@
             table.render({
                 elem: '#currentTableId',
                 url: api_url,
-                where : {
-                    'id' : event_id,
+                where: {
+                    'id': event_id,
                 },
                 toolbar: '#toolbarDemo',
                 defaultToolbar: ['filter', 'exports', 'print', ],
@@ -100,10 +123,7 @@
             // 监听搜索操作
             form.on('submit(data-search-btn)', function(data) {
                 var result = JSON.stringify(data.field);
-                // layer.alert(result, {
-                //     title: '最终的搜索信息'
-                // });
-
+           
                 //执行搜索重载
                 table.reload('currentTableId', {
                     page: {
@@ -129,7 +149,7 @@
                         maxmin: true,
                         shadeClose: true,
                         area: ['80%', '80%'],
-                        content:  add_page + "/" + event_id
+                        content: add_page + "/" + event_id
                     });
                     $(window).on("resize", function() {
                         layer.full(index);
@@ -161,23 +181,34 @@
                 } else if (obj.event === 'delete') {
                     layer.confirm('确认删除?', function(index) {
                         var id = obj.data.id;
-                        axios({
-                                method: 'post',
-                                url: delete_ip,
-                                responseType: 'json',
-                                data: {
-                                    'id': id,
-                                }
-                            })
-                            .then(function(response) {
-                                var res = response.data;
-                                if (res.code == 1) {
-                                    layer.msg(res.msg);
-                                    location.reload();
+
+
+                        $.ajax({
+                            url: delete_ip,
+                            data: {
+                                'id': id,
+                            },
+                            method: 'POST',
+                            success: function(data) {
+                                if (data.code == 1) {
+                                    layer.msg(data.msg, {
+                                        icon: 6,
+                                        time: SUCCESS_TIME,
+                                        shade: 0.2
+                                    });
+                                    setTimeout(function() {
+                                        var index = layer.getFrameIndex(window
+                                            .name); //先得到当前iframe层的索引
+                                        $('button[lay-filter="data-search-btn"]')
+                                            .click(); //刷新列表
+                                        layer.close(index); //再执行关闭
+
+                                    }, SUCCESS_TIME)
                                 } else {
-                                    layer.msg(res.msg);
+                                    layer.msg(data.msg);
                                 }
-                            });
+                            }
+                        });
                         layer.close(index);
                     });
                 }

@@ -21,10 +21,10 @@ use App\Exceptions\LogicException;
 use App\Models\Admin\LogModel;
 use App\Models\Admin\RoleModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Models\Admin\CommonModel;
 
-class AdminModel extends Model
+class AdminModel extends CommonModel
 {
     use HasFactory;
 
@@ -177,7 +177,7 @@ class AdminModel extends Model
             $result[$k]['user_name'] = $v['user_name'];
             $result[$k]['last_ip'] = $v['last_ip'];
             $result[$k]['login_count'] = $v['login_count'];
-            $result[$k]['last_date'] = $v['last_date'];
+            $result[$k]['last_date'] = $this->toTime($v['last_date']);
             $result[$k]['login_count'] = $v['login_count'];
 
             if ($v['status'] == 1) {
@@ -202,8 +202,9 @@ class AdminModel extends Model
     {$data = $this->adminData;
         $account = self::where('account', $data['account'])->value('account');
         $user_name = self::where('user_name', $data['username'])->value('user_name');
+        
 
-        if ($data['account'] == $account) {
+        if ($data['account'] == $account ) {
             throw new LogicException('账号已存在');
         }
 
@@ -270,25 +271,36 @@ class AdminModel extends Model
             $save['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
 
-        DB::beginTransaction();
+        if(1 == $data['id'] && $data['status'] == 0){
+            throw new LogicException('总管理员不可禁用');
+        }
 
-        $status = self::where("id", $data['id'])->update($save);
+        try {
 
-        if (false === $status) {
+            DB::beginTransaction();
 
-            DB::rollBack();
+            $status = self::where("id", $data['id'])->update($save);
 
-            throw new LogicException('编辑失败');
+            if (false === $status) {
 
-        } else {
+                DB::rollBack();
 
-            $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑管理员'];
+                throw new LogicException('编辑失败');
 
-            (new LogModel($log_data))->createLog();
+            } else {
 
-            DB::commit();
+                $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑管理员'];
 
-            return true;
+                (new LogModel($log_data))->createLog();
+
+                DB::commit();
+
+                return true;
+            }
+        } catch (LogicException $e) {
+
+            throw new LogicException($e->getMessage());
+
         }
 
     }
@@ -308,11 +320,15 @@ class AdminModel extends Model
 
         }
 
-        $delete = [
-            'is_delete' => 0,
-        ];
+        if ($data['id'] == 1) {
+            throw new LogicException('总管理员不可删除');
+        }
 
-        $status = self::where("id", $data['id'])->update($delete);
+        // $delete = [
+        //     'is_delete' => 0,
+        // ];
+
+        $status = self::where("id", $data['id'])->delete();
 
         if (false === $status) {
 

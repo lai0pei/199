@@ -11,11 +11,13 @@
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">游戏列表</label>
                     <div class="layui-input-block">
-                      <textarea name="game"  lay-verify="required" class="layui-textarea">{{$game['game'] ?? ''}}</textarea>
+                      <textarea name="game"  lay-verify="required" placeholder="例如:游戏多多 盈利多多" class="layui-textarea">{{$game['game'] ?? ''}}</textarea>
                     </div>
                   </div>
                   <div class="layui-form-item">
+                    @if (checkAuth('game_edit'))
                     <button class="layui-btn" lay-submit="" lay-filter="save">提交</button>
+                    @endif
                   </div>
             </form>
         </div>
@@ -34,23 +36,25 @@
 
             //监听提交
             form.on('submit(save)', function(data) {
-                
-                axios({
-                        method: 'post',
-                        url: gamePass,
-                        data: {
-                            'data': JSON.stringify(data.field),
-                        }
-                    })
-                    .then(function(response) {
-                        var res = response.data;
-                        if (res.code == 1) {
-                            layer.msg(res.msg);
-                        }
-                          
-                    });
-                   
+            
 
+                    $.ajax({
+                    url: gamePass,
+                    data: {
+                            'data': JSON.stringify(data.field),
+                        },
+                    method: 'POST',
+                    async : false,
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2})
+                           
+                        } else {
+                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2})
+                        }
+                    }
+                });
+                   
             });
 
         });

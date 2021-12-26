@@ -17,9 +17,9 @@
 
 namespace App\Models\Admin;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\CommonModel;
 
-class LogModel extends Model
+class LogModel extends CommonModel
 {
 
     /**
@@ -112,7 +112,7 @@ class LogModel extends Model
             $result[$k]['title'] = $v['title'];
             $result[$k]['ip'] = $v['ip'];
             $result[$k]['admin_name'] = $this->getName($v['admin_id']);
-            $result[$k]['created_at'] = $v['created_at'];
+            $result[$k]['created_at'] = $this->toTime($v['created_at']);
 
         }
         $res['data'] = $result;

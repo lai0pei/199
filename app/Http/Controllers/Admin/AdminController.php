@@ -59,6 +59,7 @@ class AdminController extends Controller
     }
 
     public function addNewAdmin(){
+
         try {
             if ((new AdminModel($this->request->all()))->addAdmin()) {
                 return self::json_return([],'添加成功');

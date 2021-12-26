@@ -15,7 +15,9 @@
                     </div>
                   </div>
                   <div class="layui-form-item">
+                    @if (checkAuth('refuse_edit'))
                     <button class="layui-btn" lay-submit="" lay-filter="save">提交</button>
+                    @endif
                   </div>
             </form>
         </div>
@@ -34,21 +36,25 @@
 
             //监听提交
             form.on('submit(save)', function(data) {
-                
-                axios({
-                        method: 'post',
-                        url: saveRefuse,
-                        data: {
+
+                    
+                    $.ajax({
+                    url: saveRefuse,
+                    data: {
                             'data': JSON.stringify(data.field),
+                        },
+                    method: 'POST',
+                    async : false,
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2});
+                              location.reload();
+                        } else {
+                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2});
                         }
-                    })
-                    .then(function(response) {
-                        var res = response.data;
-                        if (res.code == 1) {
-                            layer.msg(res.msg);
-                        }
-                          
-                    });
+                    }
+                });
+
                    
 
             });
