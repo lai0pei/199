@@ -187,9 +187,9 @@
 
 
             var editor = layedit.build('LAYEDITOR', {
-                hideTool: [
-                    'face'
-                ],
+                // hideTool: [
+                //     'face'
+                // ],
                 height: 200,
 
             });
