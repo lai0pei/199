@@ -1,11 +1,11 @@
 <template>
   <div>
-    <transition name="modal" v-if="showModal" >
+    <transition name="modal" v-if="showModel" >
       <div class="modal-mask ">
         <div class="modal-wrapper">
           <div class="modal-container">
             <div class="modal-header">
-              <slot name="header"> default header </slot>
+              <div> <img src="" alt="左边图标"><span>优惠申请</span><img src="" alt="右边图标"></div>
             </div>
 
             <div class="modal-body">
@@ -15,7 +15,7 @@
             <div class="modal-footer">
               <slot name="footer">
                 default footer
-                <button class="modal-default-button" @click="showModal = false">
+                <button class="modal-default-button" @click="showModel = false">
                   OK
                 </button>
               </slot>
@@ -26,6 +26,22 @@
     </transition>
   </div>
 </template>
+<script> 
+export default {
+  props :[ 'isShow', 'applyData'],
+  data () {
+    return {
+      showModel : false,
+    }
+  },
+mounted(){
+  console.log(this.isShow);
+}
+}
+
+</script>
+
+
 <style scoped>
 .modal-mask {
   position: fixed;
@@ -82,13 +98,3 @@
 }
 
 </style>
-<script> 
-export default {
-  data () {
-    return {
-      showModal : true,
-    }
-  }
-}
-
-</script>

@@ -1,9 +1,9 @@
 <template>
-  <div class="fixed w-full bottom-0">
+  <div class="w-full bottom-0  mt-2 fixed">
   <nav class="content-center">
     <ul class="grid grid-cols-4 h-16 text-center bg-black">
       <li v-for="nav in list" :key="nav.id">
-        <a :href="nav.href" class="text-white text-xs block pt-2"><span><img :src="nav.icon" alt="底部图标" class="w-8 h-8 mx-auto"></span>{{ nav.name }}</a>
+        <a :href="nav.href" class="text-white text-xs block pt-2 rounded-md"><span><img :src="nav.icon" alt="底部图标" class="w-8 h-8 mx-auto"></span>{{ nav.name }}</a>
       </li>
     </ul>
   </nav>
