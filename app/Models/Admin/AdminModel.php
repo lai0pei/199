@@ -147,7 +147,7 @@ class AdminModel extends CommonModel
 
         $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id'];
         $where = [];
-        $where['is_delete'] = 1;
+        $where['is_delete'] = 0;
         if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
 

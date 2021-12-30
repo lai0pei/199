@@ -66,7 +66,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">外联地址</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="external_url" lay-verify="required|url" lay-reqtext="活动名不能为空"
+                        <input type="text" name="external_url"
                             placeholder="http://www.google.com" value="{{ $type['external_url'] ?? '' }}"
                             class="layui-input">
                     </div>
@@ -109,7 +109,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label required">每日限制次数</label>
                     <div class="layui-input-inline">
-                        <input type="number" name="daily_limit" lay-verify="required" placeholder="例如:0"
+                        <input type="number" name="daily_limit"  placeholder="例如:0"
                             value="{{ $type['daily_limit'] ?? '' }}" class="layui-input">
                     </div>
                 </div>
@@ -265,7 +265,7 @@
                 elem: '#type_url',
                 url: uploader //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
                     ,
-                size: 200,
+                size: 2048,
                 drag: true,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

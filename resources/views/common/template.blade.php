@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{{ asset('static/layuimini/one_page/css/public.css') }}" type="text/css" media="all">
     <link rel="stylesheet" href="{{ asset('static/layuimini/one_page/css/themes/default.css') }}" type="text/css"
         media="all">
-    <link rel="stylesheet" href="{{ asset('static/font-awesome-4.7.0/css/font-awesome.min.css') }}" type="text/css"
+    <link rel="stylesheet" href="{{ asset('static/lib/font-awesome-4.7.0/css/font-awesome.min.css') }}" type="text/css"
         media="all">
     <style>
         @font-face {
@@ -46,7 +46,7 @@
 <body class="layui-layout-body layuimini-all">
     @yield('content')
     <script src="{{ asset('static/layui/layui.js') }}" charset="utf-8"></script>
-    <script src="{{ asset('static/jquery/jquery-3.6.0.js') }}" charset="utf-8"></script>
+    <script src="{{ asset('static/lib/jquery-3.4.1/jquery-3.4.1.min.js') }}" charset="utf-8"></script>
     <script src="{{ asset('static/layuimini/one_page/js/lay-config.js?v=2.0.0') }}" charset="utf-8"></script>
 
 

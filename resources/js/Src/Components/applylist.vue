@@ -5,7 +5,7 @@
       class="
         seamless-warp
         bg-repeat-round
-        text-center
+        center
         bg-applyImage
         h-24
         overflow-hidden
@@ -13,9 +13,9 @@
       :class-option="classOption"
     >
       <ul>
-        <li v-for="(item, key) in listData" :key="key">
+        <li v-for="(item, key) in listData" :key="key" class="ml-8">
           <span class="text-yellow-600 text-xs">恭喜</span
-          ><span class="text-zinc-500 text-xs pl-2">{{ item.name }}</span
+          ><span class="text-zinc-500 text-xs pl-2">{{ item.username }}</span
           ><span class="text-red-500 text-xs pl-2">成功办理</span
           ><span class="text-white text-xs pl-2 ">{{ item.event }}</span>
         </li>
@@ -27,23 +27,21 @@
 <script>
 import seamless from "vue-seamless-scroll";
 export default {
+  props : ['userApplyList'],
   components: {
     seamless,
   },
+  mounted(){
+    this.listData = this.userApplyList;
+  },
   data() {
     return {
-      listData: [
-        { name: "kan*** ", event: "电子注单" },
-        { name: "kan***", event: "电子注单" },
-        { name: "kan***  ", event: "电子注单" },
-        { name: "kan***  ", event: "电子注单" },
-        { name: "kan*** ", event: "电子注单" },
-        { name: "kan*** ", event: "电子注单" },
-      ],
+      listData: [],
       classOption: {
         step: 0.25,
         autoPlay: true,
         openTouch: true,
+        limitMoveNum : 1
       },
     };
   },

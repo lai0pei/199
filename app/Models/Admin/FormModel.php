@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 
 class FormModel extends CommonModel
 {
-    const TEXT = '文本格式';
+    const TEXT = '输入框';
     const NUM = '数字框';
     const PH = '手机号码';
     const TIME = '时间框';
@@ -82,7 +82,7 @@ class FormModel extends CommonModel
         return EventModel::find($id)->value('name');
     }
 
-    // 表单类型 0 文本格式, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框
+    // 表单类型 0 输入框, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框
     private function getOptionName($id)
     {
 

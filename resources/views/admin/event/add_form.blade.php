@@ -15,7 +15,7 @@
         <div class="layui-form-item">
             <label class="layui-form-label required">选项</label>
             <div class="layui-input-block">
-                <input type="text" name="option" lay-verify="required" lay-reqtext="请输入表单选项" placeholder="多个选项用英文逗号(,)分隔"
+                <input type="text" name="option"  lay-reqtext="请输入表单选项" placeholder="多个选项用英文逗号(,)分隔"
                     value="{{ $form['option'] ?? '' }}" class="layui-input" maxlength="12">
             </div>
         </div>
@@ -23,13 +23,14 @@
             <label class="layui-form-label required">表单类型</label>
             <div class="layui-input-inline">
                 <select name="type" lay-verify="required" lay-reqtext="请选择表单类型" id="selectId">
-                    @if (($form['type'] ?? '') == '')
                         @foreach ($type as $key => $value)
-                            <option value="{{ $key }}">{{ $value }}</option>
+                        @php  $selected = '';
+                         if(($form['type'] ?? '') == $key){
+                            $selected = 'selected="selected';
+                         }
+                         @endphp
+                            <option value="{{ $key }}" {{$selected}}>{{ $value }}</option>
                         @endforeach
-                    @else
-                        <option value="{{ $form['type'] }}">{{ $form['type_name'] }}</option>
-                    @endif
                 </select>
             </div>
         </div>
