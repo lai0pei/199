@@ -41,7 +41,7 @@ export default {
         step: 0.25,
         autoPlay: true,
         openTouch: true,
-        limitMoveNum : 1
+        limitMoveNum : 0
       },
     };
   },

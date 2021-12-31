@@ -12,8 +12,9 @@
         <!-- Scripts -->
         @routes
         <script src="{{ mix('js/app.js') }}" defer></script>
+
     </head>
-    <body class="bg-black font-sans antialiased h-full">
+    <body class="font-sans antialiased h-full bg-bgImg bg-fixed">
         @inertia
     </body>
 </html>
@@ -24,4 +25,5 @@ body{
 body::-webkit-scrollbar {
   display: none; /* for Chrome, Safari, and Opera */
 }
+
 </style>

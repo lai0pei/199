@@ -25,3 +25,7 @@ use Inertia\Inertia;
  */
 Route::get('/', [IndexController::class,'index']);
 Route::post('/nav_link', [IndexController::class,'navLink'])->name('index_nav');
+
+Route::post('/getForm', [IndexController::class,'getFormById'])->name('get_index_form');
+Route::post('/applyForm', [IndexController::class,'applyForm'])->name('apply_form');
+

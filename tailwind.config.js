@@ -16,7 +16,10 @@ module.exports = {
             backgroundImage: {
                 'applyImage': "url('/199/images/info_bg.png')",
                 'eventBg' : "url('/199/images/navi_bg.png')",
-                'eventInfo' : "url('/199/images/icon02.png')",  
+                'eventInfo' : "url('/199/images/icon02.png')", 
+                'eventBtn' :  "url('/199/images/btn_bg.png')", 
+                'bgImg' :  "url('/199/images/body_bg.jpg')", 
+                
               }
         },
     },

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative bg-black rounded-lg">
     <myHeading></myHeading>
     <myWallpaper></myWallpaper>
     <applyList :user-apply-list="applyList"></applyList>

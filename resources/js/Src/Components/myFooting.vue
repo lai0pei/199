@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full bottom-0  mt-2 fixed">
+  <div class="w-full bottom-0 fixed block bg-slate-900 rounded-t-lg max-w-screen-sm">
   <nav class="content-center max-w-screen-sm">
-    <ul class="grid grid-cols-4 h-16 text-center bg-black">
+    <ul class="grid grid-cols-4 h-16 text-center">
       <li>
         <a :href="list.home" class="text-white text-xs block pt-2 rounded-md"><span><img src="199/images/f_img01.png" alt="首页图标" class="w-8 h-8 mx-auto"></span>首页</a>
       </li>

@@ -1,36 +1,144 @@
 <?php
+/*
+ * |-----------------------------------------------------------------------------------------------------------
+ * | Laravel 8 + PHP 8.0 + LayUI + 基于CMS 开发
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 开发者: 云飞
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 文件: ApplyModel.php
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 项目: VIP活动申请
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 创建时间: Thursday, 30th December 2021 1:43:23 pm
+ * |-----------------------------------------------------------------------------------------------------------
+ * | Copyright 2021 - 2025
+ * |-----------------------------------------------------------------------------------------------------------
+ */
 
 namespace App\Models\Index;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use LogicException;
 
 class ApplyModel extends Model
 {
-  public function __construct($data = [])
-  {
-      $this->data = $data;
-  }
-  
+    public function __construct($data = [])
+    {
+        $this->data = $data;
+        $this->message = "申请成功";
+    }
+
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'user_apply';
- 
-  public function getApplyList(){
-       $where = [];
-       $where['status'] = 1;
-       $where['is_delete'] = 0;
-       $column = ['id','username','event_id'];
-       $applyList = self::where($where)->select($column)->limit(20)->get()->toArray();
+    
+    /**
+     * getApplyList
+     *
+     * @return void
+     */
+    public function getApplyList()
+    {
+        $where = [];
+        $where['status'] = 1;
+        $where['is_delete'] = 0;
+        $column = ['id', 'username', 'event_id'];
+        $applyList = self::where($where)->select($column)->limit(20)->get()->toArray();
 
-       $eventModel = new EventModel();
-       foreach($applyList as &$v){
-            $v['username'] = substr($v['username'],0,3).'****';
-           $v['event'] = $eventModel::where('id',$v['event_id'])->value('name');
-       }
-       unset($v);
-       return $applyList;
-  }
+        $eventModel = new EventModel();
+        foreach ($applyList as &$v) {
+            $v['username'] = substr($v['username'], 0, 3) . '****';
+            $v['event'] = $eventModel::where('id', $v['event_id'])->value('name');
+        }
+        unset($v);
+        return $applyList;
+    }
+    
+    /**
+     * applyForm
+     *
+     * @return void
+     */
+    public function applyForm()
+    {
+        $data = $this->data;
+        $eventId = $data['eventId'];
+        $username = $data['username'];
+
+        $eventModel = new EventModel();
+
+        $event = $eventModel::find($eventId)->toArray();
+
+        $count = self::where('username', $username)->where('event_id', $eventId)->count();
+
+        if (1 == $event['is_daily'] && $event['daily_limit'] == $count) {
+            $this->message = "今日申请次数，已超过" . $count . '次';
+            throw new LogicException();
+
+        }
+
+        $form = $this->removeNull($data['form']);
+
+        try {
+
+            DB::beginTransaction();
+
+            $insert = [
+                'event_id' => $eventId,
+                'username' => $username,
+                'value' => serialize($form),
+                'apply_time' => now(),
+                'status' => 0,
+                'is_delete' => 0,
+                'ip' => request()->ip(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            $status = self::insert($insert);
+        } catch (LogicException $e) {
+            $this->message = "申请失败";
+            throw new LogicException();
+        }
+        if (!$status) {
+            DB::rollBack();
+            $this->message = '申请失败，请联系客服';
+            throw new LogicException();
+        }
+
+        DB::commit();
+
+        return true;
+
+    }
+
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    private function removeNull($form)
+    {
+        $data = [];
+        $formModel = new FormModel();
+        $i = 0;
+        foreach ($form as &$subForm) {
+            foreach ($subForm as $k => $v) {
+
+                if (!empty($v)) {
+                    $data[$i]['name'] = $formModel::where('id', $k)->value('name');
+                    $data[$i]['value'] = $v;
+                }
+
+                $i++;
+            }
+        }
+
+        return array_values($data);
+    }
+
 }

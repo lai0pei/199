@@ -28,6 +28,7 @@ class CreateSmsApply extends Migration
             $table->tinyInteger('is_match')->comment('1=匹配，0=不匹配')->nullable();
             $table->string('ip', 100)->nullable()->comment('使用Ip');
             $table->longText('send_remark')->nullable()->comment('派送备注');
+            $table->longText('value')->nullable()->comment('派送备注');
             $table->dateTime('send_time', $precision = 0)->nullable()->comment('派送时间');
             $table->dateTime('apply_time', $precision = 0)->nullable()->comment('申请时间');
             $table->dateTime('created_at',$precision = 0)->comment('创建时间')->nullable();

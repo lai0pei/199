@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative pb-16">
     <div class="rounded-lg bg-zinc-800 mt-2 mx-2">
       <div class="overflow-auto whitespace-nowrap">
         <a
@@ -14,7 +14,7 @@
         >
       </div>
     </div>
-    <div class="relative">
+    <div>
       <ul>
         <li v-for="(list, index) in cEventList" :key="index">
           <div class="mx-2 mt-2 mb-10">
@@ -45,8 +45,8 @@
     <transition name="modal" v-if="showModal">
       <div class="modal-mask">
         <div class="modal-wrapper">
-          <div class="modal-container bg-slate-700 rounded-lg">
-            <div class="modal-header bg-slate-800 rounded-md">
+          <div class="modal-container rounded-lg">
+            <div class="modal-header rounded-md">
               <slot name="header">
                 <div>
                   <img
@@ -65,28 +65,108 @@
 
             <div class="modal-body">
               <slot name="body">
-                <div v-if="1">
-                  <input v-model="message" placeholder="会员账号" id="in" class="userId rounded-md" />
-                </div>
-                <div v-if="1">
-                  <select v-model="selected" id="sel" class="userSelect mt-1 rounded-md" aria-placeholder="选择申请金额">
-                    <option selected value="">选择申请金额</option>
-                    <option>A</option>
-                    <option>B</option>
-                    <option>C</option>
-                  </select>
-                </div>
-                <div v-if="1">
-                  <input v-model="message" type="number" placeholder="输入框" class="numberSelect mt-1 rounded-md " />
-                </div>
-                <div v-if="1">
-                   <input v-model="message" type="number" placeholder="输入框" class="numberSelect mt-1 rounded-md " />
-                   <image src=""/>
+                <ul>
+                  <li>
+                    <div>
+                      <input
+                        placeholder="会员账号"
+                        class="allForms rounded-md"
+                        v-model="username"
+                      />
+                    </div>
+                  </li>
+                  <li v-for="(form, index) in formList" :key="index">
+                    <div v-if="form.type == 0">
+                      <input
+                        v-bind:placeholder="form.name"
+                        alt="输入"
+                        class="allForms mt-1 rounded-md"
+                        v-model="formName.inputForm[form.id]"
+                      />
+                    </div>
+                    <div v-if="form.type == 1">
+                      <input
+                        type="number"
+                        v-bind:placeholder="form.name"
+                        alt="数字"
+                        class="allForms mt-1 rounded-md"
+                        v-model="formName.numberForm[form.id]"
+                      />
+                    </div>
+                    <div v-if="form.type == 2">
+                      <input
+                        type="number"
+                        v-bind:placeholder="form.name"
+                        alt="手机"
+                        class="allForms mt-1 rounded-md"
+                        v-model="formName.phoneForm[form.id]"
+                      />
+                    </div>
+                    <div v-if="form.type == 3">
+                      <input
+                        type="number"
+                        v-bind:placeholder="form.name"
+                        alt="时间"
+                        class="allForms mt-1 rounded-md"
+                        v-model="formName.timeForm[form.id]"
+                      />
+                    </div>
+                    <div v-if="form.type == 4">
+                      <el-upload class="allForms mt-1 rounded-md"
+                        ref="imgUpload"
+                        :on-success="imgSuccess"
+                       
+                        accept="image/*"
+                      
+                       
+                        multiple
+                      >
+                        <el-button type="primary">上传图片</el-button>
+                      </el-upload>
+                    </div>
+                    <div v-if="form.type == 5">
+                      <select
+                        id="sel"
+                        class="allForms mt-1 rounded-md"
+                        v-model="formName.selectForm[form.id]"
+                      >
+                        <option selected :value="form.name">
+                          {{ form.name }}
+                        </option>
+                        <option
+                          v-for="(data, index2) in form.option"
+                          :key="index2"
+                        >
+                          {{ data }}
+                        </option>
+                      </select>
+                    </div>
+                  </li>
+                </ul>
+                <div class="text-center mt-4">
+                  <span class="float-left"
+                    ><button
+                      v-on:click="showModal = false"
+                      class="btnSubmit bg-eventBtn block m-auto"
+                    >
+                      取消
+                    </button></span
+                  >
+                  <span class="float-right"
+                    ><button
+                      v-on:click="submit"
+                      class="btnSubmit bg-eventBtn block m-auto"
+                    >
+                      点击申请
+                    </button></span
+                  >
                 </div>
               </slot>
             </div>
-            <div class="text-center"> 
-                 <span><img class="w-28 text-center" src="199/images/btn_bg.png" alt="点击申请">点击申请</span>
+            <div class="modal-footer">
+              <slot name="footer">
+                <br />
+              </slot>
             </div>
           </div>
         </div>
@@ -96,29 +176,31 @@
 </template>
 
 <style scoped>
-.userId, .userSelect, .numberSelect{
-   padding: 0 0.2rem;
-    width: 100%;
-    height : 2rem;
-    color: #fff;
-    font-size: 0.8rem;
-    font-weight: bold;
-    border: 1px solid #000;
-    background: #000;
-    box-sizing: border-box;
-} 
- ::placeholder{
-   color: white;
- }  
+.allForms {
+  padding: 0 0.7rem;
+  width: 100%;
+  height: 2rem;
+  color: #fff;
+  font-size: 0.8rem;
+  border: 1px solid #000;
+  background: #000;
+  box-sizing: border-box;
+}
+::placeholder {
+  color: white;
+}
+.btnSubmit {
+  width: 6.2rem;
+  background-size: 6.2rem;
+}
 </style>
 
 <script>
-
+import axios from "axios";
+import { ElButton, ElUploader} from 'vue-el-element';
 
 export default {
-  components: {
-  
-  },
+  components: {},
   props: { passedEventList: Array },
   data() {
     return {
@@ -126,7 +208,18 @@ export default {
       eventType: [],
       eventTypeId: 0, //init index
       cEventList: [],
+      eventId: "",
       apply: [],
+      formList: [],
+      formName: {
+        inputForm: [],
+        numberForm: [],
+        phoneForm: [],
+        timeForm: [],
+        photoForm: [],
+        selectForm: [],
+      },
+      username: "",
     };
   },
   mounted() {
@@ -161,27 +254,50 @@ export default {
         this.eventType.push({ id: data.type_id, name: data.name });
       });
     },
-    getDialog: function (data) {
+    getDialog: async function (data) {
       this.showModal = true;
-    },
-     handleCancel() {
-      this.showDatePicker = false;
-    },
-    handleConfirm(item) {
-      this.selectedDate = item;
-      this.showDatePicker = false;
-    },
-    disableDate(item) {
-      if (
-        new Date(item) - new Date("2019-8-10") >= 0 &&
-        new Date("2019-8-20") - new Date(item) >= 0
-      ) {
-        return true;
+      this.formList = [];
+      this.eventId = data.id;
+      let form = [];
+      await axios
+        .post(route("get_index_form"), {
+          event_id: data.id,
+        })
+        .then(function (response) {
+          form = response.data.data;
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+
+      if (form.length != 0) {
+        this.formList = form;
       }
-      return false;
     },
+    submit: async function () {
+      this.showModal = false;
+      console.log(this.formName);
+      // if(this.username == ""){
+      //   this.$toast('请填写会员账号');
+      // }
+      // let that = this;
+      // await axios.post(route("apply_form"), {
+      //   eventId : this.eventId,
+      //   username : this.username,
+      //   form : this.formName,
+
+      // }).then(function (response){
+      //    that.$toast(response.data.msg);
+      // }).catch(function (error) {
+      //   that.$toast('申请有误');
+      // });
+    },
+      imgSuccess (res, file, fileList) {
+        console.log(res)
+        console.log(file)
+        console.log(fileList)   // 这里可以获得上传成功的相关信息
+      }
   },
-  computed: {},
 };
 </script>
 
@@ -195,7 +311,7 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: table;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
 
 .modal-wrapper {
@@ -210,6 +326,11 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   font-family: Helvetica, Arial, sans-serif;
+  background-color: #232323;
+}
+
+.modal-header {
+  background-color: #191919;
 }
 
 .modal-header h3 {
@@ -235,7 +356,7 @@ export default {
  */
 
 .modal-enter {
-  opacity: 0;
+  opacity: 0.5s;
 }
 
 .modal-leave-active {
@@ -244,7 +365,7 @@ export default {
 
 .modal-enter .modal-container,
 .modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
+  -webkit-transform: scale(2.1);
+  transform: scale(2.1);
 }
 </style>

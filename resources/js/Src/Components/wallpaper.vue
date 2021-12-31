@@ -1,5 +1,5 @@
 <template>
-  <div class="relative  mx-2 mt-2">
+  <div class="mx-2">
     <Swiper
       :slides-per-view="1"
       loop   :autoplay= 3000
