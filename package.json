@@ -28,13 +28,13 @@
         "postcss": "^8.4.5",
         "postcss-import": "^14.0.2",
         "tailwindcss": "^3.0.7",
+        "vue-base64-file-upload": "^1.0.4",
+        "vue-core-image-upload": "^2.4.13",
         "vue-easy-toast": "^1.0.5",
-        "vue-el-upload": "^1.1.1",
         "vue-js-modal": "^2.0.1",
         "vue-loader": "^15.9.8",
         "vue-seamless-scroll": "^1.1.23",
         "vue-template-compiler": "^2.6.14",
-        "vue2-swiper": "^0.0.13",
-        "vuejs-mobile-datepicker": "^1.1.7"
+        "vue2-swiper": "^0.0.13"
     }
 }

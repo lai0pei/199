@@ -18,6 +18,14 @@ return [
         'expire' => 5,
         'math' => false,
     ],
+    'index' => [
+        'length' => 4,
+        'width' => 90,
+        'height' => 32,
+        'quality' => 90,
+        'expire' => 5,
+        'math' => false,
+    ],
     'math' => [
         'length' => 9,
         'width' => 120,

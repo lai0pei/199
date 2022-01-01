@@ -27,6 +27,7 @@ class ApplyModel extends Model
     {
         $this->data = $data;
         $this->message = "申请成功";
+        $this->formModel = new FormModel();
     }
 
     /**
@@ -35,7 +36,7 @@ class ApplyModel extends Model
      * @var string
      */
     protected $table = 'user_apply';
-    
+
     /**
      * getApplyList
      *
@@ -57,7 +58,7 @@ class ApplyModel extends Model
         unset($v);
         return $applyList;
     }
-    
+
     /**
      * applyForm
      *
@@ -68,6 +69,8 @@ class ApplyModel extends Model
         $data = $this->data;
         $eventId = $data['eventId'];
         $username = $data['username'];
+        $pic_url = $data['imageUrl'];
+        $form = [];
 
         $eventModel = new EventModel();
 
@@ -82,6 +85,15 @@ class ApplyModel extends Model
         }
 
         $form = $this->removeNull($data['form']);
+
+        if (!empty($pic_url)) {
+            foreach ($pic_url as &$v) {
+                $v['name'] = $this->formModel::where('id', $v['id'])->value('name');
+                unset($v['id']);
+            }
+            unset($v);
+            $form = array_merge($form, $pic_url);
+        }
 
         try {
 
@@ -124,13 +136,13 @@ class ApplyModel extends Model
     private function removeNull($form)
     {
         $data = [];
-        $formModel = new FormModel();
+
         $i = 0;
         foreach ($form as &$subForm) {
             foreach ($subForm as $k => $v) {
 
                 if (!empty($v)) {
-                    $data[$i]['name'] = $formModel::where('id', $k)->value('name');
+                    $data[$i]['name'] = $this->formModel::where('id', $k)->value('name');
                     $data[$i]['value'] = $v;
                 }
 

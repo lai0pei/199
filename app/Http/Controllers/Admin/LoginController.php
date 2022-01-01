@@ -69,7 +69,7 @@ class LoginController extends Controller
         }
 
         // if (!captcha_check($input['captcha'])) {
-        //     return self::json_fail('验证码不正确');
+        //     return self::json_fail([],'验证码不正确');
         // }
 
         try {
@@ -89,7 +89,7 @@ class LoginController extends Controller
      * @return void
      */
     public function captcha()
-    {
+    {   
         return captcha('admin_login');
     }
 

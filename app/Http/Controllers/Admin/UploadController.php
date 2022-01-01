@@ -19,6 +19,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\MobileImExModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use LogicException;
@@ -39,7 +40,16 @@ class UploadController extends Controller
      */
     public function eventPhotoUpload()
     {
-        $path = config("filesystems.path");
+        $event = config("filesystems.event");
+
+        $time = Carbon::now()->format("Y-m-d");
+
+        $path = $event . '/' . $time;
+
+        if (!Storage::exists($path)) {
+            Storage::makeDirectory($path, 7777, true, true);
+        }
+
         $url = Storage::disk('public')->put($path, $this->request->file('file'));
         $result['code'] = self::FAIL;
         $result['msg'] = '上传成功';
@@ -52,18 +62,14 @@ class UploadController extends Controller
     public function importExcel()
     {
         try {
-         Excel::import(new MobileImExModel(), $this->request->file('file'));
+            Excel::import(new MobileImExModel(), $this->request->file('file'));
 
-        return self::json_success([], '导入成功');
+            return self::json_success([], '导入成功');
 
-    } catch (LogicException $e) {
-        return self::json_fail([], $e);
+        } catch (LogicException $e) {
+            return self::json_fail([], $e);
+        }
+
     }
 
-    }
-
-    // public function exportExcel()
-    // {
-    //     return Excel::download(new UsersExport, 'users-collection.xlsx');
-    // }
 }

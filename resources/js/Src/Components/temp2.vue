@@ -104,10 +104,12 @@
                     </div>
                     <div v-if="form.type == 3">
                       <input
-                        type="number"
+                        type="text"
                         v-bind:placeholder="form.name"
                         alt="时间"
                         class="allForms mt-1 rounded-md"
+                        onfocus="(this.type='date')"
+                        onblur="(this.type='text')"
                         v-model="formName.timeForm[form.id]"
                       />
                     </div>
@@ -120,13 +122,19 @@
                         :max-file-size="5242880"
                         inputAccept="image/*"
                         :text="form.name"
-                        :data-uploadId="form.id"
-                        v-model="formName.photoForm[form.id]"
-                        url="uploadImage"
+                        :data="{
+                          form_id: form.id,
+                        }"
+                        url="/uploadImage"
                         class="allForms mt-1 rounded-md"
                       >
                       </vue-core-image-upload>
-                      <span v-if="imageReady "><img :src="imagePreview" alt="用户申请图片"  class="rounded-md mt-1"></span>
+                      <span v-if="imageReady" :id='form.id'
+                        ><img
+                          :src="imagePreview"
+                          alt="用户申请图片"
+                          class="rounded-md mt-1"
+                      /></span>
                     </div>
                     <div v-if="form.type == 5">
                       <select
@@ -145,6 +153,20 @@
                       </select>
                     </div>
                   </li>
+                   <div>
+                      <input
+                        placeholder="填写验证码"
+                        class="allForms rounded-md"
+                        v-model="username"
+                      />
+                    </div>
+                     <div>
+                      <input
+                        placeholder="填写手机号"
+                        class="allForms rounded-md"
+                        v-model="username"
+                      />
+                    </div>
                 </ul>
                 <div class="text-center mt-4">
                   <span class="float-left"
@@ -196,8 +218,11 @@
   width: 6.2rem;
   background-size: 6.2rem;
 }
-.g-core-image-upload-btn{
-  padding-top : 0.3rem;
+.g-core-image-upload-btn {
+  padding-top: 0.3rem;
+}
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 </style>
 
@@ -209,7 +234,7 @@ export default {
   components: {
     VueCoreImageUpload,
   },
-  props: { passedEventList: Array , imageID : Number},
+  props: { passedEventList: Array, imageID: Number },
   data() {
     return {
       showModal: false,
@@ -224,18 +249,17 @@ export default {
         numberForm: [],
         phoneForm: [],
         timeForm: [],
-        photoForm: [],
         selectForm: [],
       },
       username: "",
       limit: 2,
       isPreview: false,
       type: 2,
-      imageReady : false,
-      imagePreview : "",
-      imageUrl : "",
-      uploadId : '',
- 
+      imageReady: false,
+      imagePreview: [],
+      imageUrl: [],
+      uploadId: "",
+      formId: [],
     };
   },
   mounted() {
@@ -290,43 +314,54 @@ export default {
         this.formList = form;
       }
     },
-    clearForm : function(){
+    clearForm: function () {
       this.formList = [];
-      this.imagePreview = false;
+      this.imagePreview = [];
       this.imageReady = "";
-      
+      this.imageUrl = [];
+      this.username = "";
+      this.formName.inputForm = [];
+      this.formName.numberForm = [];
+      this.formName.phoneForm = [];
+      this.formName.timeForm = [];
+      this.formName.selectForm = [];
     },
     submit: async function () {
-      this.showModal = false;
-      console.log(this.formName);
-      if(this.username == ""){
-        this.$toast('请填写会员账号');
+     
+      if (this.username == "") {
+        this.$toast("请填写会员账号");
+        return true;
       }
       let that = this;
-      await axios.post(route("apply_form"), {
-        eventId : this.eventId,
-        username : this.username,
-        form : this.formName,
-        imageUrl : this.imageUrl,
-
-      }).then(function (response){
-         that.$toast(response.data.msg);
-      }).catch(function (error) {
-        that.$toast('申请有误');
-      });
+      await axios
+        .post(route("apply_form"), {
+          eventId: this.eventId,
+          username: this.username,
+          form: this.formName,
+          imageUrl: this.imageUrl,
+        })
+        .then(function (response) {
+          that.$toast(response.data.msg);
+            this.showModal = false;
+        })
+        .catch(function (error) {
+          that.$toast("申请有误");
+        });
+       
     },
     imageuploaded: function (response) {
-      console.log("upload",this.$el );
- 
-      if(response.code == 1){
+      if (response.code == 1) {
         this.imageReady = true;
         this.imagePreview = response.data.src;
-        this.$toast('上传成功');
-      }else{
-        this.$toast('上传失败');
+        this.imageUrl.push({
+          id: response.data.form_id,
+          value: this.imagePreview,
+        });
+        this.$toast("上传成功");
+      } else {
+        this.$toast("上传失败");
       }
     },
-
   },
 };
 </script>

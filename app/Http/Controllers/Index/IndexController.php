@@ -17,24 +17,37 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Http\Controllers\Index\CommonController;
-use Inertia\Inertia;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Index\ApplyModel;
 use App\Models\Index\ConfigModel;
 use App\Models\Index\EventTypeModel;
-use App\Models\Index\ApplyModel;
 use App\Models\Index\FormModel;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 use LogicException;
+use Mews\Captcha\Facades\Captcha;
 
-class IndexController extends CommonController
+class IndexController extends Controller
 {
-    //
+
+    /**
+     * __construct
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
-    public function index() {
+    /**
+     * index
+     *
+     * @return void
+     */
+    public function index()
+    {
         $eventModel = new EventTypeModel();
         $configModel = new ConfigModel();
         $applyModel = new ApplyModel();
@@ -42,25 +55,52 @@ class IndexController extends CommonController
         $footer = $configModel->getConfig('linkConfig');
         $announcement = $configModel->getConfig('accouncement');
         $applyList = $applyModel->getApplyList();
-        return Inertia::render('index',['event'=>$event, 'footer'=>$footer, 'announcement' => $announcement, 'applyList' => $applyList]);
+        return Inertia::render('index', ['event' => $event, 'footer' => $footer, 'announcement' => $announcement, 'applyList' => $applyList]);
     }
 
-
-    public function getFormById(){
+    /**
+     * getFormById
+     *
+     * @return void
+     */
+    public function getFormById()
+    {
         $request = $this->request;
         $form = (new FormModel($request->all()))->getFormById();
         return self::json_success($form);
     }
 
-    public function applyForm(){
-        try{
-        $request = $this->request;
-        $applyModel = new ApplyModel($request->all());
-        $applyModel->applyForm();
-        return self::json_success([],$applyModel->getMessage());
-        }catch (LogicException $e){
-            return self::json_fail([],$applyModel->getMessage());
+    /**
+     * applyForm
+     *
+     * @return void
+     */
+    public function applyForm()
+    {
+        try {
+            $request = $this->request;
+            $applyModel = new ApplyModel($request->all());
+
+            if (!captcha_check($this->request->input('captcha'))) {
+                return self::json_fail([],'验证码不正确');
+            }
+
+            $applyModel->applyForm();
+            return self::json_success([], $applyModel->getMessage());
+        } catch (LogicException $e) {
+            return self::json_fail([], $applyModel->getMessage());
         }
-        
+
     }
+
+    /**
+     * captcha
+     *
+     * @return void
+     */
+    public function captcha()
+    {
+        return Captcha::src('index');
+    }
+
 }

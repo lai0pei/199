@@ -1,12 +1,7 @@
 import Vue from 'vue';
 import { createInertiaApp } from '@inertiajs/inertia-vue';
 import Toast from 'vue-easy-toast';
-import VueElElements from 'vue-el-element';
-import VueElUpload from 'vue-el-upload';
 
-
-Vue.use(VueElUpload);
-Vue.use(VueElElements);
 Vue.prototype.$route = route;
 Vue.use(Toast);
 Vue.prototype.$toast = function ($message) {
