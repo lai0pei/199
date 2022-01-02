@@ -73,7 +73,6 @@ class SmsEventModel extends CommonModel
             $result[$k]['id'] = $v['id'];
             $result[$k]['is_send'] = $this->sendName($v['is_send']);
             $result[$k]['user_name'] = $v['user_name'];
-            $result[$k]['money'] = $v['money'];
             $result[$k]['game'] = $v['game'];
             $result[$k]['ip'] = $v['ip'];
             $result[$k]['mobile'] = $v['mobile'];
@@ -156,6 +155,8 @@ class SmsEventModel extends CommonModel
         $res = self::find($data['id'])->toArray();
         $res['is_send'] = $this->sendName($res['is_send']);
         $res['is_match'] = $this->matchName($res['is_match']);
+        $res['value'] = array_values(unserialize($res['value']));
+   
         return $res;
     }
 

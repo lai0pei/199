@@ -68,10 +68,13 @@ export default {
       eventTypeId: 0, //init index
       cEventList: [],
       eventId: "",
-      apply: [],
+      gameList : [],
       formList : {
         'event_id' : [],
         'formData' : [],
+        'need_sms' : [],
+        'game_list' : [],
+        'is_sms' : [],
       },
     };
   },
@@ -109,7 +112,6 @@ export default {
     },
     getDialog: async function (data) {
       this.showModal = true;
-     
       let form = [];
       await axios
         .post(route("get_index_form"), {
@@ -123,9 +125,10 @@ export default {
         });
       this.formList.formData = form;
       this.formList.event_id = data.id;
-      // console.log(this.formList);
-//       this.formList = form;
-// console.log(this.formList);
+      this.formList.need_sms = data.need_sms;
+      this.formList.game_list = this.eventType;
+      this.formList.is_sms = data.is_sms;
+   
     },
     fromApplyDialog: function () {
       this.showModal = false;

@@ -100,6 +100,13 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
+                    <label class="layui-form-label">短信验证码申请</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox" name="need_sms" lay-skin="switch" id='need_sms' lay-text="需要|不需"
+                            {{ $type['need_sms_check'] ?? '' }}>
+                    </div>
+                </div>
+                <div class="layui-form-item">
                     <label class="layui-form-label">是否显每日限制</label>
                     <div class="layui-input-inline">
                         <input type="checkbox" name="is_daily" lay-skin="switch" id='is_daily' lay-text="限制|不限"
@@ -113,6 +120,7 @@
                             value="{{ $type['daily_limit'] ?? '' }}" class="layui-input">
                     </div>
                 </div>
+                
 
                 <div class="layui-form-item">
                     <label class="layui-form-label required">活动图片</label>

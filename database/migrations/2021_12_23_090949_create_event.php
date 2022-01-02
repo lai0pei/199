@@ -23,6 +23,8 @@ class CreateEvent extends Migration
             $table->unsignedMediumInteger('sort')->comment('排序');
             $table->unsignedTinyInteger('status')->comment('0 关闭, 1 开启')->default(1);
             $table->unsignedTinyInteger('display')->comment('0 屏蔽, 1 显示')->default(1);
+            $table->unsignedTinyInteger('is_sms')->comment('是否短信活动 0 不是, 1 是')->default(0);
+            $table->unsignedTinyInteger('need_sms')->comment('活动是否需要短信申请 0 不是, 1 是')->default(0);
             $table->string('start_time',200)->comment('活动开始时间')->nullable();
             $table->string('end_time',200)->comment('活动结束时间')->nullable();
             $table->string('daily_limit', 200)->comment('每日限制次数')->nullable();

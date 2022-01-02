@@ -22,6 +22,7 @@ class CreateUserApply extends Migration
             $table->string('description', 200)->comment('回复内容')->nullable();
             $table->unsignedTinyInteger('status')->comment('0 未审核, 1 审核通过, 2 审核不通过')->default(1);
             $table->unsignedTinyInteger('is_delete')->comment('0 正常, 1 删除')->default(1);
+            $table->longText('value')->comment('表单内容')->nullable();
             $table->string('ip', 200)->comment('用户IP')->nullable();
             $table->dateTime('created_at')->comment('创建时间')->nullable();
             $table->dateTime('updated_at')->comment('更新时间')->nullable();

@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             DefaultRole::class,
             DefaultAuthGroup::class,
             DefaultConfig::class,
+            DefaultEvent::class,  
+            DefaultEventType::class,            
         ]);
     }
 }

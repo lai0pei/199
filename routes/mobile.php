@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Index\IndexController;
 use App\Http\Controllers\Index\UploadController;
 use App\Http\Controllers\Index\TestController;
+use App\Http\Controllers\Index\MessageController;
 
 
 /*
@@ -35,6 +36,10 @@ Route::post('/applyForm', [IndexController::class,'applyForm'])->name('apply_for
 Route::post('/uploadImage', [UploadController::class,'uploadImage'])->name('uploadImage');
 
 Route::get("/getCaptcha", [IndexController::class, 'captcha'])->name('index_captcha');
+
+Route::post("/getMessage", [MessageController::class, 'smsMessage'])->name('sms_message');
+
+// Route::get("/getCaptcha", [IndexController::class, 'captcha'])->name('index_captcha');
 
 //函数 测试接口
 Route::get('/test', [TestController::class,'test']);

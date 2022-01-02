@@ -8,7 +8,7 @@ Vue.prototype.$toast = function ($message) {
   Vue.toast($message, {
     horizontalPosition: 'center',
     verticalPosition: 'center',
-    duration: 2000,
+    duration: 3000,
     mode: 'queue',
     transition: 'my-transition'
 

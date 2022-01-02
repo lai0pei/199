@@ -4,19 +4,30 @@ namespace App\Http\Controllers\Index;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-
+use App\Models\Admin\ConfigModel;
+use App\Http\Controllers\Index\util\yunpian;
+use App\Http\Controllers\Index\util\juhe;
+use LogicException;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Index\util\generateCode;
 
 class TestController extends Controller
 {
-    public function test(){
-        $path = config("filesystems.userApply");
-        public_path('storage');
-        Carbon::now()->format('Y-m-d');
-        Storage::directories($path);
-        Storage::makeDirectory($path);
-        is_dir(config("filesystems.disks.public.url").'/'.$path);
-        return self::json_success(Storage::exists($path));
+  
+    use juhe;
+    use generateCode;
+    use yunpian;
+
+    public function __construct(Request $request)
+    {
+        $this->request = $request;
     }
+
+    public function test(){
+      session()->put(1,1);
+      session()->put(2,2);
+      dd(session()->get(2));
+
+    }
+  
 }

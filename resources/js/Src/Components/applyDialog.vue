@@ -111,6 +111,22 @@
                   </div>
                 </li>
                 <div>
+                <div>
+                    <select
+                      class="allForms mt-1 rounded-md"
+                      v-model="myGameList" v-if="isSms"
+                    >
+                      <option selected>
+                       {{selectGame}}
+                      </option>
+                      <option
+                        v-for="(data, index) in gameList"
+                        :key="index"
+                      >
+                        {{ data.name }}
+                      </option>
+                    </select>
+                  </div>
                   <input
                     placeholder="填写验证码"
                     class="captcha rounded-md mt-1 w-36"
@@ -123,19 +139,39 @@
                     class="float-right rounded-md mt-1"
                   />
                 </div>
-                <div class="text-white">
-                  <input
-                    placeholder="填写手机号"
-                    class="captcha rounded-md mt-1 w-40"
-                    v-model="username"
-                  />
-                  <button
-                    v-on:click="getMessage()"
-                    class="getMessage mt-1 rounded-md float-right bg-black"
-                  >
-                    <span v-if="counting" class="text-xs">{{ timeOut }}秒</span>
-                    <span v-else class="text-xs">获取验证码</span>
-                  </button>
+                <div v-if="needSms == 1">
+                  <div>
+                    <input
+                      type="number"
+                      placeholder="填写手机号"
+                      class="allForms rounded-md mt-1 w-40"
+                      pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+                      v-model="mobileNumber"
+                    />
+                  </div>
+                  <div class="text-white">
+                    <input
+                      type="number"
+                      placeholder="填写短信验证码"
+                      class="captcha rounded-md mt-1 w-40"
+                      v-model="smsNumber"
+                    />
+                    <button
+                      v-on:click="getMessage()"
+                      :disabled="counting"
+                      class="getMessage mt-1 rounded-md float-right bg-black"
+                    >
+                      <count-down
+                        v-if="counting"
+                        :time="timeOut"
+                        :auto-start="counting"
+                        class="text-white"
+                        format="ss 秒"
+                        @finish="countFinish"
+                      ></count-down>
+                      <span v-else class="text-xs">{{ messageText }}</span>
+                    </button>
+                  </div>
                 </div>
               </ul>
               <div class="text-center mt-4">
@@ -172,11 +208,13 @@
 <script>
 import axios from "axios";
 import VueCoreImageUpload from "vue-core-image-upload";
+import countDown from "vant/lib/count-down";
 
 export default {
   props: { childProp: Object },
   components: {
     VueCoreImageUpload,
+    countDown,
   },
   data() {
     return {
@@ -197,41 +235,65 @@ export default {
       imageUrl: [],
       uploadId: "",
       formId: [],
+      isPhone : '',
       eventId: "",
       captcha: "",
       userCaptcha: "",
-      timeOut: 15,
+      mobileNumber : "",
+      timeOut: 15 * 1000,
       counting: false,
       timeWrap: null,
+      messageText: "获取验证码",
+      disable : false,
+      smsNumber : '',
+      needSms : 0,
+      gameList : [],
+      selectGame : "请选择游戏",
+      myGameList : "",
+      isSms : "",
     };
   },
   watch: {
     deep: true,
     "childProp.event_id": function (event_id) {
+      localStorage.setItem('event_id',event_id);
       this.eventId = event_id;
     },
     "childProp.formData": function (formData) {
+    
       if (formData.length != 0) {
+          localStorage.setItem('formData', formData);
         this.formList = formData;
       }
       this.getCaptcha();
     },
-    timeOut: {
-      function (value) {
-        console.log(value);
-        if (val < 0) {
-          clearInterval(this.timeWrap);
-          this.counting = false;
-          this.setTime = 15;
-          return val;
-        }
-      },
+      "childProp.need_sms": function (sms) {
+        localStorage.setItem('needSms',sms);
+       this.needSms = sms;
     },
+      "childProp.is_sms": function (sms) {
+        localStorage.setItem('isSms',sms);
+       this.isSms = sms;
+    },
+    "childProp.game_list": function (list) {
+       console.log("list",list);
+        localStorage.setItem('gameList',JSON.stringify(list));
+       this.gameList = list;
+    },
+     immediate: true,
   },
-
+  mounted(){
+    this.clearForm();
+    this.eventId = localStorage.getItem('event_id');
+    this.formList = localStorage.getItem('formData');
+    this.needSms =  localStorage.getItem('needSms');
+    this.gameList = localStorage.getItem('gameList');
+    console.log("in mounted",this.formList);
+  },
   methods: {
     clearForm: function () {
       this.formList = [];
+      this.gameList = [];
       this.imagePreview = [];
       this.imageReady = "";
       this.imageUrl = [];
@@ -247,7 +309,17 @@ export default {
         this.$toast("请填写会员账号");
         return true;
       }
-      console.log("submit ", this.eventId);
+
+       if ("" == this.userCaptcha) {
+        this.$toast("请填写验证码");
+        return true;
+      }
+
+      if (1 == this.needSms && "" == this.mobileNumber) {
+        this.$toast("请填写手机号码");
+        return true;
+      }
+
       let that = this;
       await axios
         .post(route("apply_form"), {
@@ -256,6 +328,11 @@ export default {
           form: this.formName,
           imageUrl: this.imageUrl,
           captcha: this.userCaptcha,
+          mobile : this.mobileNumber,
+          smsNumber : this.smsNumber,
+          needSms : this.needSms,
+          gameName : this.myGameList,
+          isSms : this.isSms,
         })
         .then(function (response) {
           that.$toast(response.data.msg);
@@ -263,9 +340,10 @@ export default {
             that.clearForm();
             that.closeDialog();
           }
+              that.getCaptcha();
         })
         .catch(function (error) {
-          that.$toast("申请有误");
+          that.$toast("申请有误,请刷新页面");
         });
     },
     imageuploaded: function (response) {
@@ -290,8 +368,39 @@ export default {
         that.captcha = response.data;
       });
     },
-    getMessage: function () {
-      this.counting = true;
+    getMessage: async function () {
+      
+      if ("" == this.userCaptcha) {
+        this.$toast("请填写验证码");
+        return true;
+      }
+
+      if ("" == this.mobileNumber) {
+        this.$toast("请填写手机号码");
+        return true;
+      }
+
+    
+      let that = this;
+      await axios
+        .post(route("sms_message"), {
+          mobile: this.mobileNumber,
+          captcha: this.userCaptcha,
+        })
+        .then(function (response) {
+          let res = response.data;
+          if(res.code == 1){
+              that.counting = true;
+              that.getCaptcha();
+          }
+          that.$toast(res.msg);
+        });
+         
+    },
+    countFinish: function () {
+      console.log("倒计时结束");
+      this.messageText = "再次获取";
+      this.counting = false;
     },
   },
 };

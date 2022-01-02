@@ -28,6 +28,7 @@
         "postcss": "^8.4.5",
         "postcss-import": "^14.0.2",
         "tailwindcss": "^3.0.7",
+        "vant": "^2.12.37",
         "vue-base64-file-upload": "^1.0.4",
         "vue-core-image-upload": "^2.4.13",
         "vue-easy-toast": "^1.0.5",

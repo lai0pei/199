@@ -5,36 +5,31 @@
  * |-----------------------------------------------------------------------------------------------------------
  * | 开发者: 云飞
  * |-----------------------------------------------------------------------------------------------------------
- * | 文件: AdminAuthendication.php
+ * | 文件: generateCode.php
  * |-----------------------------------------------------------------------------------------------------------
  * | 项目: VIP活动申请
  * |-----------------------------------------------------------------------------------------------------------
- * | 创建时间: Saturday, 18th December 2021 4:14:46 pm
+ * | 创建时间: Sunday, 2nd January 2022 10:11:17 am
  * |-----------------------------------------------------------------------------------------------------------
- * | Copyright 2021 - 2025
+ * | Copyright 2022 - 2025
  * |-----------------------------------------------------------------------------------------------------------
  */
 
-namespace App\Http\Middleware;
+namespace App\Http\Controllers\Index\util;
 
-use Closure;
-use Illuminate\Http\Request;
+trait generateCode {
 
-class AdminAuthendication
-{
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
-    public function handle(Request $request, Closure $next)
-    {   
-        if(empty(session('user_id'))){
-            return redirect( route('admin.login.index') );
-        }
+    function getCode($mobile){
+        
+        session()->forget($mobile);
+        $length = 5;
+        $code = '1111';
+        // for($i = 0; $i < $length; $i++) {
+        //     $code  .= mt_rand(0, 9);
+        // }
 
-        return $next($request);
+        session()->put($mobile,$code);
+
+        return $code;
     }
 }

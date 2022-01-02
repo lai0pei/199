@@ -22,7 +22,9 @@ use App\Models\Index\ApplyModel;
 use App\Models\Index\ConfigModel;
 use App\Models\Index\EventTypeModel;
 use App\Models\Index\FormModel;
+use App\Models\Index\SmsApplyModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use LogicException;
 use Mews\Captcha\Facades\Captcha;
@@ -77,18 +79,37 @@ class IndexController extends Controller
      */
     public function applyForm()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'captcha' => 'required',
+            'username' => 'required',
+            'eventId' => 'required',
+        ], );
         try {
-            $request = $this->request;
-            $applyModel = new ApplyModel($request->all());
 
-            if (!captcha_check($this->request->input('captcha'))) {
-                return self::json_fail([],'验证码不正确');
+            if ($validator->fails()) {
+                throw new LogicException('请求数据不正确');
             }
 
-            $applyModel->applyForm();
-            return self::json_success([], $applyModel->getMessage());
+            if (!captcha_check($input['captcha'])) {
+                throw new LogicException('验证码不正确');
+            }
+            if (1 == $input['needSms'] && !checkSmsCode($input['mobile'], $input['smsNumber'])) {
+                throw new LogicException('短信验证码不正确');
+            }
+
+            if(1 == $input['isSms']){
+                $smsModel = new SmsApplyModel($input);
+                $smsModel->smsForm();
+            }else{
+                $applyModel = new ApplyModel($input);
+
+                $applyModel->applyForm();
+            }
+
+            return self::json_success([], '申请成功!');
         } catch (LogicException $e) {
-            return self::json_fail([], $applyModel->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
 
     }

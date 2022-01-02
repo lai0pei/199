@@ -44,7 +44,7 @@ export default {
   components: {
     seamless,
   },
-  props: { announce: Object },
+  props: ['announce'],
   mounted() {
     this.listData = this.announce.announcement
   },

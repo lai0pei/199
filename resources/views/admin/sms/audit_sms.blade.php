@@ -33,26 +33,7 @@
                 </div>
                 <br>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">状态</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="state" value="0" id="before" title="未审核"
-                            {{ ($data['state'] ?? '') == 0 ? 'checked' : '' }}>
-                        <input type="radio" name="state" value="1" id="pass" title="通过"
-                            {{ ($data['state'] ?? '') == 1 ? 'checked' : '' }}>
-                        <input type="radio" name="state" value="2" id="refuse" title="拒绝"
-                            {{ ($data['state'] ?? '') == 2 ? 'checked' : '' }}>
-                    </div>
-                </div>
-
-                <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">派送信息</label>
-                    <div class="layui-input-block">
-                        <textarea name="send_remark" lay-verify="required"
-                            class="layui-textarea">{{ $data['send_remark'] ?? '' }}</textarea>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label required">其他信息</label>
+                    <label class="layui-form-label required">申请信息</label>
                     <div class="layui-input-block">
                         <table>
                             <tr>
@@ -95,9 +76,36 @@
                                 <td>更新时间</td>
                                 <td>{{ $data['updated_at'] ?? '' }}</td>
                             </tr>
+                            @foreach($data['value'] as $v)
+                            <tr>
+                                <td>{{$v['name']}}</td>
+                                <td>{{ $v['value'] }}</td>
+                            </tr>
+                            @endforeach
                         </table>
                     </div>
                 </div>
+           
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="state" value="0" id="before" title="未审核"
+                            {{ ($data['state'] ?? '') == 0 ? 'checked' : '' }}>
+                        <input type="radio" name="state" value="1" id="pass" title="通过"
+                            {{ ($data['state'] ?? '') == 1 ? 'checked' : '' }}>
+                        <input type="radio" name="state" value="2" id="refuse" title="拒绝"
+                            {{ ($data['state'] ?? '') == 2 ? 'checked' : '' }}>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">派送信息</label>
+                    <div class="layui-input-block">
+                        <textarea name="send_remark" lay-verify="required"
+                            class="layui-textarea">{{ $data['send_remark'] ?? '' }}</textarea>
+                    </div>
+                </div>
+               
 
                 <div class="layui-form-item">
                     <div class="layui-input-block">
@@ -134,7 +142,7 @@
                             
                             setTimeout(function () {
                                 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                               
+    
                                 parent.$('button[lay-filter="data-search-btn"]').click();//刷新列表
                                 parent.layer.close(index); //再执行关闭
 

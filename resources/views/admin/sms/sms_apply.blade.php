@@ -193,11 +193,6 @@
                             sort: true
                         },
                         {
-                            field: 'money',
-                            title: '金额',
-                            sort: true
-                        },
-                        {
                             field: 'is_match',
                             title: '匹配',
                             sort: true

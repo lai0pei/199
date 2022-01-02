@@ -55,10 +55,10 @@ class EventTypeModel extends Model
             $where['type_id'] = $type_id['type_id'];
             $where['status'] = 1;
             $where['display'] = 1;
-            $type_id['event'] = $eventModel::select('id', 'name', 'type_pic', 'type_id', 'external_url')->where($where)->orderBy('sort','asc')->get()->toArray();
+            $type_id['event'] = $eventModel::select('id', 'name', 'type_pic', 'type_id', 'external_url','need_sms','is_sms')->where($where)->whereNotNull('type_pic')->orderBy('sort','asc')->get()->toArray();
         }
-        unset($type_id);
 
+        unset($type_id);
         return $type;
 
     }

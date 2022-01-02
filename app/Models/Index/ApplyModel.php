@@ -26,7 +26,6 @@ class ApplyModel extends Model
     public function __construct($data = [])
     {
         $this->data = $data;
-        $this->message = "申请成功";
         $this->formModel = new FormModel();
     }
 
@@ -79,8 +78,7 @@ class ApplyModel extends Model
         $count = self::where('username', $username)->where('event_id', $eventId)->count();
 
         if (1 == $event['is_daily'] && $event['daily_limit'] == $count) {
-            $this->message = "今日申请次数，已超过" . $count . '次';
-            throw new LogicException();
+            throw new LogicException("今日申请次数，已超过" . $count . '次');
 
         }
 
@@ -89,6 +87,7 @@ class ApplyModel extends Model
         if (!empty($pic_url)) {
             foreach ($pic_url as &$v) {
                 $v['name'] = $this->formModel::where('id', $v['id'])->value('name');
+                $v['type'] = "photo";
                 unset($v['id']);
             }
             unset($v);
@@ -113,13 +112,11 @@ class ApplyModel extends Model
 
             $status = self::insert($insert);
         } catch (LogicException $e) {
-            $this->message = "申请失败";
-            throw new LogicException();
+            throw new LogicException("申请失败");
         }
         if (!$status) {
             DB::rollBack();
-            $this->message = '申请失败，请联系客服';
-            throw new LogicException();
+            throw new LogicException('申请失败，请联系客服');
         }
 
         DB::commit();
@@ -133,14 +130,13 @@ class ApplyModel extends Model
         return $this->message;
     }
 
-    private function removeNull($form)
+    public function removeNull($form)
     {
         $data = [];
 
         $i = 0;
         foreach ($form as &$subForm) {
             foreach ($subForm as $k => $v) {
-
                 if (!empty($v)) {
                     $data[$i]['name'] = $this->formModel::where('id', $k)->value('name');
                     $data[$i]['value'] = $v;
@@ -149,7 +145,6 @@ class ApplyModel extends Model
                 $i++;
             }
         }
-
         return array_values($data);
     }
 

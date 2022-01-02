@@ -221,7 +221,7 @@ class AdminModel extends CommonModel
             'role_id' => $data['role'],
             'reg_ip' => request()->ip(),
             'status' => $data['status'],
-            'is_delete' => 1,
+            'is_delete' => 0,
             'number' => $data['number'],
             'login_count' => 0,
             'created_at' => now(),

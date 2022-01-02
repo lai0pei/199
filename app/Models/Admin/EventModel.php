@@ -44,12 +44,14 @@ class EventModel extends CommonModel
         if (empty($data['id'])) {
             return [];
         }
+
         $event = self::find($data['id'])->toArray();
 
         ($event['status'] == 1) ? $event['status_check'] = "checked" : 0;
         ($event['display'] == 1) ? $event['display_check'] = "checked" : 0;
         ($event['is_daily'] == 1) ? $event['is_daily_check'] = "checked" : 0;
-
+        ($event['need_sms'] == 1) ? $event['need_sms_check'] = "checked" : 0;
+        
         return $event;
     }
 
@@ -65,7 +67,7 @@ class EventModel extends CommonModel
             $add = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
-                'type_pic' => $data['type_pic'],
+                'type_pic' => ($data['type_pic'])?? "",
                 'sort' => $data['sort'],
                 'status' => ($data['status']?? "" == 'on') ? 1 : 0,
                 'display' => ($data['display'] ?? "" == 'on') ? 1 : 0,
@@ -73,6 +75,7 @@ class EventModel extends CommonModel
                 'end_time' => $data['end'],
                 'daily_limit' => $data['sort'],
                 'is_daily' => ($data['is_daily'] ?? "" == 'on') ? 1 : 0,
+                'need_sms' => ($data['need_sms'] ?? "" == 'on') ? 1 : 0,
                 'content' => $data['content'],
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
@@ -102,14 +105,15 @@ class EventModel extends CommonModel
             $save = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
-                'type_pic' => $data['type_pic'],
+                'type_pic' => ($data['type_pic'])?? "",
                 'sort' => $data['sort'],
-                'status' => ($data['status'] == 'on') ? 1 : 0,
-                'display' => ($data['display'] == 'on') ? 1 : 0,
+                'status' => ($data['status']?? "" == 'on') ? 1 : 0,
+                'display' => ($data['display'] ?? "" == 'on') ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
                 'daily_limit' => $data['sort'],
-                'is_daily' => ($data['is_daily'] == 'on') ? 1 : 0,
+                'is_daily' => ($data['is_daily'] ?? "" == 'on') ? 1 : 0,
+                'need_sms' => ($data['need_sms'] ?? "" == 'on') ? 1 : 0,
                 'content' => $data['content'],
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
@@ -228,6 +232,10 @@ class EventModel extends CommonModel
         DB::beginTransaction();
 
         $name = self::find($data['id'])->value('name');
+
+        if(1 == $data['id'] || 1 == self::find($data['id'])->value('is_sm,s')){
+            throw new LogicException('固定活动不能删除!');
+        }
 
         $status = self::where('id', $data['id'])->delete();
 

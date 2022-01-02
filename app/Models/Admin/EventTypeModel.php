@@ -102,7 +102,7 @@ class EventTypeModel extends CommonModel
     public function getType()
     {
         $data = $this->data;
-    
+
         if (!empty($data['id'])) {
             $res = self::find($data['id'])->toArray();
         } else {
@@ -118,15 +118,15 @@ class EventTypeModel extends CommonModel
         $page = $data['page'] ?? 1;
 
         $where = [];
-       
+
         if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            if($param['name'] !== ''){
+            if ($param['name'] !== '') {
                 $where['name'] = $param['name'];
             }
         }
 
-        $column = ['id', 'name','status', 'created_at', 'updated_at','sort'];
+        $column = ['id', 'name', 'status', 'created_at', 'updated_at', 'sort'];
 
         $item = self::select($column)->where($where)->paginate($limit, "*", "page", $page);
 
@@ -163,6 +163,10 @@ class EventTypeModel extends CommonModel
 
         DB::beginTransaction();
 
+        $eventModel = new EventModel();
+        if (!empty($eventModel::where('type_id', $data['id'])->value('id'))) {
+            throw new LogicException('此类型活动下还有其他活动,不可删除');
+        }
         $status = self::where('id', $data['id'])->delete();
 
         if (false === $status) {
@@ -183,9 +187,9 @@ class EventTypeModel extends CommonModel
         }
     }
 
-    public function getAllType(){
-        return self::where('status',1)->get()->toArray();
+    public function getAllType()
+    {
+        return self::where('status', 1)->get()->toArray();
     }
 
-   
 }

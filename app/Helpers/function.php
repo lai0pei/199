@@ -16,4 +16,8 @@ use Illuminate\Support\Facades\Cache;
         return 0;
     }
 }
+
+function checkSmsCode($mobile, $code){
+   return  session()->get($mobile) == $code;
+}
 ?>

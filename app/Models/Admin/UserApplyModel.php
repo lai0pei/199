@@ -114,7 +114,9 @@ class UserApplyModel extends CommonModel
     {
         $data = $this->data;
 
-        return self::find($data['id'])->toArray();
+        $res = self::find($data['id'])->toArray();
+        $res['value'] = unserialize($res['value']);
+        return $res;
     }
 
     public function saveAudit()

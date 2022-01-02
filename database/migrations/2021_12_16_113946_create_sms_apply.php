@@ -19,7 +19,6 @@ class CreateSmsApply extends Migration
             $table->string('user_name',100)->nullable()->comment('申请用户名称');
             $table->string('message',200)->nullable()->comment('派送信息');
             $table->string('mobile',50)->nullable()->comment('用户电话号码');
-            $table->decimal('money', $precision = 12, $scale = 2)->default(0.00)->comment('申请金额');
             $table->string('game',100)->nullable()->comment('游戏类型');
             $table->tinyInteger('is_delete')->comment('1=删除，0=正常')->default(0)->nullable();
             $table->tinyInteger('state')->comment('0 = 未审核, 1=通过，2=失败')->default(0);
@@ -28,7 +27,7 @@ class CreateSmsApply extends Migration
             $table->tinyInteger('is_match')->comment('1=匹配，0=不匹配')->nullable();
             $table->string('ip', 100)->nullable()->comment('使用Ip');
             $table->longText('send_remark')->nullable()->comment('派送备注');
-            $table->longText('value')->nullable()->comment('派送备注');
+            $table->longText('value')->nullable()->comment('表单值');
             $table->dateTime('send_time', $precision = 0)->nullable()->comment('派送时间');
             $table->dateTime('apply_time', $precision = 0)->nullable()->comment('申请时间');
             $table->dateTime('created_at',$precision = 0)->comment('创建时间')->nullable();
