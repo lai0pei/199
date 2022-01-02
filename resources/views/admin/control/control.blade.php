@@ -33,9 +33,19 @@
                             <div class="layui-col-xs9 layui-col-md9 top-panel-number">
                                 9,054,056
                             </div>
-                            <div class="layui-col-xs3 layui-col-md3 top-panel-tips">
-                                比昨天 <a style="color: #1aa094">▲0.12</a><br>
-                                比七日 <a style="color: #bd3004">▼0.06</a>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+            <div class="layui-col-xs12 layui-col-md3">
+    
+                <div class="layui-card top-panel">
+                    <div class="layui-card-header">要展示的指标名称</div>
+                    <div class="layui-card-body">
+                        <div class="layui-row layui-col-space5">
+                            <div class="layui-col-xs9 layui-col-md9 top-panel-number">
+                                9,054,056
                             </div>
                         </div>
                     </div>
@@ -51,10 +61,6 @@
                             <div class="layui-col-xs9 layui-col-md9 top-panel-number">
                                 9,054,056
                             </div>
-                            <div class="layui-col-xs3 layui-col-md3 top-panel-tips">
-                                比昨天 <a style="color: #1aa094">▲0.12</a><br>
-                                比七日 <a style="color: #bd3004">▼0.06</a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -69,28 +75,7 @@
                             <div class="layui-col-xs9 layui-col-md9 top-panel-number">
                                 9,054,056
                             </div>
-                            <div class="layui-col-xs3 layui-col-md3 top-panel-tips">
-                                比昨天 <a style="color: #1aa094">▲0.12</a><br>
-                                比七日 <a style="color: #bd3004">▼0.06</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    
-            </div>
-            <div class="layui-col-xs12 layui-col-md3">
-    
-                <div class="layui-card top-panel">
-                    <div class="layui-card-header">要展示的指标名称</div>
-                    <div class="layui-card-body">
-                        <div class="layui-row layui-col-space5">
-                            <div class="layui-col-xs9 layui-col-md9 top-panel-number">
-                                9,054,056
-                            </div>
-                            <div class="layui-col-xs3 layui-col-md3 top-panel-tips">
-                                比昨天 <a style="color: #1aa094">▲0.12</a><br>
-                                比七日 <a style="color: #bd3004">▼0.06</a>
-                            </div>
+   
                         </div>
                     </div>
                 </div>
@@ -139,7 +124,7 @@
                 legend: {
                     data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
                 },
-                toolbox: {
+                toolbox: { 
                     feature: {
                         saveAsImage: {}
                     }
@@ -154,7 +139,7 @@
                     {
                         type: 'category',
                         boundaryGap: false,
-                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日' ]
                     }
                 ],
                 yAxis: [
@@ -168,7 +153,7 @@
                         type: 'line',
                         stack: '总量',
                         areaStyle: {},
-                        data: [120, 132, 101, 134, 90, 230, 210]
+                        data: [00, 132, 101, 134, 90, 230, 210]
                     },
                     {
                         name: '联盟广告',
