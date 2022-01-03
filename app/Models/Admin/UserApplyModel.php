@@ -22,7 +22,7 @@ use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
 class UserApplyModel extends CommonModel
-{   
+{
 
     const PASS = 1;
     const REFUSE = 2;
@@ -123,18 +123,19 @@ class UserApplyModel extends CommonModel
     {
 
         $data = $this->data;
-        
+
         $save = [
             'status' => $data['status'],
             'description' => $data['description'],
             'updated_at' => now(),
         ];
 
-        return self::where('id',$data['id'])->update($save);
+        return self::where('id', $data['id'])->update($save);
 
     }
 
-    public function delete(){
+    public function delete()
+    {
 
         $data = $this->data;
 
@@ -169,7 +170,8 @@ class UserApplyModel extends CommonModel
         }
     }
 
-    public function audit($status){
+    public function audit($status)
+    {
 
         $data = $this->data;
 
@@ -206,5 +208,10 @@ class UserApplyModel extends CommonModel
 
             return true;
         }
+    }
+
+    public function userAppr()
+    {
+        return self::where('status', 0)->count();
     }
 }

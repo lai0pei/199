@@ -19,6 +19,7 @@ namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
 use App\Models\Admin\CommonModel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class EventModel extends CommonModel
@@ -36,6 +37,11 @@ class EventModel extends CommonModel
         $this->data = $data;
     }
 
+    public function userApply()
+    {
+        return $this->hasMany(UserApplyModel::class, 'event_id', 'id');
+    }
+
     public function getEventBy()
     {
 
@@ -51,32 +57,32 @@ class EventModel extends CommonModel
         ($event['display'] == 1) ? $event['display_check'] = "checked" : 0;
         ($event['is_daily'] == 1) ? $event['is_daily_check'] = "checked" : 0;
         ($event['need_sms'] == 1) ? $event['need_sms_check'] = "checked" : 0;
-        
+
         return $event;
     }
 
     public function maniEvent()
     {
 
-        $data = $this->data;
-
+        $input = $this->data;
+        $data = $input['data'];
+        $content = $input['content'];
         DB::beginTransaction();
-
 
         if (-1 == $data['id']) {
             $add = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
-                'type_pic' => ($data['type_pic'])?? "",
+                'type_pic' => $data['type_pic'] ?? "",
                 'sort' => $data['sort'],
-                'status' => ($data['status']?? "" == 'on') ? 1 : 0,
+                'status' => ($data['status'] ?? "" == 'on') ? 1 : 0,
                 'display' => ($data['display'] ?? "" == 'on') ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
                 'daily_limit' => $data['sort'],
                 'is_daily' => ($data['is_daily'] ?? "" == 'on') ? 1 : 0,
                 'need_sms' => ($data['need_sms'] ?? "" == 'on') ? 1 : 0,
-                'content' => $data['content'],
+                'content' => $content,
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -102,23 +108,27 @@ class EventModel extends CommonModel
             }
 
         } else {
+
             $save = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
-                'type_pic' => ($data['type_pic'])?? "",
                 'sort' => $data['sort'],
-                'status' => ($data['status']?? "" == 'on') ? 1 : 0,
+                'status' => ($data['status'] ?? "" == 'on') ? 1 : 0,
                 'display' => ($data['display'] ?? "" == 'on') ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
                 'daily_limit' => $data['sort'],
                 'is_daily' => ($data['is_daily'] ?? "" == 'on') ? 1 : 0,
                 'need_sms' => ($data['need_sms'] ?? "" == 'on') ? 1 : 0,
-                'content' => $data['content'],
+                'content' => $content,
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
+
+            if (!empty($data['type_pic'])) {
+                $save['type_pic'] = $data['type_pic'];
+            }
 
             $status = self::where('id', $data['id'])->update($save);
 
@@ -153,19 +163,19 @@ class EventModel extends CommonModel
 
         if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            if($param['name'] !== ''){
+            if ($param['name'] !== '') {
                 $where['name'] = $where['name'] = $param['name'];
             }
-            if($param['type_id'] !== ''){
+            if ($param['type_id'] !== '') {
                 $where['type_id'] = $param['type_id'];
             }
-            if($param['status'] !== ''){
+            if ($param['status'] !== '') {
                 $where['status'] = $param['status'];
             }
-            if($param['display'] !== ''){
+            if ($param['display'] !== '') {
                 $where['display'] = $param['display'];
             }
-            if($param['is_daily'] !== ''){
+            if ($param['is_daily'] !== '') {
                 $where['is_daily'] = $param['is_daily'];
             }
         }
@@ -197,7 +207,7 @@ class EventModel extends CommonModel
 
     public function getEvent()
     {
-        return self::select('id','name')->get()->toArray();
+        return self::select('id', 'name')->get()->toArray();
     }
 
     public function getStatus()
@@ -233,7 +243,7 @@ class EventModel extends CommonModel
 
         $name = self::find($data['id'])->value('name');
 
-        if(1 == $data['id'] || 1 == self::find($data['id'])->value('is_sm,s')){
+        if (1 == $data['id'] || 1 == self::find($data['id'])->value('is_sm,s')) {
             throw new LogicException('固定活动不能删除!');
         }
 
@@ -256,4 +266,15 @@ class EventModel extends CommonModel
             return true;
         }
     }
+
+    public function getTotalNumber()
+    {
+        return self::count();
+    }
+
+    public function getTodayEvent()
+    {
+        return self::whereDate('created_at', Carbon::today())->count();
+    }
+
 }

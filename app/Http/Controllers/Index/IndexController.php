@@ -20,6 +20,7 @@ namespace App\Http\Controllers\Index;
 use App\Http\Controllers\Controller;
 use App\Models\Index\ApplyModel;
 use App\Models\Index\ConfigModel;
+use App\Models\Index\EventModel;
 use App\Models\Index\EventTypeModel;
 use App\Models\Index\FormModel;
 use App\Models\Index\SmsApplyModel;
@@ -98,10 +99,10 @@ class IndexController extends Controller
                 throw new LogicException('短信验证码不正确');
             }
 
-            if(1 == $input['isSms']){
+            if (1 == $input['isSms']) {
                 $smsModel = new SmsApplyModel($input);
                 $smsModel->smsForm();
-            }else{
+            } else {
                 $applyModel = new ApplyModel($input);
 
                 $applyModel->applyForm();
@@ -122,6 +123,41 @@ class IndexController extends Controller
     public function captcha()
     {
         return Captcha::src('index');
+    }
+
+    public function getAllEvent()
+    {
+        return self::json_success((new EventModel())->getAllEvent());
+    }
+
+    public function checkForm()
+    {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'username' => 'required',
+            'eventId' => 'required',
+        ], );
+        try {
+
+            if ($validator->fails()) {
+                throw new LogicException('请求数据不正确');
+            }
+
+            $applyModel = new ApplyModel($input);
+
+            $res = $applyModel->checkForm();
+
+            return self::json_success($res, '操作成功!');
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
+    }
+
+    public function detail(){
+        $content = (new EventModel( $this->request->all()))->getContent();
+        $configModel = new ConfigModel();
+        $footer = $configModel->getConfig('linkConfig');
+        return Inertia::render('Components/detail',['footer' => $footer,'content'=>$content['content'],'name'=>$content['name']]);
     }
 
 }

@@ -10,7 +10,7 @@
                   src="199/images/img01.png"
                   alt="左边图标"
                   class="float-left ml-14 mt-2.5 w-5"
-                /><span class="text-amber-400 text-xl ml-1">优惠申请</span
+                /><span class="text-amber-400 text-xl ml-4">优惠申请</span
                 ><img
                   src="199/images/img02.png"
                   alt="右边图标"
@@ -111,19 +111,21 @@
                   </div>
                 </li>
                 <div>
-                <div>
+                  <div>
                     <select
                       class="allForms mt-1 rounded-md"
-                      v-model="myGameList" v-if="isSms"
+                      v-model="myGameList"
+                      v-if="isSms"
                     >
                       <option selected>
-                       {{selectGame}}
+                        {{ selectGame }}
                       </option>
                       <option
-                        v-for="(data, index) in gameList"
+                        v-for="(game, index) in gameList"
                         :key="index"
+                        :value="game.id"
                       >
-                        {{ data.name }}
+                        {{ game.name }}
                       </option>
                     </select>
                   </div>
@@ -235,66 +237,70 @@ export default {
       imageUrl: [],
       uploadId: "",
       formId: [],
-      isPhone : '',
+      isPhone: "",
       eventId: "",
       captcha: "",
       userCaptcha: "",
-      mobileNumber : "",
+      mobileNumber: "",
       timeOut: 15 * 1000,
       counting: false,
       timeWrap: null,
       messageText: "获取验证码",
-      disable : false,
-      smsNumber : '',
-      needSms : 0,
-      gameList : [],
-      selectGame : "请选择游戏",
-      myGameList : "",
-      isSms : "",
+      disable: false,
+      smsNumber: "",
+      needSms: 0,
+      gameList: [],
+      selectGame: "请选择游戏",
+      myGameList: "",
+      isSms: "",
     };
   },
   watch: {
     deep: true,
     "childProp.event_id": function (event_id) {
-      localStorage.setItem('event_id',event_id);
+      localStorage.setItem("event_id", event_id);
       this.eventId = event_id;
     },
     "childProp.formData": function (formData) {
-    
       if (formData.length != 0) {
-          localStorage.setItem('formData', formData);
+        localStorage.setItem("formData", formData);
         this.formList = formData;
       }
       this.getCaptcha();
     },
-      "childProp.need_sms": function (sms) {
-        localStorage.setItem('needSms',sms);
-       this.needSms = sms;
-    },
-      "childProp.is_sms": function (sms) {
-        localStorage.setItem('isSms',sms);
-       this.isSms = sms;
-    },
     "childProp.game_list": function (list) {
-       console.log("list",list);
-        localStorage.setItem('gameList',JSON.stringify(list));
-       this.gameList = list;
+      localStorage.setItem("gameList", JSON.stringify(list));
+      this.gameList = list;
     },
-     immediate: true,
+    "childProp.need_sms": function (sms) {
+      localStorage.setItem("needSms", sms);
+      this.needSms = sms;
+    },
+    "childProp.is_sms": function (sms) {
+      localStorage.setItem("isSms", sms);
+
+      this.isSms = sms;
+    },
+
+    immediate: true,
   },
-  mounted(){
+  created() {
     this.clearForm();
-    this.eventId = localStorage.getItem('event_id');
-    this.formList = localStorage.getItem('formData');
-    this.needSms =  localStorage.getItem('needSms');
-    this.gameList = localStorage.getItem('gameList');
-    console.log("in mounted",this.formList);
+    this.eventId = localStorage.getItem("event_id");
+    this.formList = localStorage.getItem("formData");
+    this.needSms = localStorage.getItem("needSms");
+    this.gameList = localStorage.getItem("gameList");
+    this.isSms = localStorage.getItem("isSms");
+    console.log("is apply sms", this.isSms);
+    console.log("in apply dialog", this.gameList);
   },
   methods: {
     clearForm: function () {
       this.formList = [];
-      this.gameList = [];
       this.imagePreview = [];
+      this.isSms = false;
+      this.needSms = false;
+      this.gameList = [];
       this.imageReady = "";
       this.imageUrl = [];
       this.username = "";
@@ -310,7 +316,7 @@ export default {
         return true;
       }
 
-       if ("" == this.userCaptcha) {
+      if ("" == this.userCaptcha) {
         this.$toast("请填写验证码");
         return true;
       }
@@ -328,11 +334,11 @@ export default {
           form: this.formName,
           imageUrl: this.imageUrl,
           captcha: this.userCaptcha,
-          mobile : this.mobileNumber,
-          smsNumber : this.smsNumber,
-          needSms : this.needSms,
-          gameName : this.myGameList,
-          isSms : this.isSms,
+          mobile: this.mobileNumber,
+          smsNumber: this.smsNumber,
+          needSms: this.needSms,
+          gameName: this.myGameList,
+          isSms: this.isSms,
         })
         .then(function (response) {
           that.$toast(response.data.msg);
@@ -340,7 +346,7 @@ export default {
             that.clearForm();
             that.closeDialog();
           }
-              that.getCaptcha();
+          that.getCaptcha();
         })
         .catch(function (error) {
           that.$toast("申请有误,请刷新页面");
@@ -369,7 +375,6 @@ export default {
       });
     },
     getMessage: async function () {
-      
       if ("" == this.userCaptcha) {
         this.$toast("请填写验证码");
         return true;
@@ -380,7 +385,6 @@ export default {
         return true;
       }
 
-    
       let that = this;
       await axios
         .post(route("sms_message"), {
@@ -389,13 +393,12 @@ export default {
         })
         .then(function (response) {
           let res = response.data;
-          if(res.code == 1){
-              that.counting = true;
-              that.getCaptcha();
+          if (res.code == 1) {
+            that.counting = true;
+            that.getCaptcha();
           }
           that.$toast(res.msg);
         });
-         
     },
     countFinish: function () {
       console.log("倒计时结束");
@@ -465,7 +468,8 @@ export default {
 }
 
 .modal-container {
-  width: 300px;
+  width: 20rem;
+  max-height: 30rem;
   margin: 0px auto;
   padding: 20px 30px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);

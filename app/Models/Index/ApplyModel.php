@@ -19,6 +19,7 @@ namespace App\Models\Index;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use LogicException;
 
 class ApplyModel extends Model
@@ -146,6 +147,26 @@ class ApplyModel extends Model
             }
         }
         return array_values($data);
+    }
+
+    public function checkForm()
+    {
+        $data = $this->data;
+        $eventId = $data['eventId'];
+        $username = $data['username'];
+        $column = ['username', 'apply_time', 'status', 'description'];
+        $res = self::where('event_id', $eventId)->where('username', $username)->select($column)->get()->toArray();
+        foreach ($res as &$v) {
+            switch (true) {
+                case $v['status'] == 1:$v['status'] = '通过';
+                    break;
+                case $v['status'] == 2:$v['status'] = '拒绝';
+                    break;
+                default:$v['status'] = '未审核';
+            }
+            $v['apply_time'] = Carbon::parse($v['apply_time'])->format('Y年-m月-d日 | H时:i分:s秒');
+        }
+        return $res;
     }
 
 }

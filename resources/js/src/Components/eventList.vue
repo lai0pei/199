@@ -34,7 +34,7 @@
                 src="/199/images/icon02.png"
                 alt="申请详情"
                 class="w-4 float-left mr-1"
-              /><span class="text-neutral-400 text-xs float-right"
+              /><span class="text-neutral-400 text-xs float-right" @click="detail(list)"
                 >活动规则</span
               ></span
             >
@@ -133,6 +133,9 @@ export default {
     fromApplyDialog: function () {
       this.showModal = false;
     },
+    detail : function(data){
+     this.$inertia.get(route('detail'), {'event_id' : data.id});
+    }
   },
 };
 </script>

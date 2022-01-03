@@ -63,6 +63,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     //后台页面
     Route::get('/', [AuthMenuController::class, 'index'])->name('admin_menu');
     Route::get('/control', [ControlController::class, 'control'])->name('admin_control');
+    Route::post('/getChart', [ControlController::class, 'getChart'])->name('admin_getChart');
 
     //管理员 页面 和 接口
     Route::get('/person', [AdminController::class, 'person'])->name('admin_person');

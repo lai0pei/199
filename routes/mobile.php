@@ -39,7 +39,11 @@ Route::get("/getCaptcha", [IndexController::class, 'captcha'])->name('index_capt
 
 Route::post("/getMessage", [MessageController::class, 'smsMessage'])->name('sms_message');
 
-// Route::get("/getCaptcha", [IndexController::class, 'captcha'])->name('index_captcha');
+Route::post("/getEventList", [IndexController::class, 'getAllEvent'])->name('event_list');
+
+Route::post("/checkForm", [IndexController::class, 'checkForm'])->name('check_form');
+
+Route::get('/detail', [IndexController::class,'detail'])->name('detail');
 
 //函数 测试接口
 Route::get('/test', [TestController::class,'test']);

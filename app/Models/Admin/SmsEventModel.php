@@ -18,6 +18,7 @@
 namespace App\Models\Admin;
 
 use App\Models\Admin\CommonModel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use LogicException;
 
@@ -156,7 +157,7 @@ class SmsEventModel extends CommonModel
         $res['is_send'] = $this->sendName($res['is_send']);
         $res['is_match'] = $this->matchName($res['is_match']);
         $res['value'] = array_values(unserialize($res['value']));
-   
+
         return $res;
     }
 
@@ -250,5 +251,21 @@ class SmsEventModel extends CommonModel
             return true;
         }
     }
+
+    public function getNewMember()
+    {
+        return self::count();
+    }
+
+    public function getTodayMember()
+    {
+        return self::whereDate('created_at', Carbon::today())->count();
+    }
+
+    public function smsAppr()
+    {
+        return self::where('state', 0)->count();
+    }
+    
 
 }

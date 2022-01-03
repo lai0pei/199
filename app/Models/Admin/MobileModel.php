@@ -18,8 +18,8 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Admin\CommonModel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
 
 class MobileModel extends CommonModel
@@ -143,6 +143,11 @@ class MobileModel extends CommonModel
         $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '一键清除了所有电话数据'];
 
         (new LogModel($log_data))->createLog();
+    }
+
+    public function getCount()
+    {
+        return self::count();
     }
 
 }

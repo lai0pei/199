@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Index;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Admin\ConfigModel;
-use App\Http\Controllers\Index\util\yunpian;
-use App\Http\Controllers\Index\util\juhe;
-use LogicException;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Index\util\generateCode;
+use App\Http\Controllers\Index\util\juhe;
+use App\Http\Controllers\Index\util\yunpian;
+use Illuminate\Http\Request;
+use App\Models\Admin\ControlModel;
 
 class TestController extends Controller
 {
-  
+
     use juhe;
     use generateCode;
     use yunpian;
@@ -23,11 +21,10 @@ class TestController extends Controller
         $this->request = $request;
     }
 
-    public function test(){
-      session()->put(1,1);
-      session()->put(2,2);
-      dd(session()->get(2));
-
+    public function test()
+    {
+    
+       dd($this->request->cookie());
     }
-  
+
 }

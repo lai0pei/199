@@ -34,7 +34,7 @@
 @endsection
 @section('content')
     <div class="layuimini-container">
-        <div class="layui-form layuimini-form" >
+        <div class="layui-form layuimini-form">
             <form class="layui-form" action="" id="addGoodsForm">
                 <div class="layui-form-item">
                     <input type="hidden" name="id" value="{{ $type['id'] ?? -1 }}" class="layui-input">
@@ -66,9 +66,8 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">外联地址</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="external_url"
-                            placeholder="http://www.google.com" value="{{ $type['external_url'] ?? '' }}"
-                            class="layui-input">
+                        <input type="text" name="external_url" placeholder="http://www.google.com"
+                            value="{{ $type['external_url'] ?? '' }}" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -116,11 +115,11 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label required">每日限制次数</label>
                     <div class="layui-input-inline">
-                        <input type="number" name="daily_limit"  placeholder="例如:0"
+                        <input type="number" name="daily_limit" placeholder="例如:0"
                             value="{{ $type['daily_limit'] ?? '' }}" class="layui-input">
                     </div>
                 </div>
-                
+
 
                 <div class="layui-form-item">
                     <label class="layui-form-label required">活动图片</label>
@@ -138,8 +137,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label required">活动内容</label>
                     <div class="layui-input-block">
-                        <textarea class="layui-textarea" id="LAYEDITOR" style="display: none;" name='content'
-                            lay-verify="contentVerify">{{ $type['content'] ?? '' }}</textarea>
+                        <textarea id="editor" name='content'> {{ $type['content'] ?? '' }}</textarea>
                     </div>
                 </div>
 
@@ -156,9 +154,18 @@
     </div>
 @endsection
 @section('footer')
-
-
+    <script src="{{ asset('static/ckeditor/ckeditor.js') }}" charset="utf-8"></script>
     <script>
+     ClassicEditor
+    .create( document.querySelector( '#editor' ))
+    .then( newEditor => {
+        editor = newEditor;
+    })
+    .catch( error => {
+        console.log( error );
+    } );
+
+
         var mani_type = "{{ route('admin_mani_event') }}";
         var uploader = "{{ route('admin_upload') }}";
         var content = "{{ route('admin_upload_content') }}";
@@ -170,19 +177,18 @@
                 layer = layui.layer,
                 upload = layui.upload,
                 element = layui.element,
-                layedit = layui.layedit,
                 laydate = layui.laydate;
 
             //编辑后
-            layedit.set({
-                uploadImage: {
-                    url: uploader, //接口url
-                    type: 'post', //默认post
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                },
-            });
+            // layedit.set({
+            //     uploadImage: {
+            //         url: uploader, //接口url
+            //         type: 'post', //默认post
+            //         headers: {
+            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //         },
+            //     },
+            // });
 
             //编辑 赋值
             var content = "{{ $type['content'] ?? '' }}";
@@ -191,26 +197,15 @@
                 layui.$('#uploadView').removeClass('layui-hide');
             }
 
-
-
-
-            var editor = layedit.build('LAYEDITOR', {
-                // hideTool: [
-                //     'face'
-                // ],
-                height: 200,
-
-            });
-
             // if(-1 !== isEventPic){
-            //     layedit.setContent(editor, content, false);
+            // layedit.setContent(editor, content, false);
             // }
 
-            form.verify({
-                'contentVerify': function(value) {
-                    layedit.sync(editor);
-                }
-            });
+            // form.verify({
+            //     'contentVerify': function(value) {
+            //         layedit.sync(editor);
+            //     }
+            // });
 
             //开启公历节日
             laydate.render({
@@ -228,10 +223,13 @@
 
             //监听提交
             form.on('submit(saveBtn)', function(data) {
-
+                let content = editor.getData();
                 $.ajax({
                     url: mani_type,
-                    data: data.field,
+                    data: {
+                        "data" : data.field,
+                    "content" : content
+                },
                     method: 'POST',
                     success: function(data) {
                         let type_id = "{{ $type['id'] ?? -1 }}";
@@ -248,7 +246,7 @@
                             } else {
                                 setTimeout(function() {
                                     var index = parent.layer.getFrameIndex(window
-                                    .name); //先得到当前iframe层的索引
+                                        .name); //先得到当前iframe层的索引
                                     parent.$('button[lay-filter="data-search-btn"]')
                                         .click(); //刷新列表
                                     parent.layer.close(index); //再执行关闭
