@@ -3,8 +3,8 @@
     <Swiper
       :slides-per-view="1"
       loop   :autoplay= 3000
-      pagination-visible  
-      class="rounded-md"  
+      pagination-visible
+      class="rounded-md"
     >
       <div v-for="item in photo" :key="item">
         <img :src="item" alt="轮播图" class="w-full " />
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { Swiper } from "vue2-swiper";
+import {Swiper} from 'vue2-swiper';
 
 
 export default {
@@ -24,11 +24,11 @@ export default {
   data() {
     return {
       photo: [
-        "199/images/banner01.jpg",
-        "199/images/banner02.png",
-        "199/images/banner03.png",
-        "199/images/banner04.png",
-        "199/images/banner05.png",
+        '199/images/banner01.jpg',
+        '199/images/banner02.png',
+        '199/images/banner03.png',
+        '199/images/banner04.png',
+        '199/images/banner05.png',
       ],
     };
   },
@@ -37,7 +37,7 @@ export default {
       console.log(swiper);
     };
     const onSlideChange = () => {
-      console.log("slide change");
+      console.log('slide change');
     };
     return {
       onSwiper,

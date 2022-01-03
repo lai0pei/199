@@ -102,76 +102,76 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from 'axios';
 export default {
-  props: { childProp: Object },
+  props: {childProp: Object},
   data() {
     return {
-      username: "",
-      eventId: "",
+      username: '',
+      eventId: '',
       eventList: [],
-      selectGame: "请选择活动",
+      selectGame: '请选择活动',
       is_result: false,
       is_search: true,
-      head_text: "查看进度",
+      head_text: '查看进度',
       tableData: [],
       showButton: true,
-      btnText: "取消",
+      btnText: '取消',
     };
   },
   watch: {
-    deep: true,
-    "childProp.game_list": function (list) {
-      localStorage.setItem("eventList", JSON.stringify(list));
+    'deep': true,
+    'childProp.game_list': function(list) {
+      localStorage.setItem('eventList', JSON.stringify(list));
       this.eventList = list;
     },
-    immediate: true,
+    'immediate': true,
   },
   mounted() {
     this.clearForm();
-    this.eventList = localStorage.getItem("eventList");
-    console.log("in mounted search dialog", this.eventList);
+    this.eventList = localStorage.getItem('eventList');
+    console.log('in mounted search dialog', this.eventList);
   },
   methods: {
-    clearForm: function () {
-      this.username = "";
+    clearForm: function() {
+      this.username = '';
     },
-    submit: async function () {
-      if (this.username == "") {
-        this.$toast("请填写会员账号");
+    submit: async function() {
+      if (this.username == '') {
+        this.$toast('请填写会员账号');
         return true;
       }
 
-      let that = this;
+      const that = this;
       await axios
-        .post(route("check_form"), {
-          eventId: this.eventId,
-          username: this.username,
-        })
-        .then(function (response) {
-          if (response.data.code == 1) {
-            that.clearForm();
-            if (response.data.data.length == 0) {
-              that.$toast("无数据");
-            } else {
-              that.is_result = true;
-              that.is_search = false;
-              that.head_text = "进度列表";
-              that.showButton = false;
-              that.btnText = "确定";
-              that.tableData = response.data.data;
-              that.$toast(response.data.msg);
+          .post(route('check_form'), {
+            eventId: this.eventId,
+            username: this.username,
+          })
+          .then(function(response) {
+            if (response.data.code == 1) {
+              that.clearForm();
+              if (response.data.data.length == 0) {
+                that.$toast('无数据');
+              } else {
+                that.is_result = true;
+                that.is_search = false;
+                that.head_text = '进度列表';
+                that.showButton = false;
+                that.btnText = '确定';
+                that.tableData = response.data.data;
+                that.$toast(response.data.msg);
+              }
             }
-          }
-        })
-        .catch(function (error) {
-          that.$toast("申请有误,请刷新页面");
-        });
+          })
+          .catch(function(error) {
+            that.$toast('申请有误,请刷新页面');
+          });
     },
-    closeDialog: function () {
-      this.$emit("fromApplyDialog");
+    closeDialog: function() {
+      this.$emit('fromApplyDialog');
     },
-    showMsg: function (data) {
+    showMsg: function(data) {
       this.$toast(data.description);
     },
   },

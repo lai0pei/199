@@ -26,16 +26,16 @@
     background: #141414;
 }
 </style>
-<script> 
-import myHeading from "./myHeading";
-import myFoot from "./myFooting";
+<script>
+import myHeading from './myHeading';
+import myFoot from './myFooting';
 
 export default {
-    components : {
-        myHeading,
-        myFoot
-    },
-     props : ['footer','content','name'],
+  components: {
+    myHeading,
+    myFoot,
+  },
+  props: ['footer', 'content', 'name'],
 
-}
+};
 </script>

@@ -208,12 +208,12 @@
 </template>
 
 <script>
-import axios from "axios";
-import VueCoreImageUpload from "vue-core-image-upload";
-import countDown from "vant/lib/count-down";
+import axios from 'axios';
+import VueCoreImageUpload from 'vue-core-image-upload';
+import countDown from 'vant/lib/count-down';
 
 export default {
-  props: { childProp: Object },
+  props: {childProp: Object},
   components: {
     VueCoreImageUpload,
     countDown,
@@ -228,131 +228,131 @@ export default {
         timeForm: [],
         selectForm: [],
       },
-      username: "",
+      username: '',
       limit: 2,
       isPreview: false,
       type: 2,
       imageReady: false,
       imagePreview: [],
       imageUrl: [],
-      uploadId: "",
+      uploadId: '',
       formId: [],
-      isPhone: "",
-      eventId: "",
-      captcha: "",
-      userCaptcha: "",
-      mobileNumber: "",
+      isPhone: '',
+      eventId: '',
+      captcha: '',
+      userCaptcha: '',
+      mobileNumber: '',
       timeOut: 15 * 1000,
       counting: false,
       timeWrap: null,
-      messageText: "获取验证码",
+      messageText: '获取验证码',
       disable: false,
-      smsNumber: "",
+      smsNumber: '',
       needSms: 0,
       gameList: [],
-      selectGame: "请选择游戏",
-      myGameList: "",
-      isSms: "",
+      selectGame: '请选择游戏',
+      myGameList: '',
+      isSms: '',
     };
   },
   watch: {
-    deep: true,
-    "childProp.event_id": function (event_id) {
-      localStorage.setItem("event_id", event_id);
+    'deep': true,
+    'childProp.event_id': function(event_id) {
+      localStorage.setItem('event_id', event_id);
       this.eventId = event_id;
     },
-    "childProp.formData": function (formData) {
+    'childProp.formData': function(formData) {
       if (formData.length != 0) {
-        localStorage.setItem("formData", formData);
+        localStorage.setItem('formData', formData);
         this.formList = formData;
       }
       this.getCaptcha();
     },
-    "childProp.game_list": function (list) {
-      localStorage.setItem("gameList", JSON.stringify(list));
+    'childProp.game_list': function(list) {
+      localStorage.setItem('gameList', JSON.stringify(list));
       this.gameList = list;
     },
-    "childProp.need_sms": function (sms) {
-      localStorage.setItem("needSms", sms);
+    'childProp.need_sms': function(sms) {
+      localStorage.setItem('needSms', sms);
       this.needSms = sms;
     },
-    "childProp.is_sms": function (sms) {
-      localStorage.setItem("isSms", sms);
+    'childProp.is_sms': function(sms) {
+      localStorage.setItem('isSms', sms);
 
       this.isSms = sms;
     },
 
-    immediate: true,
+    'immediate': true,
   },
   created() {
     this.clearForm();
-    this.eventId = localStorage.getItem("event_id");
-    this.formList = localStorage.getItem("formData");
-    this.needSms = localStorage.getItem("needSms");
-    this.gameList = localStorage.getItem("gameList");
-    this.isSms = localStorage.getItem("isSms");
-    console.log("is apply sms", this.isSms);
-    console.log("in apply dialog", this.gameList);
+    this.eventId = localStorage.getItem('event_id');
+    this.formList = localStorage.getItem('formData');
+    this.needSms = localStorage.getItem('needSms');
+    this.gameList = localStorage.getItem('gameList');
+    this.isSms = localStorage.getItem('isSms');
+    console.log('is apply sms', this.isSms);
+    console.log('in apply dialog', this.gameList);
   },
   methods: {
-    clearForm: function () {
+    clearForm: function() {
       this.formList = [];
       this.imagePreview = [];
       this.isSms = false;
       this.needSms = false;
       this.gameList = [];
-      this.imageReady = "";
+      this.imageReady = '';
       this.imageUrl = [];
-      this.username = "";
+      this.username = '';
       this.formName.inputForm = [];
       this.formName.numberForm = [];
       this.formName.phoneForm = [];
       this.formName.timeForm = [];
       this.formName.selectForm = [];
     },
-    submit: async function () {
-      if (this.username == "") {
-        this.$toast("请填写会员账号");
+    submit: async function() {
+      if (this.username == '') {
+        this.$toast('请填写会员账号');
         return true;
       }
 
-      if ("" == this.userCaptcha) {
-        this.$toast("请填写验证码");
+      if ('' == this.userCaptcha) {
+        this.$toast('请填写验证码');
         return true;
       }
 
-      if (1 == this.needSms && "" == this.mobileNumber) {
-        this.$toast("请填写手机号码");
+      if (1 == this.needSms && '' == this.mobileNumber) {
+        this.$toast('请填写手机号码');
         return true;
       }
 
-      let that = this;
+      const that = this;
       await axios
-        .post(route("apply_form"), {
-          eventId: this.eventId,
-          username: this.username,
-          form: this.formName,
-          imageUrl: this.imageUrl,
-          captcha: this.userCaptcha,
-          mobile: this.mobileNumber,
-          smsNumber: this.smsNumber,
-          needSms: this.needSms,
-          gameName: this.myGameList,
-          isSms: this.isSms,
-        })
-        .then(function (response) {
-          that.$toast(response.data.msg);
-          if (response.data.code == 1) {
-            that.clearForm();
-            that.closeDialog();
-          }
-          that.getCaptcha();
-        })
-        .catch(function (error) {
-          that.$toast("申请有误,请刷新页面");
-        });
+          .post(route('apply_form'), {
+            eventId: this.eventId,
+            username: this.username,
+            form: this.formName,
+            imageUrl: this.imageUrl,
+            captcha: this.userCaptcha,
+            mobile: this.mobileNumber,
+            smsNumber: this.smsNumber,
+            needSms: this.needSms,
+            gameName: this.myGameList,
+            isSms: this.isSms,
+          })
+          .then(function(response) {
+            that.$toast(response.data.msg);
+            if (response.data.code == 1) {
+              that.clearForm();
+              that.closeDialog();
+            }
+            that.getCaptcha();
+          })
+          .catch(function(error) {
+            that.$toast('申请有误,请刷新页面');
+          });
     },
-    imageuploaded: function (response) {
+    imageuploaded: function(response) {
       if (response.code == 1) {
         this.imageReady = true;
         this.imagePreview = response.data.src;
@@ -360,49 +360,49 @@ export default {
           id: response.data.form_id,
           value: this.imagePreview,
         });
-        this.$toast("上传成功");
+        this.$toast('上传成功');
       } else {
-        this.$toast("上传失败");
+        this.$toast('上传失败');
       }
     },
-    closeDialog: function () {
-      this.$emit("fromApplyDialog");
+    closeDialog: function() {
+      this.$emit('fromApplyDialog');
     },
-    getCaptcha: async function () {
-      let that = this;
-      await axios.get(route("index_captcha")).then(function (response) {
+    getCaptcha: async function() {
+      const that = this;
+      await axios.get(route('index_captcha')).then(function(response) {
         that.captcha = response.data;
       });
     },
-    getMessage: async function () {
-      if ("" == this.userCaptcha) {
-        this.$toast("请填写验证码");
+    getMessage: async function() {
+      if ('' == this.userCaptcha) {
+        this.$toast('请填写验证码');
         return true;
       }
 
-      if ("" == this.mobileNumber) {
-        this.$toast("请填写手机号码");
+      if ('' == this.mobileNumber) {
+        this.$toast('请填写手机号码');
         return true;
       }
 
-      let that = this;
+      const that = this;
       await axios
-        .post(route("sms_message"), {
-          mobile: this.mobileNumber,
-          captcha: this.userCaptcha,
-        })
-        .then(function (response) {
-          let res = response.data;
-          if (res.code == 1) {
-            that.counting = true;
-            that.getCaptcha();
-          }
-          that.$toast(res.msg);
-        });
+          .post(route('sms_message'), {
+            mobile: this.mobileNumber,
+            captcha: this.userCaptcha,
+          })
+          .then(function(response) {
+            const res = response.data;
+            if (res.code == 1) {
+              that.counting = true;
+              that.getCaptcha();
+            }
+            that.$toast(res.msg);
+          });
     },
-    countFinish: function () {
-      console.log("倒计时结束");
-      this.messageText = "再次获取";
+    countFinish: function() {
+      console.log('倒计时结束');
+      this.messageText = '再次获取';
       this.counting = false;
     },
   },

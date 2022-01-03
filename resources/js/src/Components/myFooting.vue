@@ -21,14 +21,14 @@
 
 <script>
 export default {
-  name: "myFooding",
-  props : ['footer'],
+  name: 'myFooding',
+  props: ['footer'],
   data() {
     return {
       list: [],
     };
   },
-  mounted(){
+  mounted() {
     this.list = this.footer;
   },
 };

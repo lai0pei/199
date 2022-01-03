@@ -23,14 +23,14 @@
 </template>
 
 <script>
-import search from "./searchDialog";
-import axios from "axios";
+import search from './searchDialog';
+import axios from 'axios';
 
 export default {
   components: {
     search,
   },
-  name: "myHeading",
+  name: 'myHeading',
   data() {
     return {
       showModal: false,
@@ -40,20 +40,20 @@ export default {
     };
   },
   methods: {
-    getDialog: async function (data) {
+    getDialog: async function(data) {
       this.showModal = true;
-      let that = this;
+      const that = this;
       await axios
-        .post(route("event_list"), {})
-        .then(function (response) {
-          let list = response.data.data;
-          that.eventList.game_list = list;
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+          .post(route('event_list'), {})
+          .then(function(response) {
+            const list = response.data.data;
+            that.eventList.game_list = list;
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
     },
-    fromApplyDialog: function () {
+    fromApplyDialog: function() {
       this.showModal = false;
     },
   },

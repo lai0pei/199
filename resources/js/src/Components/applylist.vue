@@ -25,13 +25,13 @@
 </template>
 
 <script>
-import seamless from "vue-seamless-scroll";
+import seamless from 'vue-seamless-scroll';
 export default {
-  props : ['userApplyList'],
+  props: ['userApplyList'],
   components: {
     seamless,
   },
-  mounted(){
+  mounted() {
     this.listData = this.userApplyList;
   },
   data() {
@@ -41,7 +41,7 @@ export default {
         step: 0.25,
         autoPlay: true,
         openTouch: true,
-        limitMoveNum : 0
+        limitMoveNum: 0,
       },
     };
   },

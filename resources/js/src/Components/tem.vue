@@ -202,21 +202,21 @@
 </style>
 
 <script>
-import axios from "axios";
-import VueCoreImageUpload from "vue-core-image-upload";
+import axios from 'axios';
+import VueCoreImageUpload from 'vue-core-image-upload';
 
 export default {
   components: {
     VueCoreImageUpload,
   },
-  props: { passedEventList: Array , imageID : Number},
+  props: {passedEventList: Array, imageID: Number},
   data() {
     return {
       showModal: false,
       eventType: [],
-      eventTypeId: 0, //init index
+      eventTypeId: 0, // init index
       cEventList: [],
-      eventId: "",
+      eventId: '',
       apply: [],
       formList: [],
       formName: {
@@ -227,20 +227,20 @@ export default {
         photoForm: [],
         selectForm: [],
       },
-      username: "",
+      username: '',
       limit: 2,
       isPreview: false,
       type: 2,
-      imageReady : false,
-      imagePreview : "",
-      imageUrl : "",
-      uploadId : '',
- 
+      imageReady: false,
+      imagePreview: '',
+      imageUrl: '',
+      uploadId: '',
+
     };
   },
   mounted() {
     this.makeEventList();
-    let eventId = localStorage.getItem("eventId");
+    const eventId = localStorage.getItem('eventId');
     if (eventId !== null && typeof eventId == Number) {
       this.eventTypeId = eventId;
     }
@@ -248,81 +248,80 @@ export default {
     this.selectEvent(this.eventTypeId);
   },
   methods: {
-    selectEvent: function (eventId) {
-      localStorage.removeItem("eventId");
+    selectEvent: function(eventId) {
+      localStorage.removeItem('eventId');
       localStorage.eventId = eventId;
       this.eventTypeId = eventId;
       this.assignEventList(eventId);
     },
-    assignEventList: function (index) {
+    assignEventList: function(index) {
       this.cEventList = [];
-      let eventData = this.passedEventList[index];
+      const eventData = this.passedEventList[index];
 
       if (
         undefined !== eventData &&
-        Object.keys(eventData["event"]).length !== 0
+        Object.keys(eventData['event']).length !== 0
       ) {
-        this.cEventList = Object.values(eventData["event"]);
+        this.cEventList = Object.values(eventData['event']);
       }
     },
-    makeEventList: function () {
+    makeEventList: function() {
       this.passedEventList.forEach((data) => {
-        this.eventType.push({ id: data.type_id, name: data.name });
+        this.eventType.push({id: data.type_id, name: data.name});
       });
     },
-    getDialog: async function (data) {
+    getDialog: async function(data) {
       this.showModal = true;
       this.clearForm();
       this.eventId = data.id;
       let form = [];
       await axios
-        .post(route("get_index_form"), {
-          event_id: data.id,
-        })
-        .then(function (response) {
-          form = response.data.data;
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+          .post(route('get_index_form'), {
+            event_id: data.id,
+          })
+          .then(function(response) {
+            form = response.data.data;
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
 
       if (form.length != 0) {
         this.formList = form;
       }
     },
-    clearForm : function(){
+    clearForm: function() {
       this.formList = [];
       this.imagePreview = false;
-      this.imageReady = "";
-      
+      this.imageReady = '';
     },
-    submit: async function () {
+    submit: async function() {
       this.showModal = false;
       console.log(this.formName);
-      if(this.username == ""){
+      if (this.username == '') {
         this.$toast('请填写会员账号');
       }
-      let that = this;
-      await axios.post(route("apply_form"), {
-        eventId : this.eventId,
-        username : this.username,
-        form : this.formName,
-        imageUrl : this.imageUrl,
+      const that = this;
+      await axios.post(route('apply_form'), {
+        eventId: this.eventId,
+        username: this.username,
+        form: this.formName,
+        imageUrl: this.imageUrl,
 
-      }).then(function (response){
-         that.$toast(response.data.msg);
-      }).catch(function (error) {
+      }).then(function(response) {
+        that.$toast(response.data.msg);
+      }).catch(function(error) {
         that.$toast('申请有误');
       });
     },
-    imageuploaded: function (response) {
-      console.log("upload",this.$el );
- 
-      if(response.code == 1){
+    imageuploaded: function(response) {
+      console.log('upload', this.$el );
+
+      if (response.code == 1) {
         this.imageReady = true;
         this.imagePreview = response.data.src;
         this.$toast('上传成功');
-      }else{
+      } else {
         this.$toast('上传失败');
       }
     },

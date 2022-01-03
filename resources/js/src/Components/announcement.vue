@@ -28,7 +28,7 @@
             float-left
             leading-6
             h-6
-      
+
           "
         >
           {{ list }}
@@ -39,14 +39,14 @@
 </template>
 
 <script>
-import seamless from "vue-seamless-scroll";
+import seamless from 'vue-seamless-scroll';
 export default {
   components: {
     seamless,
   },
   props: ['announce'],
   mounted() {
-    this.listData = this.announce.announcement
+    this.listData = this.announce.announcement;
   },
   data() {
     return {
@@ -54,8 +54,8 @@ export default {
       classOption: {
         direction: 2,
         step: 0.5,
-        autoPlay : true,
-        limitMoveNum : 0,
+        autoPlay: true,
+        limitMoveNum: 0,
       },
     };
   },

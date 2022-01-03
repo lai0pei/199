@@ -51,36 +51,35 @@
 </template>
 
 
-
 <script>
-import axios from "axios";
-import applyDialog from "./applyDialog";
+import axios from 'axios';
+import applyDialog from './applyDialog';
 
 export default {
   components: {
     applyDialog,
   },
-  props: { passedEventList: Array },
+  props: {passedEventList: Array},
   data() {
     return {
       showModal: false,
       eventType: [],
-      eventTypeId: 0, //init index
+      eventTypeId: 0, // init index
       cEventList: [],
-      eventId: "",
-      gameList : [],
-      formList : {
-        'event_id' : [],
-        'formData' : [],
-        'need_sms' : [],
-        'game_list' : [],
-        'is_sms' : [],
+      eventId: '',
+      gameList: [],
+      formList: {
+        'event_id': [],
+        'formData': [],
+        'need_sms': [],
+        'game_list': [],
+        'is_sms': [],
       },
     };
   },
   mounted() {
     this.makeEventList();
-    let eventId = localStorage.getItem("eventId");
+    const eventId = localStorage.getItem('eventId');
     if (eventId !== null && typeof eventId == Number) {
       this.eventTypeId = eventId;
     }
@@ -88,54 +87,53 @@ export default {
     this.selectEvent(this.eventTypeId);
   },
   methods: {
-    selectEvent: function (eventId) {
-      localStorage.removeItem("eventId");
+    selectEvent: function(eventId) {
+      localStorage.removeItem('eventId');
       localStorage.eventId = eventId;
       this.eventTypeId = eventId;
       this.assignEventList(eventId);
     },
-    assignEventList: function (index) {
+    assignEventList: function(index) {
       this.cEventList = [];
-      let eventData = this.passedEventList[index];
+      const eventData = this.passedEventList[index];
 
       if (
         undefined !== eventData &&
-        Object.keys(eventData["event"]).length !== 0
+        Object.keys(eventData['event']).length !== 0
       ) {
-        this.cEventList = Object.values(eventData["event"]);
+        this.cEventList = Object.values(eventData['event']);
       }
     },
-    makeEventList: function () {
+    makeEventList: function() {
       this.passedEventList.forEach((data) => {
-        this.eventType.push({ id: data.type_id, name: data.name });
+        this.eventType.push({id: data.type_id, name: data.name});
       });
     },
-    getDialog: async function (data) {
+    getDialog: async function(data) {
       this.showModal = true;
       let form = [];
       await axios
-        .post(route("get_index_form"), {
-          event_id: data.id,
-        })
-        .then(function (response) {
-          form = response.data.data;
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+          .post(route('get_index_form'), {
+            event_id: data.id,
+          })
+          .then(function(response) {
+            form = response.data.data;
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
       this.formList.formData = form;
       this.formList.event_id = data.id;
       this.formList.need_sms = data.need_sms;
       this.formList.game_list = this.eventType;
       this.formList.is_sms = data.is_sms;
-   
     },
-    fromApplyDialog: function () {
+    fromApplyDialog: function() {
       this.showModal = false;
     },
-    detail : function(data){
-     this.$inertia.get(route('detail'), {'event_id' : data.id});
-    }
+    detail: function(data) {
+      this.$inertia.get(route('detail'), {'event_id': data.id});
+    },
   },
 };
 </script>
