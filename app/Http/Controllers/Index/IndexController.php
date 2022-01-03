@@ -32,11 +32,11 @@ use Mews\Captcha\Facades\Captcha;
 
 class IndexController extends Controller
 {
-
     /**
      * __construct
      *
      * @param  mixed $request
+     *
      * @return void
      */
     public function __construct(Request $request)
@@ -87,19 +87,18 @@ class IndexController extends Controller
             'eventId' => 'required',
         ], );
         try {
-
             if ($validator->fails()) {
                 throw new LogicException('请求数据不正确');
             }
 
-            if (!captcha_check($input['captcha'])) {
+            if (! captcha_check($input['captcha'])) {
                 throw new LogicException('验证码不正确');
             }
-            if (1 == $input['needSms'] && !checkSmsCode($input['mobile'], $input['smsNumber'])) {
+            if ($input['needSms'] === 1 && ! checkSmsCode($input['mobile'], $input['smsNumber'])) {
                 throw new LogicException('短信验证码不正确');
             }
 
-            if (1 == $input['isSms']) {
+            if ($input['isSms'] === 1) {
                 $smsModel = new SmsApplyModel($input);
                 $smsModel->smsForm();
             } else {
@@ -112,7 +111,6 @@ class IndexController extends Controller
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }
-
     }
 
     /**
@@ -138,7 +136,6 @@ class IndexController extends Controller
             'eventId' => 'required',
         ], );
         try {
-
             if ($validator->fails()) {
                 throw new LogicException('请求数据不正确');
             }
@@ -153,11 +150,11 @@ class IndexController extends Controller
         }
     }
 
-    public function detail(){
-        $content = (new EventModel( $this->request->all()))->getContent();
+    public function detail()
+    {
+        $content = (new EventModel($this->request->all()))->getContent();
         $configModel = new ConfigModel();
         $footer = $configModel->getConfig('linkConfig');
-        return Inertia::render('Components/detail',['footer' => $footer,'content'=>$content['content'],'name'=>$content['name']]);
+        return Inertia::render('Components/detail', ['footer' => $footer,'content' => $content['content'],'name' => $content['name']]);
     }
-
 }

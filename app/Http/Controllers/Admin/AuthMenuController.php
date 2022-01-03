@@ -19,19 +19,19 @@ namespace App\Http\Controllers\Admin;
 
 use app\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
-use App\Models\Admin\AuthMenuModel;
 use App\Models\Admin\AdminModel;
+use App\Models\Admin\AuthMenuModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 
 class AuthMenuController extends Controller
 {
-
     /**
      * __construct
      *
      * @param  mixed $request
+     *
      * @return void
      */
     public function __construct(Request $request)
@@ -45,8 +45,8 @@ class AuthMenuController extends Controller
      * @return void
      */
     public function index()
-    {   
-        return view('admin.authmenu.index',['admin_name' => (new AdminModel())->getName() ?? '昵称' ]);
+    {
+        return view('admin.authmenu.index', ['admin_name' => (new AdminModel())->getName() ?? '昵称' ]);
     }
 
     /**
@@ -72,9 +72,8 @@ class AuthMenuController extends Controller
                 return self::json_return([], '添加成功');
             }
         } catch (LogicException $e) {
-            return self::json_fail([],$e->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
-
     }
 
     /**
@@ -83,9 +82,9 @@ class AuthMenuController extends Controller
      * @return void
      */
     public function clear()
-    {   
-        Cache::flush();  
-        return self::json_success([],'缓存已清除');
+    {
+        Cache::flush();
+        return self::json_success([], '缓存已清除');
     }
 
     /**
@@ -95,8 +94,6 @@ class AuthMenuController extends Controller
      */
     public function init()
     {
-       
-       return self::json((new AuthMenuModel())->menuInit());
-
+        return self::json((new AuthMenuModel())->menuInit());
     }
 }

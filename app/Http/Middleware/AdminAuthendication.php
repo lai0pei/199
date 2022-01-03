@@ -27,12 +27,13 @@ class AdminAuthendication
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     *
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {   
-        if(empty(session('user_id'))){
-            return redirect( route('admin.login.index') );
+    {
+        if (empty(session('user_id'))) {
+            return redirect(route('admin.login.index'));
         }
 
         return $next($request);

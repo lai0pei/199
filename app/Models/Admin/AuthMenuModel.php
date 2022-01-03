@@ -17,25 +17,11 @@
 
 namespace App\Models\Admin;
 
-use App\Models\Admin\LogModel;
-use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\Cache;
 use LogicException;
 
 class AuthMenuModel extends CommonModel
 {
-
-    /**
-     * __construct
-     *
-     * @param  mixed $data
-     * @return void
-     */
-    public function __construct($data = [])
-    {
-        $this->data = $data;
-    }
-
     /**
      * The table associated with the model.
      *
@@ -46,9 +32,20 @@ class AuthMenuModel extends CommonModel
     /**
      * The attributes that are mass assignable.
      *
-     * @var string[]
+     * @var array<string>
      */
     protected $fillable = ['p_id', 'title', 'auth_name', 'icon', 'href', 'target', 'status', 'is_shortcut', 'sort'];
+    /**
+     * __construct
+     *
+     * @param  mixed $data
+     *
+     * @return void
+     */
+    public function __construct($data = [])
+    {
+        $this->data = $data;
+    }
 
     /**
      * 新添加 菜单
@@ -87,16 +84,16 @@ class AuthMenuModel extends CommonModel
      * @return void
      */
     public function menuInit()
-    { 
+    {
         $user_id = session('user_id');
         $key = 'admin_menu_' . session('user_id');
         $menus = Cache::get($key);
-        if (!empty($menus)) {
+        if (! empty($menus)) {
             return $menus;
         }
         $permissions = $this->getPermission($user_id);
 
-        if ($permissions == []) {
+        if ($permissions === []) {
             return [];
         }
         $this->setPermission($user_id);
@@ -110,12 +107,11 @@ class AuthMenuModel extends CommonModel
         Cache::put($key, $init, now()->addMinute(60));
         return $init;
     }
-    
+
     /**
      * getMenu
      *
      * @param  mixed $pid
-     * 
      */
     private function getMenu($pid)
     {
@@ -125,8 +121,9 @@ class AuthMenuModel extends CommonModel
         $where['status'] = 1;
         return self::where($where)->orderBy('sort')->get($columns)->toArray();
     }
-    
-    private function setPermission($user_id){
+
+    private function setPermission($user_id)
+    {
         $role_id = AdminModel::where('id', $user_id)->value('role_id');
         $permission = AuthGroupModel::where('role_id', $role_id)->value('auth_id');
         if (empty($permission)) {
@@ -136,11 +133,12 @@ class AuthMenuModel extends CommonModel
         $column = ['id','name'];
         $permission_menu = PermissionMenuModel::whereIn('id', $list)->get($column)->toArray();
         session(['permission' => $permission_menu]);
-    }   
+    }
     /**
      * getPermission
      *
      * @param  mixed $user_id
+     *
      * @return void
      */
     private function getPermission($user_id)
@@ -160,14 +158,13 @@ class AuthMenuModel extends CommonModel
 
         return $res;
     }
-    
+
     /**
      * topChild
      *
      * @param  mixed $top_permission
      * @param  mixed $child_permission
      * @param  mixed $grand_permission
-     * 
      */
     private function topChild($top_permission, $child_permission, $grand_permission)
     {
@@ -183,9 +180,7 @@ class AuthMenuModel extends CommonModel
                         $child_menu[$childK] = $this->groupData($childV);
 
                         foreach ($this->getMenu($childV['id']) as $grandK => $grandV) {
-
                             if (in_array($grandV['id'], $grand_permission)) {
-
                                 $grand_menu[$grandK] = $this->groupData($grandV);
                             }
                         }
@@ -193,13 +188,11 @@ class AuthMenuModel extends CommonModel
                         $child_menu[$childK]['child'] = array_values($grand_menu);
                         unset($grand_menu);
                     }
-
                 }
 
                 $top_menu[$topK]['child'] = array_values($child_menu);
                 unset($child_menu);
             }
-
         }
 
         return $top_menu;
@@ -207,7 +200,6 @@ class AuthMenuModel extends CommonModel
 
     private function groupData($data)
     {
-
         return [
             'id' => $data['id'],
             'p_id' => $data['p_id'],
@@ -217,6 +209,5 @@ class AuthMenuModel extends CommonModel
             'href' => $data['href'],
             'is_shorcut' => $data['is_shortcut'],
         ];
-
     }
 }

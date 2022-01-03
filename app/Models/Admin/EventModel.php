@@ -18,13 +18,11 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use App\Models\Admin\CommonModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class EventModel extends CommonModel
 {
-
     /**
      * The table associated with the model.
      *
@@ -44,7 +42,6 @@ class EventModel extends CommonModel
 
     public function getEventBy()
     {
-
         $data = $this->data;
 
         if (empty($data['id'])) {
@@ -53,35 +50,34 @@ class EventModel extends CommonModel
 
         $event = self::find($data['id'])->toArray();
 
-        ($event['status'] == 1) ? $event['status_check'] = "checked" : 0;
-        ($event['display'] == 1) ? $event['display_check'] = "checked" : 0;
-        ($event['is_daily'] == 1) ? $event['is_daily_check'] = "checked" : 0;
-        ($event['need_sms'] == 1) ? $event['need_sms_check'] = "checked" : 0;
+        $event['status'] === 1 ? $event['status_check'] = 'checked' : 0;
+        $event['display'] === 1 ? $event['display_check'] = 'checked' : 0;
+        $event['is_daily'] === 1 ? $event['is_daily_check'] = 'checked' : 0;
+        $event['need_sms'] === 1 ? $event['need_sms_check'] = 'checked' : 0;
 
         return $event;
     }
 
     public function maniEvent()
     {
-
         $input = $this->data;
         $data = $input['data'];
         $content = $input['content'];
         DB::beginTransaction();
 
-        if (-1 == $data['id']) {
+        if ($data['id'] === -1) {
             $add = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
-                'type_pic' => $data['type_pic'] ?? "",
+                'type_pic' => $data['type_pic'] ?? '',
                 'sort' => $data['sort'],
-                'status' => ($data['status'] ?? "" == 'on') ? 1 : 0,
-                'display' => ($data['display'] ?? "" == 'on') ? 1 : 0,
+                'status' => $data['status'] ?? '' === 'on' ? 1 : 0,
+                'display' => $data['display'] ?? '' === 'on' ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
                 'daily_limit' => $data['sort'],
-                'is_daily' => ($data['is_daily'] ?? "" == 'on') ? 1 : 0,
-                'need_sms' => ($data['need_sms'] ?? "" == 'on') ? 1 : 0,
+                'is_daily' => $data['is_daily'] ?? '' === 'on' ? 1 : 0,
+                'need_sms' => $data['need_sms'] ?? '' === 'on' ? 1 : 0,
                 'content' => $content,
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
@@ -90,70 +86,61 @@ class EventModel extends CommonModel
 
             $status = self::insert($add);
 
-            if (false === $status) {
-
+            if ($status === false) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
-
-            } else {
-
-                $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '添加了新活动 [' . $data['name'] . ']'];
-
-                (new LogModel($log_data))->createLog();
-
-                DB::commit();
-
-                return true;
             }
 
-        } else {
+            $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '添加了新活动 [' . $data['name'] . ']'];
 
-            $save = [
-                'name' => $data['name'],
-                'type_id' => $data['type_id'],
-                'sort' => $data['sort'],
-                'status' => ($data['status'] ?? "" == 'on') ? 1 : 0,
-                'display' => ($data['display'] ?? "" == 'on') ? 1 : 0,
-                'start_time' => $data['start'],
-                'end_time' => $data['end'],
-                'daily_limit' => $data['sort'],
-                'is_daily' => ($data['is_daily'] ?? "" == 'on') ? 1 : 0,
-                'need_sms' => ($data['need_sms'] ?? "" == 'on') ? 1 : 0,
-                'content' => $content,
-                'external_url' => $data['external_url'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+            (new LogModel($log_data))->createLog();
 
-            if (!empty($data['type_pic'])) {
-                $save['type_pic'] = $data['type_pic'];
-            }
+            DB::commit();
 
-            $status = self::where('id', $data['id'])->update($save);
-
-            if (false === $status) {
-
-                DB::rollBack();
-
-                throw new LogicException('添加失败');
-
-            } else {
-
-                $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑了活动[' . $data['name'] . ']'];
-
-                (new LogModel($log_data))->createLog();
-
-                DB::commit();
-
-                return true;
-            }
+            return true;
         }
+
+        $save = [
+            'name' => $data['name'],
+            'type_id' => $data['type_id'],
+            'sort' => $data['sort'],
+            'status' => $data['status'] ?? '' === 'on' ? 1 : 0,
+            'display' => $data['display'] ?? '' === 'on' ? 1 : 0,
+            'start_time' => $data['start'],
+            'end_time' => $data['end'],
+            'daily_limit' => $data['sort'],
+            'is_daily' => $data['is_daily'] ?? '' === 'on' ? 1 : 0,
+            'need_sms' => $data['need_sms'] ?? '' === 'on' ? 1 : 0,
+            'content' => $content,
+            'external_url' => $data['external_url'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+
+        if (! empty($data['type_pic'])) {
+            $save['type_pic'] = $data['type_pic'];
+        }
+
+        $status = self::where('id', $data['id'])->update($save);
+
+        if ($status === false) {
+            DB::rollBack();
+
+            throw new LogicException('添加失败');
+        }
+
+        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑了活动[' . $data['name'] . ']'];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
     public function getEventList()
     {
-
         $data = $this->data;
 
         $limit = $data['limit'] ?? 15;
@@ -161,7 +148,7 @@ class EventModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['name'] !== '') {
                 $where['name'] = $where['name'] = $param['name'];
@@ -180,7 +167,7 @@ class EventModel extends CommonModel
             }
         }
 
-        $item = self::where($where)->paginate($limit, "*", "page", $page);
+        $item = self::where($where)->paginate($limit, '*', 'page', $page);
 
         $result = [];
         foreach ($item->items() as $k => $v) {
@@ -188,21 +175,15 @@ class EventModel extends CommonModel
             $result[$k]['name'] = $v['name'];
             $result[$k]['type'] = $this->getEventName($v['type_id']);
             $result[$k]['sort'] = $v['sort'];
-            $result[$k]['display'] = ($v['display'] == 1) ? '显示' : '隐藏';
-            $result[$k]['status'] = ($v['status'] == 1) ? '开启' : '关闭';
-            $result[$k]['is_daily'] = ($v['is_daily'] == 1) ? '限制' : '不限制';
+            $result[$k]['display'] = $v['display'] === 1 ? '显示' : '隐藏';
+            $result[$k]['status'] = $v['status'] === 1 ? '开启' : '关闭';
+            $result[$k]['is_daily'] = $v['is_daily'] === 1 ? '限制' : '不限制';
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
-
         }
         $res['data'] = $result;
         $res['count'] = $item->count();
 
         return $res;
-    }
-
-    private function getEventName($id)
-    {
-        return EventTypeModel::where('id', $id)->value('name');
     }
 
     public function getEvent()
@@ -236,35 +217,31 @@ class EventModel extends CommonModel
 
     public function deleteEvent()
     {
-
         $data = $this->data;
 
         DB::beginTransaction();
 
         $name = self::find($data['id'])->value('name');
 
-        if (1 == $data['id'] || 1 == self::find($data['id'])->value('is_sm,s')) {
+        if ($data['id'] === 1 || self::find($data['id'])->value('is_sm,s') === 1) {
             throw new LogicException('固定活动不能删除!');
         }
 
         $status = self::where('id', $data['id'])->delete();
 
-        if (false === $status) {
-
+        if ($status === false) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
-
-        } else {
-
-            $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除了活动[' . $name . ']'];
-
-            (new LogModel($log_data))->createLog();
-
-            DB::commit();
-
-            return true;
         }
+
+        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除了活动[' . $name . ']'];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
     public function getTotalNumber()
@@ -277,4 +254,8 @@ class EventModel extends CommonModel
         return self::whereDate('created_at', Carbon::today())->count();
     }
 
+    private function getEventName($id)
+    {
+        return EventTypeModel::where('id', $id)->value('name');
+    }
 }

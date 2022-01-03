@@ -17,16 +17,14 @@
 
 namespace App\Models\Admin;
 
-use App\Models\Admin\CommonModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use LogicException;
 
 class SmsEventModel extends CommonModel
 {
-
-    const PASS = 1;
-    const REFUSE = 2;
+    public const PASS = 1;
+    public const REFUSE = 2;
     /**
      * The table associated with the model.
      *
@@ -47,7 +45,7 @@ class SmsEventModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['is_match'] !== '') {
                 $where['is_match'] = $param['is_match'];
@@ -66,7 +64,7 @@ class SmsEventModel extends CommonModel
             }
         }
 
-        $item = self::where($where)->paginate($limit, "*", "page", $page);
+        $item = self::where($where)->paginate($limit, '*', 'page', $page);
 
         $result = [];
 
@@ -89,45 +87,6 @@ class SmsEventModel extends CommonModel
         $res['data'] = $result;
         $res['count'] = $item->count();
         return $res;
-    }
-
-    private function matchName($id)
-    {
-
-        switch (true) {
-            case 1 == $id:$name = '匹配';
-                break;
-            case 0 == $id:$name = '不匹配';
-                break;
-            default:$name = '无';
-        }
-        return $name;
-    }
-
-    private function sendName($id)
-    {
-
-        switch (true) {
-            case 1 == $id:$name = '已发';
-                break;
-            case 0 == $id:$name = '未发';
-                break;
-            default:$name = '无';
-        }
-        return $name;
-    }
-
-    private function stateName($id)
-    {
-
-        switch (true) {
-            case 1 == $id:$name = '通过';
-                break;
-            case 2 == $id:$name = '失败';
-                break;
-            default:$name = '未审核';
-        }
-        return $name;
     }
 
     public function getType()
@@ -163,7 +122,6 @@ class SmsEventModel extends CommonModel
 
     public function saveSms()
     {
-
         $data = $this->data;
 
         $save = [
@@ -173,12 +131,10 @@ class SmsEventModel extends CommonModel
         ];
 
         return self::where('id', $data['id'])->update($save);
-
     }
 
     public function delete()
     {
-
         $data = $this->data;
 
         DB::beginTransaction();
@@ -188,33 +144,28 @@ class SmsEventModel extends CommonModel
             $count = count($ids);
             $status = self::whereIn('id', $ids)->delete();
             $title = '删除了' . $count . '行用户短信活动申请记录';
-
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
         }
 
-        if (false === $status) {
-
+        if ($status === false) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
-
-        } else {
-
-            $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => $title];
-
-            (new LogModel($log_data))->createLog();
-
-            DB::commit();
-
-            return true;
         }
+
+        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => $title];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
     public function audit($status)
     {
-
         $data = $this->data;
 
         DB::beginTransaction();
@@ -228,28 +179,24 @@ class SmsEventModel extends CommonModel
             ];
             $status = self::whereIn('id', $ids)->update($audit);
             $title = '审核了    ' . $count . '行用户短信活动申请记录';
-
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
         }
 
-        if (false === $status) {
-
+        if ($status === false) {
             DB::rollBack();
 
             throw new LogicException('审核失败');
-
-        } else {
-
-            $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => $title];
-
-            (new LogModel($log_data))->createLog();
-
-            DB::commit();
-
-            return true;
         }
+
+        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => $title];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
     public function getNewMember()
@@ -266,6 +213,49 @@ class SmsEventModel extends CommonModel
     {
         return self::where('state', 0)->count();
     }
-    
 
+    private function matchName($id)
+    {
+        switch (true) {
+            case $id === 1:
+                $name = '匹配';
+                break;
+            case $id === 0:
+                $name = '不匹配';
+                break;
+            default:
+                $name = '无';
+        }
+        return $name;
+    }
+
+    private function sendName($id)
+    {
+        switch (true) {
+            case $id === 1:
+                $name = '已发';
+                break;
+            case $id === 0:
+                $name = '未发';
+                break;
+            default:
+                $name = '无';
+        }
+        return $name;
+    }
+
+    private function stateName($id)
+    {
+        switch (true) {
+            case $id === 1:
+                $name = '通过';
+                break;
+            case $id === 2:
+                $name = '失败';
+                break;
+            default:
+                $name = '未审核';
+        }
+        return $name;
+    }
 }

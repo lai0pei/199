@@ -14,43 +14,41 @@
  * | Copyright 2022 - 2025
  * |-----------------------------------------------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\Index\util;
 
-use LogicException;
 use Illuminate\Support\Facades\Log;
+use LogicException;
 
 trait juhe
 {
-
-    //
     protected $juheUrl = 'http://v.juhe.cn/sms/send?';
 
     public function juheSms($params)
     {
         // 请求参数
         $paramsString = http_build_query($params);
-     
+
         $message = '短信发送失败';
         // 发起接口网络请求
         $response = null;
-    
+
         try {
             $response = $this->juheHttpRequest($this->juheUrl, $paramsString, 1);
         } catch (LogicException $e) {
-
             throw new LogicException($e);
         }
 
-        if (!$response) {
+        if (! $response) {
             throw new LogicException($message);
         }
         $result = json_decode($response, true);
 
-        if (!$result) {
+        if (! $result) {
             throw new LogicException($message);
         }
-    
-        if (0 != $result['error_code']) {
+
+        if ($result['error_code'] !== 0) {
             Log::channel('index')->info($result);
             throw new LogicException('手机号码不支持');
         }
@@ -59,9 +57,11 @@ trait juhe
 
     /**
      * 发起网络请求函数
+     *
      * @param string $url 请求的URL
      * @param bool $params 请求的参数内容
      * @param int $ispost 是否POST请求
+     *
      * @return bool|string 返回内容
      */
     private function juheHttpRequest($url, $params = false, $ispost = 0)
@@ -87,7 +87,7 @@ trait juhe
         $response = curl_exec($ch);
         if ($response === false) {
             // echo "cURL Error: ".curl_error($ch);
-            return json_decode(curl_error($ch),true);
+            return json_decode(curl_error($ch), true);
         }
         curl_close($ch);
         return $response;

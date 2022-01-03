@@ -2,11 +2,8 @@
 
 namespace App\Models\Admin;
 
-use App\Models\Admin\CommonModel;
-
 class PermissionMenuModel extends CommonModel
 {
-
     /**
      * The table associated with the model.
      *
@@ -32,15 +29,15 @@ class PermissionMenuModel extends CommonModel
         $auth = AuthGroupModel::where('role_id', $data['id'])->value('auth_id');
 
         $auth_list = [];
-        if (!empty($auth)) {
-            $auth_list = explode(",", $auth); 
+        if (! empty($auth)) {
+            $auth_list = explode(',', $auth);
         }
-     
+
         $auth_menu = new AuthMenuModel();
         $current_id = array_unique(array_column($permission, 'current_auth_id'));
         $menu = [];
         $sub_menu = [];
-        $i = 0 ;
+        $i = 0;
         foreach ($current_id as $v) {
             $menu[$i]['id'] = $i;
             $menu[$i]['title'] = $auth_menu::where('id', $v)->where('status', 1)->value('title');
@@ -49,7 +46,7 @@ class PermissionMenuModel extends CommonModel
             $menu[$i]['field'] = 'node';
             $menu[$i]['type'] = 1;
             $current_menus = self::where('current_auth_id', $v)->select('id', 'name', 'title')->get()->toArray();
-           
+
             foreach ($current_menus as $menu_key => $menu_value) {
                 $sub_menu[$menu_key]['checked'] = false;
                 if (in_array($menu_value['id'], $auth_list)) {
@@ -67,24 +64,23 @@ class PermissionMenuModel extends CommonModel
         }
 
         return $menu;
-
     }
-    
-    public function authList(){
-      
+
+    public function authList()
+    {
         $data = $this->data;
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
 
         $where = [];
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            if (!empty($param['name'])) {
+            if (! empty($param['name'])) {
                 $where['title'] = trim($param['name']);
             }
         }
 
-        $item = self::where($where)->paginate($limit, "*", "page", $page);
+        $item = self::where($where)->paginate($limit, '*', 'page', $page);
         $auth_menu = new AuthMenuModel();
 
         $result = [];
@@ -92,10 +88,9 @@ class PermissionMenuModel extends CommonModel
             $result[$k]['id'] = $v['id'];
             $result[$k]['name'] = $v['name'];
             $result[$k]['title'] = $v['title'];
-            $result[$k]['menu_title'] = $auth_menu::where('id',$v['current_auth_id'])->value('title');
+            $result[$k]['menu_title'] = $auth_menu::where('id', $v['current_auth_id'])->value('title');
             $result[$k]['updated_at'] = $this->toTime($v['updated_at']);
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
-
         }
         $res['data'] = $result;
         $res['count'] = $item->count();
@@ -103,8 +98,8 @@ class PermissionMenuModel extends CommonModel
         return $res;
     }
 
-    public function viewPermission(){
-        
+    public function viewPermission()
+    {
         $data = $this->data;
 
         return self::find($data['id']);

@@ -17,23 +17,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Exceptions\LogicException;
+use App\Http\Controllers\Controller;
 use App\Models\Admin\FormModel;
 use Illuminate\Http\Request;
 
 class FormController extends Controller
 {
-    //
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
     public function form()
-    {    
+    {
         $id = $this->request->route()->parameters();
-        return view('admin.event.form_event',['id'=>$id['id']]);
+        return view('admin.event.form_event', ['id' => $id['id']]);
     }
 
     public function getFormList()
@@ -48,37 +47,35 @@ class FormController extends Controller
         return response()->json($result);
     }
 
-    
-    public function formDelete(){
-
+    public function formDelete()
+    {
         try {
-            if ((new FormModel($this->request->all()))-> formDelete()) {
-                return self::json_success([],'操作成功');
+            if ((new FormModel($this->request->all()))->formDelete()) {
+                return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
-            return self::json_fail([],$e->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
     }
 
     public function formDetail()
-    {    
+    {
         $route = $this->request->route()->parameters();
         $formModel = new FormModel($route);
         $data = $formModel->getFormById();
         $formType = $formModel->getFormType();
         $event_id = $route['event_id'];
-        return view('admin.event.add_form',['form'=>$data, 'type'=>$formType, 'event_id'=>$event_id]);
+        return view('admin.event.add_form', ['form' => $data, 'type' => $formType, 'event_id' => $event_id]);
     }
 
-    
     public function formAdd()
     {
         try {
-            if ((new FormModel($this->request->all()))-> formAdd()) {
-                return self::json_success([],'操作成功');
+            if ((new FormModel($this->request->all()))->formAdd()) {
+                return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
-            return self::json_fail([],$e->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
     }
 }

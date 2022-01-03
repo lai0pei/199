@@ -20,13 +20,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\ControlModel;
 use App\Models\Admin\EventModel;
+use App\Models\Admin\MobileModel;
 use App\Models\Admin\SmsEventModel;
 use App\Models\Admin\UserApplyModel;
-use App\Models\Admin\MobileModel;
 
 class ControlController extends Controller
 {
-
     public function control()
     {
         $smsModel = new SmsEventModel();

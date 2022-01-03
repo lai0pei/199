@@ -28,7 +28,6 @@ use LogicException;
 
 class MessageController extends Controller
 {
-
     use juhe;
     use yunpian;
     use generateCode;
@@ -53,7 +52,7 @@ class MessageController extends Controller
             $mobile = $all['mobile'];
             $captch = $all['captcha'];
 
-            if (!captcha_check($captch)) {
+            if (! captcha_check($captch)) {
                 throw new LogicException('验证码不正确');
             }
 
@@ -91,7 +90,5 @@ class MessageController extends Controller
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }
-
     }
-
 }

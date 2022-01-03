@@ -10,7 +10,6 @@ use LogicException;
 
 class UserController extends Controller
 {
-    //
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -43,7 +42,6 @@ class UserController extends Controller
 
     public function saveAudit()
     {
-
         return self::json_success((new UserApplyModel($this->request->all()))->saveAudit());
     }
 
@@ -56,7 +54,6 @@ class UserController extends Controller
         } catch (LogicException $e) {
             return self::json_fail($e->getMessage());
         }
-
     }
 
     public function refuse()
@@ -68,7 +65,6 @@ class UserController extends Controller
         } catch (LogicException $e) {
             return self::json_fail($e->getMessage());
         }
-
     }
 
     public function pass()
@@ -80,6 +76,5 @@ class UserController extends Controller
         } catch (LogicException $e) {
             return self::json_fail($e->getMessage());
         }
-
     }
 }

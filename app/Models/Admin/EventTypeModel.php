@@ -18,12 +18,10 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
 class EventTypeModel extends CommonModel
 {
-
     /**
      * The table associated with the model.
      *
@@ -42,7 +40,7 @@ class EventTypeModel extends CommonModel
 
         DB::beginTransaction();
 
-        if ($data['id'] == -1) {
+        if ($data['id'] === -1) {
             $add = [
                 'name' => $data['name'],
                 'status' => $data['status'],
@@ -53,57 +51,49 @@ class EventTypeModel extends CommonModel
 
             $status = self::insert($add);
 
-            if (false === $status) {
-
+            if ($status === false) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
-
-            } else {
-
-                $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '添加新活动类型'];
-
-                (new LogModel($log_data))->createLog();
-
-                DB::commit();
-
-                return true;
             }
 
-        } else {
-            $save = [
-                'name' => $data['name'],
-                'status' => $data['status'],
-                'sort' => $data['sort'],
-                'updated_at' => now(),
-            ];
+            $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '添加新活动类型'];
 
-            $status = self::where('id', $data['id'])->update($save);
+            (new LogModel($log_data))->createLog();
 
-            if (false === $status) {
+            DB::commit();
 
-                DB::rollBack();
-
-                throw new LogicException('添加失败');
-
-            } else {
-
-                $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑允许登录ip地址'];
-
-                (new LogModel($log_data))->createLog();
-
-                DB::commit();
-
-                return true;
-            }
+            return true;
         }
+        $save = [
+            'name' => $data['name'],
+            'status' => $data['status'],
+            'sort' => $data['sort'],
+            'updated_at' => now(),
+        ];
+
+        $status = self::where('id', $data['id'])->update($save);
+
+        if ($status === false) {
+            DB::rollBack();
+
+            throw new LogicException('添加失败');
+        }
+
+        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑允许登录ip地址'];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
     public function getType()
     {
         $data = $this->data;
 
-        if (!empty($data['id'])) {
+        if (! empty($data['id'])) {
             $res = self::find($data['id'])->toArray();
         } else {
             $res = [];
@@ -119,7 +109,7 @@ class EventTypeModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['name'] !== '') {
                 $where['name'] = $param['name'];
@@ -128,7 +118,7 @@ class EventTypeModel extends CommonModel
 
         $column = ['id', 'name', 'status', 'created_at', 'updated_at', 'sort'];
 
-        $item = self::select($column)->where($where)->paginate($limit, "*", "page", $page);
+        $item = self::select($column)->where($where)->paginate($limit, '*', 'page', $page);
 
         $result = [];
 
@@ -146,17 +136,6 @@ class EventTypeModel extends CommonModel
         return $res;
     }
 
-    private function getStatus($status)
-    {
-        if (1 == $status) {
-            $name = '正常';
-        } else {
-            $name = '禁用';
-        }
-
-        return $name;
-    }
-
     public function typeDelete()
     {
         $data = $this->data;
@@ -164,27 +143,24 @@ class EventTypeModel extends CommonModel
         DB::beginTransaction();
 
         $eventModel = new EventModel();
-        if (!empty($eventModel::where('type_id', $data['id'])->value('id'))) {
+        if (! empty($eventModel::where('type_id', $data['id'])->value('id'))) {
             throw new LogicException('此类型活动下还有其他活动,不可删除');
         }
         $status = self::where('id', $data['id'])->delete();
 
-        if (false === $status) {
-
+        if ($status === false) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
-
-        } else {
-
-            $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除了一项活动类型'];
-
-            (new LogModel($log_data))->createLog();
-
-            DB::commit();
-
-            return true;
         }
+
+        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除了一项活动类型'];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
     public function getAllType()
@@ -192,4 +168,14 @@ class EventTypeModel extends CommonModel
         return self::where('status', 1)->get()->toArray();
     }
 
+    private function getStatus($status)
+    {
+        if ($status === 1) {
+            $name = '正常';
+        } else {
+            $name = '禁用';
+        }
+
+        return $name;
+    }
 }

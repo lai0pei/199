@@ -9,8 +9,6 @@ use Illuminate\Http\Request;
 
 class MobileController extends Controller
 {
-    //
-
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -23,7 +21,6 @@ class MobileController extends Controller
 
     public function getMobile()
     {
-
         $data = (new MobileModel($this->request->all()))->getMobile();
 
         $result['code'] = self::FAIL;
@@ -57,9 +54,7 @@ class MobileController extends Controller
 
     public function oneClick()
     {
-
         (new MobileModel($this->request->all()))->oneClick();
         return self::json_success([], '操作成功');
-
     }
 }

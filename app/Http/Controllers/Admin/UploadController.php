@@ -27,7 +27,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class UploadController extends Controller
 {
-    //
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -40,13 +39,13 @@ class UploadController extends Controller
      */
     public function eventPhotoUpload()
     {
-        $event = config("filesystems.event");
+        $event = config('filesystems.event');
 
-        $time = Carbon::now()->format("Y-m-d");
+        $time = Carbon::now()->format('Y-m-d');
 
         $path = $event . '/' . $time;
 
-        if (!Storage::exists($path)) {
+        if (! Storage::exists($path)) {
             Storage::makeDirectory($path, 7777, true, true);
         }
 
@@ -56,7 +55,6 @@ class UploadController extends Controller
         $result['data'] = ['src' => asset('storage/' . $url)];
 
         return response()->json($result);
-
     }
 
     public function importExcel()
@@ -65,11 +63,8 @@ class UploadController extends Controller
             Excel::import(new MobileImExModel(), $this->request->file('file'));
 
             return self::json_success([], '导入成功');
-
         } catch (LogicException $e) {
             return self::json_fail([], $e);
         }
-
     }
-
 }

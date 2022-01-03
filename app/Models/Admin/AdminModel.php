@@ -18,11 +18,8 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use App\Models\Admin\LogModel;
-use App\Models\Admin\RoleModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
-use App\Models\Admin\CommonModel;
 
 class AdminModel extends CommonModel
 {
@@ -44,7 +41,6 @@ class AdminModel extends CommonModel
 
     public function __construct($data = [])
     {
-
         $this->adminData = $data;
     }
 
@@ -73,11 +69,11 @@ class AdminModel extends CommonModel
             throw new LogicException('账号不存在');
         }
 
-        if (!password_verify($data['password'], $admin->password)) {
+        if (! password_verify($data['password'], $admin->password)) {
             throw new LogicException('账号密码不正确');
         }
 
-        if (1 != $admin->status) {
+        if ($admin->status !== 1) {
             throw new LogicException('该账号禁用 无法进行登录，请联系管理员');
         }
 
@@ -98,17 +94,6 @@ class AdminModel extends CommonModel
         $log->createLog();
 
         return true;
-
-    }
-
-    /**
-     * 管理员session
-     *
-     * @return void
-     */
-    private function setAdminSession($user_id)
-    {
-        return session()->put('user_id', $user_id);
     }
 
     /**
@@ -148,7 +133,7 @@ class AdminModel extends CommonModel
         $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id'];
         $where = [];
         $where['is_delete'] = 0;
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
 
             if ($param['role_id'] !== '') {
@@ -163,12 +148,12 @@ class AdminModel extends CommonModel
             if ($param['status'] !== '') {
                 $where['status'] = $param['status'];
             }
-
         }
 
         $item = self::select($column)->where($where)->with(['role_name' => function ($query) {
             $query->select(['id', 'role_name']);
-        }])->paginate($limit, "*", "page", $page);
+        },
+        ])->paginate($limit, '*', 'page', $page);
 
         $result = [];
         foreach ($item->items() as $k => $v) {
@@ -180,18 +165,17 @@ class AdminModel extends CommonModel
             $result[$k]['last_date'] = $this->toTime($v['last_date']);
             $result[$k]['login_count'] = $v['login_count'];
 
-            if ($v['status'] == 1) {
-                $result[$k]['status'] = "正常";
+            if ($v['status'] === 1) {
+                $result[$k]['status'] = '正常';
             } else {
-                $result[$k]['status'] = "禁用";
+                $result[$k]['status'] = '禁用';
             }
 
             if (empty($v['role_name']['role_name'])) {
-                $result[$k]['role_name'] = "无";
+                $result[$k]['role_name'] = '无';
             } else {
                 $result[$k]['role_name'] = $v['role_name']['role_name'];
             }
-
         }
         $res['data'] = $result;
         $res['count'] = $item->count();
@@ -199,16 +183,16 @@ class AdminModel extends CommonModel
     }
 
     public function addAdmin()
-    {$data = $this->adminData;
+    {
+        $data = $this->adminData;
         $account = self::where('account', $data['account'])->value('account');
         $user_name = self::where('user_name', $data['username'])->value('user_name');
-        
 
-        if ($data['account'] == $account ) {
+        if ($data['account'] === $account) {
             throw new LogicException('账号已存在');
         }
 
-        if ($data['username'] == $user_name) {
+        if ($data['username'] === $user_name) {
             throw new LogicException('昵称存在');
         }
 
@@ -232,20 +216,18 @@ class AdminModel extends CommonModel
 
         $status = self::insert($new_admin);
 
-        if (false === $status) {
+        if ($status === false) {
             DB::rollBack();
             throw new LogicException('添加失败');
-        } else {
-
-            $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '创建新管理员'];
-
-            (new LogModel($log_data))->createLog();
-
-            DB::commit();
-
-            return true;
         }
 
+        $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '创建新管理员'];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
     public function editAdmin()
@@ -253,7 +235,6 @@ class AdminModel extends CommonModel
         $data = $this->adminData;
         $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id', 'number'];
         return self::where('id', $data['id'])->get($column);
-
     }
 
     public function saveAdmin()
@@ -267,47 +248,39 @@ class AdminModel extends CommonModel
         $save['status'] = $data['status'];
         $save['number'] = $data['number'];
 
-        if (!empty($data['password'])) {
+        if (! empty($data['password'])) {
             $save['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
 
-        if(1 == $data['id'] && $data['status'] == 0){
+        if ($data['id'] === 1 && $data['status'] === 0) {
             throw new LogicException('总管理员不可禁用');
         }
 
         try {
-
             DB::beginTransaction();
 
-            $status = self::where("id", $data['id'])->update($save);
+            $status = self::where('id', $data['id'])->update($save);
 
-            if (false === $status) {
-
+            if ($status === false) {
                 DB::rollBack();
 
                 throw new LogicException('编辑失败');
-
-            } else {
-
-                $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑管理员'];
-
-                (new LogModel($log_data))->createLog();
-
-                DB::commit();
-
-                return true;
             }
+
+            $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑管理员'];
+
+            (new LogModel($log_data))->createLog();
+
+            DB::commit();
+
+            return true;
         } catch (LogicException $e) {
-
             throw new LogicException($e->getMessage());
-
         }
-
     }
 
     public function deleteAdmin()
     {
-
         $data = $this->adminData;
 
         DB::beginTransaction();
@@ -315,12 +288,10 @@ class AdminModel extends CommonModel
         $admin = self::find($data['id']);
 
         if (empty($admin)) {
-
             throw new LogicException('此管理员不存在');
-
         }
 
-        if ($data['id'] == 1) {
+        if ($data['id'] === 1) {
             throw new LogicException('总管理员不可删除');
         }
 
@@ -328,24 +299,30 @@ class AdminModel extends CommonModel
         //     'is_delete' => 0,
         // ];
 
-        $status = self::where("id", $data['id'])->delete();
+        $status = self::where('id', $data['id'])->delete();
 
-        if (false === $status) {
-
+        if ($status === false) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
-
-        } else {
-
-            $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除管理员 ' . $admin->user_name];
-
-            (new LogModel($log_data))->createLog();
-
-            DB::commit();
-
-            return true;
         }
+
+        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除管理员 ' . $admin->user_name];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
+    /**
+     * 管理员session
+     *
+     * @return void
+     */
+    private function setAdminSession($user_id)
+    {
+        return session()->put('user_id', $user_id);
+    }
 }

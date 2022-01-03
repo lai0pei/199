@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
-    //
-
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -18,13 +16,13 @@ class UploadController extends Controller
 
     public function uploadImage()
     {
-        $userApply = config("filesystems.userApply");
+        $userApply = config('filesystems.userApply');
 
-        $time = Carbon::now()->format("Y-m-d");
+        $time = Carbon::now()->format('Y-m-d');
 
         $path = $userApply . '/' . $time;
 
-        if (!Storage::exists($path)) {
+        if (! Storage::exists($path)) {
             Storage::makeDirectory($path, 7777, true, true);
         }
         $url = Storage::disk('public')->put($path, $this->request->file('applyUser'));
@@ -33,6 +31,5 @@ class UploadController extends Controller
         $result['data'] = ['src' => asset('storage/' . $url),'form_id' => $this->request->input('form_id')];
 
         return response()->json($result);
-
     }
 }

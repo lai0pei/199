@@ -18,7 +18,6 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use App\Models\Admin\CommonModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
 
@@ -47,7 +46,7 @@ class MobileModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
 
             if ($param['mobile'] !== '') {
@@ -55,7 +54,7 @@ class MobileModel extends CommonModel
             }
         }
 
-        $item = self::where($where)->orderbydesc('id')->paginate($limit, "*", "page", $page);
+        $item = self::where($where)->orderbydesc('id')->paginate($limit, '*', 'page', $page);
 
         $result = [];
 
@@ -73,7 +72,6 @@ class MobileModel extends CommonModel
 
     public function deleteMobile()
     {
-
         $data = $this->data;
 
         DB::beginTransaction();
@@ -83,33 +81,28 @@ class MobileModel extends CommonModel
             $count = count($ids);
             $status = self::whereIn('id', $ids)->delete();
             $title = '删除了' . $count . '行vip电话号码';
-
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
         }
 
-        if (false === $status) {
-
+        if ($status === false) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
-
-        } else {
-
-            $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => $title];
-
-            (new LogModel($log_data))->createLog();
-
-            DB::commit();
-
-            return true;
         }
+
+        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => $title];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
     public function maniMobile()
     {
-
         $data = $this->data;
 
         DB::beginTransaction();
@@ -120,10 +113,8 @@ class MobileModel extends CommonModel
                 'updated_at' => now(),
             ]);
         } catch (LogicException $e) {
-
             DB::rollBack();
             throw new LogicException($e->getMessage());
-
         }
 
         $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '添加了一行vip手机号码'];
@@ -137,7 +128,6 @@ class MobileModel extends CommonModel
 
     public function oneClick()
     {
-
         self::truncate();
 
         $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '一键清除了所有电话数据'];
@@ -149,5 +139,4 @@ class MobileModel extends CommonModel
     {
         return self::count();
     }
-
 }

@@ -14,27 +14,26 @@
  * | Copyright 2022 - 2025
  * |-----------------------------------------------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\Index\util;
 
-use LogicException;
 use Illuminate\Support\Facades\Log;
+use LogicException;
 
 trait yunpian
 {
-
-    protected $url = "https://sms.yunpian.com/v2/sms/single_send.json";
+    protected $url = 'https://sms.yunpian.com/v2/sms/single_send.json';
 
     public function yunPianSms($params)
     {
         try {
-   
-            $response = $this->post("https://sms.yunpian.com/v2/sms/single_send.json", $params);
+            $response = $this->post('https://sms.yunpian.com/v2/sms/single_send.json', $params);
 
-            if (!$response) {
+            if (! $response) {
                 throw new LogicException('手机号码不支持');
             }
 
-            if($response['code'] !== 0){
+            if ($response['code'] !== 0) {
                 Log::channel('index')->info($response);
             }
         } catch (LogicException $e) {

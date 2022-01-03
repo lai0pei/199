@@ -25,8 +25,6 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    //
-
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -47,7 +45,8 @@ class EventController extends Controller
         return self::json_success($data);
     }
 
-    function list() {
+    public function list()
+    {
         $model = new EventModel($this->request->all());
         $types = (new EventTypeModel())->getAllType();
         $status = $model->getStatus();
@@ -58,7 +57,6 @@ class EventController extends Controller
 
     public function getEventList()
     {
-
         $data = (new EventModel($this->request->all()))->getEventList();
 
         $result['code'] = self::FAIL;

@@ -4,23 +4,24 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\SmsEventModel;
-use LogicException;
 use Illuminate\Http\Request;
+use LogicException;
 
 class SmsController extends Controller
 {
-    //
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
 
-    public function sms(){
+    public function sms()
+    {
         $data = (new SmsEventModel($this->request->all()))->getType();
-        return view('admin.sms.sms_apply',['is_match' => $data['is_match'],'state' => $data['state'],'is_send'=>$data['is_send']]);
+        return view('admin.sms.sms_apply', ['is_match' => $data['is_match'],'state' => $data['state'],'is_send' => $data['is_send']]);
     }
 
-    public function smsEventList(){
+    public function smsEventList()
+    {
         $data = (new SmsEventModel($this->request->all()))->smsList();
         $result['code'] = self::FAIL;
         $result['msg'] = '操作成功';
@@ -30,12 +31,14 @@ class SmsController extends Controller
         return response()->json($result);
     }
 
-    public function smsAuditIndex(){
+    public function smsAuditIndex()
+    {
         $data = (new SmsEventModel($this->request->route()->parameters()))->smsAudit();
-        return view('admin.sms.audit_sms',['data'=>$data]);
+        return view('admin.sms.audit_sms', ['data' => $data]);
     }
 
-    public function saveSms(){
+    public function saveSms()
+    {
         return self::json_success((new SmsEventModel($this->request->all()))->saveSms());
     }
 
@@ -48,7 +51,6 @@ class SmsController extends Controller
         } catch (LogicException $e) {
             return self::json_fail($e->getMessage());
         }
-
     }
 
     public function refuseSms()
@@ -60,7 +62,6 @@ class SmsController extends Controller
         } catch (LogicException $e) {
             return self::json_fail($e->getMessage());
         }
-
     }
 
     public function passSms()
@@ -72,9 +73,5 @@ class SmsController extends Controller
         } catch (LogicException $e) {
             return self::json_fail($e->getMessage());
         }
-
     }
-
-  
-
 }

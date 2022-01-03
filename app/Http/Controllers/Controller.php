@@ -15,8 +15,6 @@
  * |-----------------------------------------------------------------------------------------------------------
  */
 
-
-
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -27,67 +25,72 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-    
-    const SUCCESS = 1;
 
-    const FAIL = 0;
+    public const SUCCESS = 1;
+
+    public const FAIL = 0;
 
     /**
      * ajax_return
-     * 
+     *
      * @param  mixed $status
      * @param  mixed $msg
      * @param  mixed $data
+     *
      * @return void
      */
-    protected static function json_return($data = [], $msg = '操作成功', $status = self::SUCCESS ){
-         $result['code'] = $status;
-         $result['msg'] = $msg;
-         $result['data'] = $data;
-    
-         return response()->json($result);
+    protected static function json_return($data = [], $msg = '操作成功', $status = self::SUCCESS)
+    {
+        $result['code'] = $status;
+        $result['msg'] = $msg;
+        $result['data'] = $data;
+
+        return response()->json($result);
     }
-    
+
     /**
      * success
      *
      * @param  mixed $msg
      * @param  mixed $data
+     *
      * @return void
      */
-    protected static function json_success($data=[],$msg='操作成功'){
-         $result['code'] = self::SUCCESS;
-         $result['msg'] = $msg;
-         $result['data'] = $data;
-         
-         return response()->json($result);
+    protected static function json_success($data = [], $msg = '操作成功')
+    {
+        $result['code'] = self::SUCCESS;
+        $result['msg'] = $msg;
+        $result['data'] = $data;
+
+        return response()->json($result);
     }
-    
+
     /**
      * fail
      *
      * @param  mixed $msg
      * @param  mixed $data
+     *
      * @return void
      */
-    protected static function json_fail($data=[],$msg='操作失败'){
+    protected static function json_fail($data = [], $msg = '操作失败')
+    {
         $result['code'] = self::FAIL;
         $result['msg'] = $msg;
         $result['data'] = $data;
-    
+
         return response()->json($result);
     }
-    
+
     /**
      * json
      *
      * @param  mixed $data
+     *
      * @return void
      */
-    protected static function json($data = []){
+    protected static function json($data = [])
+    {
         return response()->json($data);
     }
-
-
-
 }

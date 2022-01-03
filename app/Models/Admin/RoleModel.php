@@ -18,12 +18,10 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
 class RoleModel extends CommonModel
 {
-
     /**
      * The table associated with the model.
      *
@@ -51,22 +49,17 @@ class RoleModel extends CommonModel
      */
     public function getAllRole()
     {
-
         $data = $this->data;
 
         $column = ['id', 'role_name'];
 
-        if (!empty($data['id'])) {
-
+        if (! empty($data['id'])) {
             $result = self::where('status', 1)->where('id', $data['id'])->get($column)->toArray();
-
         } else {
-
             $result = self::where('status', 1)->get($column)->toArray();
         }
 
         return $result;
-
     }
 
     /**
@@ -76,20 +69,19 @@ class RoleModel extends CommonModel
      */
     public function getRoleByPermission()
     {
-
         $data = $this->data;
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
 
         $where = [];
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            if (!empty($param['title'])) {
+            if (! empty($param['title'])) {
                 $where['role_name'] = $param['title'];
             }
         }
 
-        $item = self::where($where)->paginate($limit, "*", "page", $page);
+        $item = self::where($where)->paginate($limit, '*', 'page', $page);
 
         $result = [];
 
@@ -100,27 +92,16 @@ class RoleModel extends CommonModel
             $result[$k]['updated_at'] = $this->toTime($v['updated_at']);
             $result[$k]['auth_count'] = $this->countPermission($v['id']);
 
-            if ($v['status'] == 1) {
-                $result[$k]['status'] = "开启";
+            if ($v['status'] === 1) {
+                $result[$k]['status'] = '开启';
             } else {
-                $result[$k]['status'] = "关闭";
+                $result[$k]['status'] = '关闭';
             }
-
         }
         $res['data'] = $result;
         $res['count'] = $item->count();
 
         return $res;
-    }
-
-    private function countPermission($id)
-    {
-        $auth_group = new AuthGroupModel();
-        $list = $auth_group::where('role_id', $id)->value('auth_id');
-        if (null == $list) {
-            return 0;
-        }
-        return count(explode(',', $list));
     }
 
     public function maniRole()
@@ -132,11 +113,10 @@ class RoleModel extends CommonModel
             'status' => 1,
         ];
 
-        if (!empty($data['id'])) {
+        if (! empty($data['id'])) {
             return self::where('id', $data['id'])->get()->toArray()[0];
-        } else {
-            return $fake;
         }
+        return $fake;
     }
 
     /**
@@ -158,8 +138,7 @@ class RoleModel extends CommonModel
 
         DB::beginTransaction();
         //添加
-        if ($data['id'] == -1) {
-
+        if ($data['id'] === -1) {
             if (isset($role)) {
                 throw new LogicException('同名称已存在');
             }
@@ -168,7 +147,7 @@ class RoleModel extends CommonModel
 
             $status = self::insertGetId($insert);
 
-            if (false == $status) {
+            if ($status === false) {
                 DB::rollBack();
                 throw new LogicException('添加失败');
             }
@@ -184,18 +163,17 @@ class RoleModel extends CommonModel
             ];
 
             AuthGroupModel::insert($auth_group);
-
         } else { //保存
 
             $edit = self::where('id', $data['id'])->first()->toArray();
 
-            if (!($edit['id'] == $data['id'] && $edit['role_name'] == $data['role_name'])) {
+            if (! ($edit['id'] === $data['id'] && $edit['role_name'] === $data['role_name'])) {
                 throw new LogicException('同名称已存在');
             }
 
             $status = self::where('id', $data['id'])->update($insert);
 
-            if (false == $status) {
+            if ($status === false) {
                 DB::rollBack();
                 throw new LogicException('保存失败');
             }
@@ -217,7 +195,6 @@ class RoleModel extends CommonModel
      */
     public function deleteGroup()
     {
-
         $data = $this->data;
 
         DB::beginTransaction();
@@ -228,30 +205,27 @@ class RoleModel extends CommonModel
             throw new LogicException('此管理员组不存在');
         }
 
-        if(1 == $data['id']){
+        if ($data['id'] === 1) {
             throw new LogicException('总管理组不可删除');
         }
 
-        $status = self::where("id", $data['id'])->delete();
+        $status = self::where('id', $data['id'])->delete();
 
-        if (false === $status) {
-
+        if ($status === false) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
-
-        } else {
-
-            AuthGroupModel::where('role_id', $data['id'])->delete();
-
-            $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除管理组 ' . $admin->role_name];
-
-            (new LogModel($log_data))->createLog();
-
-            DB::commit();
-
-            return true;
         }
+
+        AuthGroupModel::where('role_id', $data['id'])->delete();
+
+        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除管理组 ' . $admin->role_name];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 
     public function getRoleNameById()
@@ -268,5 +242,15 @@ class RoleModel extends CommonModel
             $res = $role[0];
         }
         return $res;
+    }
+
+    private function countPermission($id)
+    {
+        $auth_group = new AuthGroupModel();
+        $list = $auth_group::where('role_id', $id)->value('auth_id');
+        if ($list === null) {
+            return 0;
+        }
+        return count(explode(',', $list));
     }
 }

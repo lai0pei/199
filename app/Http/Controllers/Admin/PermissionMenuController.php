@@ -11,7 +11,6 @@ use LogicException;
 
 class PermissionMenuController extends Controller
 {
-    //
     public function __construct(Request $request)
     {
         $this->request = $request;

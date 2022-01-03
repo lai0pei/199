@@ -7,11 +7,9 @@ use App\Http\Controllers\Index\util\generateCode;
 use App\Http\Controllers\Index\util\juhe;
 use App\Http\Controllers\Index\util\yunpian;
 use Illuminate\Http\Request;
-use App\Models\Admin\ControlModel;
 
 class TestController extends Controller
 {
-
     use juhe;
     use generateCode;
     use yunpian;
@@ -23,8 +21,6 @@ class TestController extends Controller
 
     public function test()
     {
-    
-       dd($this->request->cookie());
+        dd($this->request->cookie());
     }
-
 }

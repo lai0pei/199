@@ -18,24 +18,23 @@
 namespace App\Models\Index;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use LogicException;
 
 class ApplyModel extends Model
 {
-    public function __construct($data = [])
-    {
-        $this->data = $data;
-        $this->formModel = new FormModel();
-    }
-
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'user_apply';
+    public function __construct($data = [])
+    {
+        $this->data = $data;
+        $this->formModel = new FormModel();
+    }
 
     /**
      * getApplyList
@@ -78,17 +77,16 @@ class ApplyModel extends Model
 
         $count = self::where('username', $username)->where('event_id', $eventId)->count();
 
-        if (1 == $event['is_daily'] && $event['daily_limit'] == $count) {
-            throw new LogicException("今日申请次数，已超过" . $count . '次');
-
+        if ($event['is_daily'] === 1 && $event['daily_limit'] === $count) {
+            throw new LogicException('今日申请次数，已超过' . $count . '次');
         }
 
         $form = $this->removeNull($data['form']);
 
-        if (!empty($pic_url)) {
+        if (! empty($pic_url)) {
             foreach ($pic_url as &$v) {
                 $v['name'] = $this->formModel::where('id', $v['id'])->value('name');
-                $v['type'] = "photo";
+                $v['type'] = 'photo';
                 unset($v['id']);
             }
             unset($v);
@@ -96,7 +94,6 @@ class ApplyModel extends Model
         }
 
         try {
-
             DB::beginTransaction();
 
             $insert = [
@@ -113,9 +110,9 @@ class ApplyModel extends Model
 
             $status = self::insert($insert);
         } catch (LogicException $e) {
-            throw new LogicException("申请失败");
+            throw new LogicException('申请失败');
         }
-        if (!$status) {
+        if (! $status) {
             DB::rollBack();
             throw new LogicException('申请失败，请联系客服');
         }
@@ -123,7 +120,6 @@ class ApplyModel extends Model
         DB::commit();
 
         return true;
-
     }
 
     public function getMessage()
@@ -138,7 +134,7 @@ class ApplyModel extends Model
         $i = 0;
         foreach ($form as &$subForm) {
             foreach ($subForm as $k => $v) {
-                if (!empty($v)) {
+                if (! empty($v)) {
                     $data[$i]['name'] = $this->formModel::where('id', $k)->value('name');
                     $data[$i]['value'] = $v;
                 }
@@ -158,15 +154,17 @@ class ApplyModel extends Model
         $res = self::where('event_id', $eventId)->where('username', $username)->select($column)->get()->toArray();
         foreach ($res as &$v) {
             switch (true) {
-                case $v['status'] == 1:$v['status'] = '通过';
+                case $v['status'] === 1:
+                    $v['status'] = '通过';
                     break;
-                case $v['status'] == 2:$v['status'] = '拒绝';
+                case $v['status'] === 2:
+                    $v['status'] = '拒绝';
                     break;
-                default:$v['status'] = '未审核';
+                default:
+                    $v['status'] = '未审核';
             }
             $v['apply_time'] = Carbon::parse($v['apply_time'])->format('Y年-m月-d日 | H时:i分:s秒');
         }
         return $res;
     }
-
 }

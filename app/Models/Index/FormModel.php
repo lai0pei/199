@@ -21,33 +21,31 @@ use Illuminate\Database\Eloquent\Model;
 
 class FormModel extends Model
 {
-    public function __construct($data = [])
-    {
-        $this->data = $data;
-    }
-
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'form';
+    public function __construct($data = [])
+    {
+        $this->data = $data;
+    }
 
-    public function getFormById(){
-
+    public function getFormById()
+    {
         $data = $this->data;
 
         $eventId = $data['event_id'];
 
         $column = ['id','name','type','option'];
 
-        $rawForm = self::where('event_id',$eventId)->select($column)->orderBy('sort','desc')->get()->toArray();
+        $rawForm = self::where('event_id', $eventId)->select($column)->orderBy('sort', 'desc')->get()->toArray();
 
-        foreach($rawForm as &$value){
-            $value['option'] = explode(',',$value['option']);
+        foreach ($rawForm as &$value) {
+            $value['option'] = explode(',', $value['option']);
         }
 
         return $rawForm;
-
     }
 }

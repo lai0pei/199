@@ -21,17 +21,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class EventModel extends Model
 {
-    public function __construct($data = [])
-    {
-        $this->data = $data;
-    }
-
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'event';
+    public function __construct($data = [])
+    {
+        $this->data = $data;
+    }
 
     /**
      * event
@@ -56,9 +55,8 @@ class EventModel extends Model
     public function getContent()
     {
         $data = $this->data;
-        $res['content'] =  self::find($data['event_id'])->value("content");
-        $res['name'] =  self::find($data['event_id'])->value("name");
+        $res['content'] = self::find($data['event_id'])->value('content');
+        $res['name'] = self::find($data['event_id'])->value('name');
         return $res;
     }
-
 }

@@ -25,17 +25,16 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
-
     /**
      * __construct
      *
      * @param  mixed $request
+     *
      * @return void
      */
     public function __construct(Request $request)
     {
         $this->input = $request;
-
     }
 
     /**
@@ -45,7 +44,7 @@ class LoginController extends Controller
      */
     public function index()
     {
-        if (!empty(session('user_id'))) {
+        if (! empty(session('user_id'))) {
             return redirect(route('admin_menu'));
         }
         return view('admin.login.index');
@@ -75,12 +74,11 @@ class LoginController extends Controller
         try {
             $admin = new AdminModel($input);
             if ($admin->adminLogin()) {
-                return self::json_success([],'登录成功');
+                return self::json_success([], '登录成功');
             }
         } catch (LogicException $e) {
-            return self::json_fail([],$e->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
-
     }
 
     /**
@@ -89,7 +87,7 @@ class LoginController extends Controller
      * @return void
      */
     public function captcha()
-    {   
+    {
         return captcha('admin_login');
     }
 
@@ -102,7 +100,6 @@ class LoginController extends Controller
     {
         (new AdminModel())->logout();
 
-        return self::json_success([],'成功登出');
+        return self::json_success([], '成功登出');
     }
-
 }

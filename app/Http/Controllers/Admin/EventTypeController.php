@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\EventTypeModel;
-use App\Exceptions\LogicException;
 use Illuminate\Http\Request;
 
 class EventTypeController extends Controller
 {
-    //
-
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -22,16 +20,14 @@ class EventTypeController extends Controller
     }
 
     public function maniType()
-    {   
-        
+    {
         try {
-            if ((new EventTypeModel($this->request->all()))-> maniType()) {
-                return self::json_success([],'操作成功');
+            if ((new EventTypeModel($this->request->all()))->maniType()) {
+                return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
-            return self::json_fail([],$e->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
-       
     }
 
     public function addType()
@@ -41,7 +37,7 @@ class EventTypeController extends Controller
     }
 
     public function typeList()
-    {   
+    {
         $data = (new EventTypeModel($this->request->all()))->listType();
         $result['code'] = self::FAIL;
         $result['msg'] = '操作成功';
@@ -54,17 +50,16 @@ class EventTypeController extends Controller
     public function typeDelete()
     {
         try {
-            if ((new EventTypeModel($this->request->all()))-> typeDelete()) {
-                return self::json_success([],'操作成功');
+            if ((new EventTypeModel($this->request->all()))->typeDelete()) {
+                return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
-            return self::json_fail([],$e->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
     }
 
-    public function getAllType(){
+    public function getAllType()
+    {
         return self::json_success((new EventTypeModel())->getAllType());
-
     }
-
 }

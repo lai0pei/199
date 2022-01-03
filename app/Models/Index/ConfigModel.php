@@ -5,9 +5,8 @@ namespace App\Models\Index;
 use Illuminate\Database\Eloquent\Model;
 
 class ConfigModel extends Model
-{   
-
-        /**
+{
+    /**
      * The table associated with the model.
      *
      * @var string
@@ -19,9 +18,8 @@ class ConfigModel extends Model
         $this->data = $data;
     }
 
-    public function getConfig($name){
-      
-        return unserialize(self::where('name',$name)->value('json_data'));
-
+    public function getConfig($name)
+    {
+        return unserialize(self::where('name', $name)->value('json_data'));
     }
 }

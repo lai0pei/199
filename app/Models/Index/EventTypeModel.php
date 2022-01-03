@@ -17,23 +17,20 @@
 
 namespace App\Models\Index;
 
-use Illuminate\Console\Scheduling\Event;
 use Illuminate\Database\Eloquent\Model;
 
 class EventTypeModel extends Model
 {
-
-    public function __construct($data = [])
-    {
-        $this->data = $data;
-    }
-
     /**
      * The table associated with the model.
      *
      * @var string
      */
     protected $table = 'type';
+    public function __construct($data = [])
+    {
+        $this->data = $data;
+    }
 
     /**
      * event
@@ -48,18 +45,17 @@ class EventTypeModel extends Model
     public function getAllEventList()
     {
         $eventModel = new EventModel();
-        $type = self::select("id as type_id", 'name')->where('status', 1)->get()->toArray();
-       
+        $type = self::select('id as type_id', 'name')->where('status', 1)->get()->toArray();
+
         foreach ($type as &$type_id) {
             $where = [];
             $where['type_id'] = $type_id['type_id'];
             $where['status'] = 1;
             $where['display'] = 1;
-            $type_id['event'] = $eventModel::select('id', 'name', 'type_pic', 'type_id', 'external_url','need_sms','is_sms')->where($where)->whereNotNull('type_pic')->orderBy('sort','asc')->get()->toArray();
+            $type_id['event'] = $eventModel::select('id', 'name', 'type_pic', 'type_id', 'external_url', 'need_sms', 'is_sms')->where($where)->whereNotNull('type_pic')->orderBy('sort', 'asc')->get()->toArray();
         }
 
         unset($type_id);
         return $type;
-
     }
 }

@@ -27,7 +27,12 @@ class ControlModel extends Model
     public function __construct($data = [])
     {
         $this->data = $data;
-        $this->currentDate = "";
+        $this->currentDate = '';
+    }
+
+    public function __destruct()
+    {
+        unset($this->currentDate);
     }
 
     public function getChart()
@@ -46,14 +51,13 @@ class ControlModel extends Model
         $allDay = [];
         $day = -9;
         for ($day; $day < 1; $day++) {
-            array_push($allDay, (date("Y-m-d", strtotime($day . ' day'))));
+            array_push($allDay, (date('Y-m-d', strtotime($day . ' day'))));
         }
         return $allDay;
     }
 
     public function getSeriesData($type, $day)
     {
-
         $series = [];
         foreach ($type as $k => $v) {
             $series[$k]['name'] = $v['name'];
@@ -83,10 +87,5 @@ class ControlModel extends Model
             array_push($tmp, $count);
         }
         return $tmp;
-    }
-
-    public function __destruct()
-    {
-        unset($this->currentDate);
     }
 }

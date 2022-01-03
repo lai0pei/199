@@ -4,7 +4,6 @@ namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
 class AuthGroupModel extends CommonModel
@@ -30,7 +29,7 @@ class AuthGroupModel extends CommonModel
         DB::beginTransaction();
         try {
             $menus = json_decode($data['checked'], true);
-           
+
             if (empty($data)) {
                 return false;
             }
@@ -43,15 +42,15 @@ class AuthGroupModel extends CommonModel
                     $i++;
                 }
             }
-            $auth_id = implode(",", $ids);
-            
+            $auth_id = implode(',', $ids);
+
             $update = [
                 'updated_at' => now(),
                 'auth_id' => $auth_id,
             ];
-          
+
             $status = self::where('role_id', $data['id'])->update($update);
-            if (!$status) {
+            if (! $status) {
                 return false;
             }
         } catch (LogicException $e) {

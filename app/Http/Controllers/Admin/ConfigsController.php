@@ -20,11 +20,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\ConfigModel;
 use Illuminate\Http\Request;
-use LogicException;
 
 class ConfigsController extends Controller
 {
-    //
     public function __construct(Request $request)
     {
         $this->request = $request;
@@ -84,5 +82,4 @@ class ConfigsController extends Controller
     {
         return self::json_success((new ConfigModel($this->request->all()))->saveConfig('accouncement', '更新了前台公告'));
     }
-
 }

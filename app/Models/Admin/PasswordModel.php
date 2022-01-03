@@ -4,7 +4,6 @@ namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Models\Admin\CommonModel;
 use Illuminate\Support\Facades\DB;
 
 class PasswordModel extends CommonModel
@@ -31,7 +30,6 @@ class PasswordModel extends CommonModel
         $role = RoleModel::where('id', $admin['role_id'])->value('role_name');
         $admin['role_name'] = $role;
         return $admin;
-
     }
 
     public function changePassword()
@@ -43,8 +41,8 @@ class PasswordModel extends CommonModel
         $re_password = $data['re-new'];
 
         $admin = self::find($user_id);
- 
-        if (!password_verify($password, $admin->password)) {
+
+        if (! password_verify($password, $admin->password)) {
             throw new LogicException('老密码不正确');
         }
 
@@ -63,22 +61,18 @@ class PasswordModel extends CommonModel
 
         $status = self::where('id', $user_id)->update($new_admin);
 
-        if (false === $status) {
-
+        if ($status === false) {
             DB::rollBack();
 
             throw new LogicException('修改密码失败');
-
-        } else {
-
-            $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => $admin->account . ' 修改了登录密码'];
-
-            (new LogModel($log_data))->createLog();
-
-            DB::commit();
-
-            return true;
         }
 
+        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => $admin->account . ' 修改了登录密码'];
+
+        (new LogModel($log_data))->createLog();
+
+        DB::commit();
+
+        return true;
     }
 }

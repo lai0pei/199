@@ -17,10 +17,10 @@
 
 namespace App\Http\Controllers\Index\util;
 
-trait generateCode {
-
-    function getCode($mobile){
-        
+trait generateCode
+{
+    public function getCode($mobile)
+    {
         session()->forget($mobile);
         $length = 5;
         $code = '1111';
@@ -28,7 +28,7 @@ trait generateCode {
         //     $code  .= mt_rand(0, 9);
         // }
 
-        session()->put($mobile,$code);
+        session()->put($mobile, $code);
 
         return $code;
     }

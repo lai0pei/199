@@ -17,11 +17,12 @@
 
 namespace App\Models\Admin;
 
-use App\Models\Admin\CommonModel;
-
 class LogModel extends CommonModel
 {
-
+    public const LOGIN_TYPE = 0;
+    public const ADD_TYPE = 1;
+    public const SAVE_TYPE = 2;
+    public const DELETE_TYPE = 3;
     /**
      * The table associated with the model.
      *
@@ -36,15 +37,11 @@ class LogModel extends CommonModel
      */
     protected $fillable = ['type', 'title', 'content', 'is_delete', 'ip', 'admin_id'];
 
-    const LOGIN_TYPE = 0;
-    const ADD_TYPE = 1;
-    const SAVE_TYPE = 2;
-    const DELETE_TYPE = 3;
-
     /**
      * __construct
      *
      * @param  mixed $data
+     *
      * @return void
      */
     public function __construct($data = [])
@@ -75,35 +72,32 @@ class LogModel extends CommonModel
         return self::insert($data);
     }
 
-    
-
     public function log()
     {
-
         $data = $this->log;
 
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
 
         $where = [];
-       
-        if (!empty($data['searchParams'])) {
+
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            if($param['user'] !== ''){
+            if ($param['user'] !== '') {
                 $where['admin_id'] = AdminModel::where('account', $param['user'])->value('id');
             }
-            if($param['type'] !== ''){
+            if ($param['type'] !== '') {
                 $where['type'] = $param['type'];
             }
-            if($param['ip'] !== ''){
+            if ($param['ip'] !== '') {
                 $where['ip'] = $param['ip'];
             }
-            if($param['start'] !== ''){
+            if ($param['start'] !== '') {
                 $where['created_at'] = $param['start'];
             }
         }
 
-        $item = self::where($where)->orderbydesc('id')->paginate($limit, "*", "page", $page);
+        $item = self::where($where)->orderbydesc('id')->paginate($limit, '*', 'page', $page);
 
         $result = [];
         foreach ($item->items() as $k => $v) {
@@ -113,28 +107,11 @@ class LogModel extends CommonModel
             $result[$k]['ip'] = $v['ip'];
             $result[$k]['admin_name'] = $this->getName($v['admin_id']);
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
-
         }
         $res['data'] = $result;
         $res['count'] = $item->count();
 
         return $res;
-    }
-
-    private function typeToName($type)
-    {
-        switch (true) {
-            case $type == self::LOGIN_TYPE:$name = '登录相关';
-                break;
-            case $type == self::ADD_TYPE:$name = '添加相关';
-                break;
-            case $type == self::SAVE_TYPE:$name = '保存相关';
-                break;
-            case $type == self::DELETE_TYPE:$name = '删除相关';
-                break;
-            default:$name = '其他操作';
-        }
-        return $name;
     }
 
     public function logType()
@@ -147,6 +124,36 @@ class LogModel extends CommonModel
         ];
     }
 
+    public function detailLog()
+    {
+        $data = $this->log;
+        $log = self::find($data['id'])->toArray();
+        $log['user'] = $this->getName($log['admin_id']);
+        $log['type'] = $this->typeToName($log['type']);
+        return $log;
+    }
+
+    private function typeToName($type)
+    {
+        switch (true) {
+            case $type === self::LOGIN_TYPE:
+                $name = '登录相关';
+                break;
+            case $type === self::ADD_TYPE:
+                $name = '添加相关';
+                break;
+            case $type === self::SAVE_TYPE:
+                $name = '保存相关';
+                break;
+            case $type === self::DELETE_TYPE:
+                $name = '删除相关';
+                break;
+            default:
+                $name = '其他操作';
+        }
+        return $name;
+    }
+
     private function getName($admin_id)
     {
         $name = AdminModel::where('id', $admin_id)->value('account');
@@ -157,13 +164,4 @@ class LogModel extends CommonModel
 
         return $name;
     }
-
-    public function detailLog(){
-        $data = $this->log;
-        $log = self::find($data['id'])->toArray();
-        $log['user'] = $this->getName($log['admin_id']);
-        $log['type'] = $this->typeToName($log['type']);
-        return $log;
-    }
-
 }

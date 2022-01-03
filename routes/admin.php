@@ -52,9 +52,9 @@ use Illuminate\Support\Facades\Route;
 /*
 | 后台登录
  */
-Route::get("admin/login", [LoginController::class, 'index'])->name('admin.login.index');
-Route::post("admin/login", [LoginController::class, 'login'])->name('admin.login.login');
-Route::get("admin/captcha", [LoginController::class, 'captcha'])->name('admin.login.captcha');
+Route::get('admin/login', [LoginController::class, 'index'])->name('admin.login.index');
+Route::post('admin/login', [LoginController::class, 'login'])->name('admin.login.login');
+Route::get('admin/captcha', [LoginController::class, 'captcha'])->name('admin.login.captcha');
 
 /*
 | 后台路由
@@ -153,7 +153,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::get('/event_lists', [EventController::class, 'list'])->name('admin_event_list');
     Route::get('/get_list', [EventController::class, 'getEventList'])->name('admin_get_event');
     Route::post('/delete_event/{id?}', [EventController::class, 'deleteEvent'])->name('admin_delete_event');
-    
+
     //活动表单
     Route::get('/form/{id?}', [FormController::class, 'form'])->name('admin_form');
     Route::get('/form_list', [FormController::class, 'getFormList'])->name('admin_form_list');
@@ -189,12 +189,11 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
     Route::post('/bulksms_refuse', [SmsController::class, 'refuseSms'])->name('admin_sms_refuse');
     Route::post('/bulksms_pass', [SmsController::class, 'passSms'])->name('admin_sms_pass');
 
-// |------------------------------------------------------------------------------------------------------------------------------------------------------
+    // |------------------------------------------------------------------------------------------------------------------------------------------------------
 
     //get 接口
     Route::get('/clear', [AuthMenuController::class, 'clear'])->name('admin.clear');
     Route::get('/init', [AuthMenuController::class, 'init'])->name('admin.init');
     //post 接口
     Route::post('/logout', [LoginController::class, 'logout'])->name('admin_logout');
-
 });

@@ -17,7 +17,6 @@
 
 namespace App\Models\Admin;
 
-use App\Models\Admin\CommonModel;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use LogicException;
@@ -27,6 +26,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 
 class MobileImExModel extends CommonModel implements ToCollection, WithChunkReading
 {
+    use Importable;
     /**
      * The table associated with the model.
      *
@@ -34,12 +34,11 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
      */
     protected $table = 'vip_mobile';
 
-    use Importable;
-
     /**
      *  导入用户手机号
      *
      * @param  mixed $collection
+     *
      * @return void
      */
     public function collection(Collection $collection)
@@ -49,17 +48,18 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
             $count = 0;
             $error = 0;
             foreach ($collection as $v) {
-                if ($v[0] == null) {
+                if ($v[0] === null) {
                     continue;
                 }
-                if (!preg_match("/^[a-z0-9_]+$/i", $v[0])) {
+                if (! preg_match('/^[a-z0-9_]+$/i', $v[0])) {
                     $error++;
                     continue;
                 }
                 $status = self::insert(['mobile' => $v[0],
                     'created_at' => now(),
-                    'updated_at' => now()]);
-                if (!$status) {
+                    'updated_at' => now(),
+                ]);
+                if (! $status) {
                     DB::rollBack();
                     throw new LogicException('数据格式不正确');
                 }
@@ -86,5 +86,4 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
     {
         return 2000;
     }
-
 }
