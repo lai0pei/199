@@ -68,7 +68,7 @@ class AdminModel extends CommonModel
         $envIp = config('admin.ip');
         $allowIp = array_column((new IpModel())->getAllIp(), 'ip');
         $adminIp = request()->ip();
-
+  
         if ($adminIp !== $envIp && ! in_array($adminIp, $allowIp)) {
             throw new LogicException('Ip不允许');
         }

@@ -4,6 +4,8 @@
       :slides-per-view="1"
       loop   :autoplay= 3000
       pagination-visible
+      performance-mode
+      
       class="rounded-md"
     >
       <div v-for="item in photo" :key="item">
@@ -33,18 +35,13 @@ export default {
     };
   },
   setup() {
-    const onSwiper = (swiper) => {
-      console.log(swiper);
-    };
-    const onSlideChange = () => {
-      console.log('slide change');
-    };
     return {
-      onSwiper,
-      onSlideChange,
+      
       modules: [Pagination, Autoplay],
+      
     };
   },
+
 };
 </script>
 

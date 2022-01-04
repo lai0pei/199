@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use LogicException;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\File;
 
 class UploadController extends Controller
 {
@@ -68,8 +69,15 @@ class UploadController extends Controller
         }
     }
 
-    public function eventContent()
-    {
+    public function ueditor()
+    
+    {  
+        $config = File::get(public_path('static/ueditor/config.json'));
+        if(!empty($config)){
+            $myDomain =  request()->getSchemeAndHttpHost();
+            $replaced = str_replace('#url#',$myDomain,$config);
+            return self::json($replaced);
+        }
         return self::json_success([]);
     }
 }

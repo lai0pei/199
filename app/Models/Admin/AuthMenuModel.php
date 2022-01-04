@@ -88,7 +88,7 @@ class AuthMenuModel extends CommonModel
         $user_id = session('user_id');
         $key = 'admin_menu_' . session('user_id');
         $menus = Cache::get($key);
-        if (! empty($menus)) {
+        if (!empty($menus)) {
             return $menus;
         }
         $permissions = $this->getPermission($user_id);
@@ -96,7 +96,7 @@ class AuthMenuModel extends CommonModel
         if ($permissions === []) {
             return [];
         }
-        $this->setPermission($user_id);
+        $this->setPermission();
         $init = [];
         $init['homeInfo'] = ['title' => '活动分析', 'href' => route('admin_control')];
         $init['logoInfo'] = ['title' => '活动页面', 'image' => asset('image/logo.png'), 'href' => ''];
@@ -122,15 +122,16 @@ class AuthMenuModel extends CommonModel
         return self::where($where)->orderBy('sort')->get($columns)->toArray();
     }
 
-    private function setPermission($user_id)
+    public function setPermission()
     {
+        $user_id = session('user_id');
         $role_id = AdminModel::where('id', $user_id)->value('role_id');
         $permission = AuthGroupModel::where('role_id', $role_id)->value('auth_id');
         if (empty($permission)) {
             return [];
         }
         $list = explode(',', $permission);
-        $column = ['id','name'];
+        $column = ['id', 'name'];
         $permission_menu = PermissionMenuModel::whereIn('id', $list)->get($column)->toArray();
         session(['permission' => $permission_menu]);
     }

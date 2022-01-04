@@ -52,15 +52,15 @@ use Illuminate\Support\Facades\Route;
 /*
 | 后台登录
  */
-Route::get('admin/login', [LoginController::class, 'index'])->name('admin.login.index');
-Route::post('admin/login', [LoginController::class, 'login'])->name('admin.login.login');
-Route::get('admin/captcha', [LoginController::class, 'captcha'])->name('admin.login.captcha');
-Route::get('/uploadContent', [UploadController::class, 'eventContent'])->name('admin_upload_content');
+Route::get('6ucwfN@Bt/login', [LoginController::class, 'index'])->name('admin.login.index');
+Route::post('6ucwfN@Bt/login', [LoginController::class, 'login'])->name('admin.login.login');
+Route::get('6ucwfN@Bt/captcha', [LoginController::class, 'captcha'])->name('admin.login.captcha');
+Route::get('/ueditor', [UploadController::class, 'ueditor'])->name('admin_upload_content');
 
 /*
 | 后台路由
  */
-Route::middleware(['admin'])->prefix('admin')->group(function () {
+Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     //后台页面
     Route::get('/', [AuthMenuController::class, 'index'])->name('admin_menu');
     Route::get('/control', [ControlController::class, 'control'])->name('admin_control');

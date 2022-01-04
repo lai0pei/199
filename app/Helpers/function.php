@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Cache;
+use App\Models\Admin\AuthMenuModel;
 
 function checkAuth($name = '')
 {
@@ -8,6 +9,10 @@ function checkAuth($name = '')
     $permission = Cache::get($key);
     if (empty($permission)) {
         $data = session('permission');
+        if(empty($data)){
+            (new AuthMenuModel())->setPermission();
+            $data = session('permission');
+        }
         $permission = array_column($data, 'name');
         Cache::put($key, $permission, now()->addMinute(60));
     }
