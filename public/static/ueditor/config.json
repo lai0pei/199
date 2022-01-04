@@ -13,15 +13,15 @@
     "imageCompressBorder": 1600,
     "imageInsertAlign": "none",
     "imageUrlPrefix": "#url#",
-    "imagePathFormat": "\/Uploads\/images\/{yyyy}{mm}{dd}\/{time}{rand:6}",
+    "imagePathFormat": "/#imgPath#/images/{yyyy}{mm}{dd}\/{time}{rand:6}",
     "scrawlActionName": "uploadscrawl",
     "scrawlFieldName": "upfile",
-    "scrawlPathFormat": "\/Uploads\/images\/{yyyy}{mm}{dd}\/{time}{rand:6}",
+    "scrawlPathFormat": "/#imgPath#/images/{yyyy}{mm}{dd}\/{time}{rand:6}",
     "scrawlMaxSize": 2048000,
     "scrawlUrlPrefix": "",
     "scrawlInsertAlign": "none",
     "snapscreenActionName": "uploadimage",
-    "snapscreenPathFormat": "\/Uploads\/images\/{yyyy}{mm}{dd}\/{time}{rand:6}",
+    "snapscreenPathFormat": "/#imgPath#/images/{yyyy}{mm}{dd}\/{time}{rand:6}",
     "snapscreenUrlPrefix": "",
     "snapscreenInsertAlign": "none",
     "catcherLocalDomain": [
@@ -31,7 +31,7 @@
     ],
     "catcherActionName": "catchimage",
     "catcherFieldName": "source",
-    "catcherPathFormat": "\/Uploads\/images\/{yyyy}{mm}{dd}\/{time}{rand:6}",
+    "catcherPathFormat": "/#imgPath#/images/{yyyy}{mm}{dd}\/{time}{rand:6}",
     "catcherUrlPrefix": "",
     "catcherMaxSize": 2048000,
     "catcherAllowFiles": [
@@ -43,7 +43,7 @@
     ],
     "videoActionName": "uploadvideo",
     "videoFieldName": "upfile",
-    "videoPathFormat": "\/ueditor\/php\/upload\/video\/{yyyy}{mm}{dd}\/{time}{rand:6}",
+    "videoPathFormat": "/#imgPath#/images/{yyyy}{mm}{dd}\/{time}{rand:6}",
     "videoUrlPrefix": "",
     "videoMaxSize": 102400000,
     "videoAllowFiles": [
@@ -67,7 +67,7 @@
     ],
     "fileActionName": "uploadfile",
     "fileFieldName": "upfile",
-    "filePathFormat": "\/ueditor\/upload\/file\/{yyyy}{mm}{dd}\/{time}{rand:6}",
+    "filePathFormat": "/#imgPath#/images/{yyyy}{mm}{dd}\/{time}{rand:6}",
     "fileUrlPrefix": "#url#",
     "fileMaxSize": 51200000,
     "fileAllowFiles": [
@@ -113,9 +113,9 @@
         ".xml"
     ],
     "imageManagerActionName": "listimage",
-    "imageManagerListPath": "\/Uploads\/images\/",
+    "imageManagerListPath": "/#imgPath#/",
     "imageManagerListSize": 20,
-    "imageManagerUrlPrefix": "http:\/\/center.shopsn.cn",
+    "imageManagerUrlPrefix": "#url#",
     "imageManagerInsertAlign": "none",
     "imageManagerAllowFiles": [
         ".png",

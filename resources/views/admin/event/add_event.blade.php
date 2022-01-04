@@ -261,8 +261,9 @@
                                 shade: 0.2
                             });
                             if (-1 == type_id) {
-                                $("#addGoodsForm")[0].reset();
-                                layui.form.render();
+                                // $("#addGoodsForm")[0].reset();
+                                // layui.form.render();
+                                location.reload();
                             } else {
                                 setTimeout(function() {
                                     var index = parent.layer.getFrameIndex(window

@@ -158,7 +158,7 @@ export default {
                 that.is_search = false;
                 that.head_text = '进度列表';
                 that.showButton = false;
-                that.btnText = '确定';
+                that.btnText = '关闭';
                 that.tableData = response.data.data;
                 that.$toast(response.data.msg);
               }

@@ -17,4 +17,5 @@
 //后台 配置
 return [
     "ip" =>  env('APP_IP', ''),
+    "ueditor_json" => 'static/ueditor/config.json',
 ];

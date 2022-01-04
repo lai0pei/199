@@ -64,7 +64,7 @@ class EventModel extends CommonModel
 
         DB::beginTransaction();
 
-        if ($data['id'] === -1) {
+        if ($data['id'] == -1) {
             $add = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
@@ -82,7 +82,7 @@ class EventModel extends CommonModel
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-
+          
             $status = self::insert($add);
 
             if ($status === false) {

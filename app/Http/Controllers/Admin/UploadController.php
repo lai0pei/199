@@ -21,10 +21,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\MobileImExModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use LogicException;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\File;
 
 class UploadController extends Controller
 {
@@ -46,7 +46,7 @@ class UploadController extends Controller
 
         $path = $event . '/' . $time;
 
-        if (! Storage::exists($path)) {
+        if (!Storage::exists($path)) {
             Storage::makeDirectory($path, 7777, true, true);
         }
 
@@ -70,14 +70,41 @@ class UploadController extends Controller
     }
 
     public function ueditor()
-    
-    {  
-        $config = File::get(public_path('static/ueditor/config.json'));
-        if(!empty($config)){
-            $myDomain =  request()->getSchemeAndHttpHost();
-            $replaced = str_replace('#url#',$myDomain,$config);
-            return self::json($replaced);
+    {
+        $config = File::get(public_path(config('admin.ueditor_json')));
+        if (!empty($config)) {
+            $myDomain = request()->getSchemeAndHttpHost();
+            $replaced = str_replace('#url#', $myDomain, $config);
+            $replaced = str_replace('#imgPath#', 'storage', $replaced);
+            return self::json(json_decode($replaced, true));
         }
         return self::json_success([]);
+    }
+
+    public function ueditorUpload()
+    {
+        $common = config('filesystems.common');
+
+        $request = $this->request;
+        try {
+            $name = $request->file('upfile')->getClientOriginalName();
+
+            $time = Carbon::now()->format('Y-m-d');
+
+            $path = $common . '/' . $time;
+
+            if (!Storage::exists($path)) {
+                Storage::makeDirectory($path, 7777, true, true);
+            }
+            $url = Storage::disk('public')->put($path, $request->file('upfile'));
+            $result['state'] = "SUCCESS";
+            $result['url'] = '/storage/' . $url;
+            $result['title'] = $name;
+            $result['original'] = $name;
+        } catch (LogicException $e) {
+            return self::json_fail([]);
+        }
+
+        return self::json($result);
     }
 }

@@ -56,6 +56,7 @@ Route::get('6ucwfN@Bt/login', [LoginController::class, 'index'])->name('admin.lo
 Route::post('6ucwfN@Bt/login', [LoginController::class, 'login'])->name('admin.login.login');
 Route::get('6ucwfN@Bt/captcha', [LoginController::class, 'captcha'])->name('admin.login.captcha');
 Route::get('/ueditor', [UploadController::class, 'ueditor'])->name('admin_upload_content');
+Route::post('/ueditor', [UploadController::class, 'ueditorUpload']);
 
 /*
 | 后台路由
@@ -118,7 +119,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::get('/common_settings', [CommonSettingController::class, 'common'])->name('admin_common_settings');
 
     //拒绝
-    Route::get('/bulk_refuse', [ConfigsController::class, 'refuse'])->name('admin_bulk_refuse');
+    Route::get('/bulk_refuse', [ConfigsController::class, 'refuse'])->name('admin_bulk_refuseMsg');
     Route::post('/refuse_save', [ConfigsController::class, 'refuseSave'])->name('admin_bulk_save');
 
     //通过
