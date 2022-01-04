@@ -6,15 +6,5 @@ module.exports = {
         alias: {
             '@': path.resolve('resources/js'),
         },
-        module: {
-            rules: [
-              {
-                enforce: 'pre',
-                test: /\.(js|vue)$/,
-                loader: 'eslint-loader',
-                exclude: /node_modules/
-              }
-            ]
-          }
     },
 };

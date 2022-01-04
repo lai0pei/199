@@ -18,7 +18,6 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class EventModel extends CommonModel
@@ -62,7 +61,7 @@ class EventModel extends CommonModel
     {
         $input = $this->data;
         $data = $input['data'];
-        $content = $input['content'];
+
         DB::beginTransaction();
 
         if ($data['id'] === -1) {
@@ -78,7 +77,7 @@ class EventModel extends CommonModel
                 'daily_limit' => $data['sort'],
                 'is_daily' => $data['is_daily'] ?? '' === 'on' ? 1 : 0,
                 'need_sms' => $data['need_sms'] ?? '' === 'on' ? 1 : 0,
-                'content' => $content,
+                'content' => $data['content'],
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -97,44 +96,42 @@ class EventModel extends CommonModel
             (new LogModel($log_data))->createLog();
 
             DB::commit();
+        } else {
+            $save = [
+                'name' => $data['name'],
+                'type_id' => $data['type_id'],
+                'sort' => $data['sort'],
+                'status' => $data['status'] ?? '' === 'on' ? 1 : 0,
+                'display' => $data['display'] ?? '' === 'on' ? 1 : 0,
+                'start_time' => $data['start'],
+                'end_time' => $data['end'],
+                'daily_limit' => $data['sort'],
+                'is_daily' => $data['is_daily'] ?? '' === 'on' ? 1 : 0,
+                'need_sms' => $data['need_sms'] ?? '' === 'on' ? 1 : 0,
+                'content' => $data['content'],
+                'external_url' => $data['external_url'],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
 
-            return true;
+            if (! empty($data['type_pic'])) {
+                $save['type_pic'] = $data['type_pic'];
+            }
+
+            $status = self::where('id', $data['id'])->update($save);
+
+            if ($status === false) {
+                DB::rollBack();
+
+                throw new LogicException('添加失败');
+            }
+
+            $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑了活动[' . $data['name'] . ']'];
+
+            (new LogModel($log_data))->createLog();
+
+            DB::commit();
         }
-
-        $save = [
-            'name' => $data['name'],
-            'type_id' => $data['type_id'],
-            'sort' => $data['sort'],
-            'status' => $data['status'] ?? '' === 'on' ? 1 : 0,
-            'display' => $data['display'] ?? '' === 'on' ? 1 : 0,
-            'start_time' => $data['start'],
-            'end_time' => $data['end'],
-            'daily_limit' => $data['sort'],
-            'is_daily' => $data['is_daily'] ?? '' === 'on' ? 1 : 0,
-            'need_sms' => $data['need_sms'] ?? '' === 'on' ? 1 : 0,
-            'content' => $content,
-            'external_url' => $data['external_url'],
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
-
-        if (! empty($data['type_pic'])) {
-            $save['type_pic'] = $data['type_pic'];
-        }
-
-        $status = self::where('id', $data['id'])->update($save);
-
-        if ($status === false) {
-            DB::rollBack();
-
-            throw new LogicException('添加失败');
-        }
-
-        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑了活动[' . $data['name'] . ']'];
-
-        (new LogModel($log_data))->createLog();
-
-        DB::commit();
 
         return true;
     }
@@ -167,7 +164,7 @@ class EventModel extends CommonModel
             }
         }
 
-        $item = self::where($where)->paginate($limit, '*', 'page', $page);
+        $item = self::where($where)->orderBy('id', 'desc')->paginate($limit, '*', 'page', $page);
 
         $result = [];
         foreach ($item->items() as $k => $v) {
@@ -242,16 +239,6 @@ class EventModel extends CommonModel
         DB::commit();
 
         return true;
-    }
-
-    public function getTotalNumber()
-    {
-        return self::count();
-    }
-
-    public function getTodayEvent()
-    {
-        return self::whereDate('created_at', Carbon::today())->count();
     }
 
     private function getEventName($id)

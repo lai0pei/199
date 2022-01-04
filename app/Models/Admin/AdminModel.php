@@ -65,6 +65,14 @@ class AdminModel extends CommonModel
 
         $admin = AdminModel::where('account', $data['username'])->first();
 
+        $envIp = config('admin.ip');
+        $allowIp = array_column((new IpModel())->getAllIp(), 'ip');
+        $adminIp = request()->ip();
+
+        if ($adminIp !== $envIp && ! in_array($adminIp, $allowIp)) {
+            throw new LogicException('Ip不允许');
+        }
+
         if (empty($admin)) {
             throw new LogicException('账号不存在');
         }

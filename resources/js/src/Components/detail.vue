@@ -3,7 +3,7 @@
 <myHeading></myHeading>
 <div class="relative top">
 <div class="text-center myTitle">{{name}}</div>
-<div v-html="content">
+<div v-html="content" style="overflow-y=auto">
 </div>
 </div>
 <myFoot :footer="footer"></myFoot>
@@ -23,7 +23,6 @@
     padding: 0.24rem 0.4rem 1.3rem;
     min-height: 90vh;
     box-sizing: border-box;
-    background: #141414;
 }
 </style>
 <script>

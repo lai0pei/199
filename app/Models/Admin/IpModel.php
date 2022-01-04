@@ -147,4 +147,9 @@ class IpModel extends CommonModel
 
         return true;
     }
+
+    public function getAllIp()
+    {
+        return self::select('ip')->get()->toArray();
+    }
 }

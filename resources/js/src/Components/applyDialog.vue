@@ -98,7 +98,7 @@
                       class="allForms mt-1 rounded-md"
                       v-model="formName.selectForm[form.id]"
                     >
-                      <option selected :value="form.name">
+                      <option  disabled value="">
                         {{ form.name }}
                       </option>
                       <option
@@ -111,13 +111,13 @@
                   </div>
                 </li>
                 <div>
-                  <div>
+                  <div  v-if="isSms == 1">
                     <select
                       class="allForms mt-1 rounded-md"
                       v-model="myGameList"
-                      v-if="isSms"
+
                     >
-                      <option selected>
+                      <option disabled value="" >
                         {{ selectGame }}
                       </option>
                       <option
@@ -248,17 +248,18 @@ export default {
       messageText: '获取验证码',
       disable: false,
       smsNumber: '',
-      needSms: 0,
+      needSms: false,
       gameList: [],
       selectGame: '请选择游戏',
-      myGameList: '',
-      isSms: '',
+      myGameList: [],
+      isSms: false,
     };
   },
   watch: {
     'deep': true,
     'childProp.event_id': function(event_id) {
       localStorage.setItem('event_id', event_id);
+      console.log("event in watch", event_id );
       this.eventId = event_id;
     },
     'childProp.formData': function(formData) {
@@ -269,30 +270,28 @@ export default {
       this.getCaptcha();
     },
     'childProp.game_list': function(list) {
-      localStorage.setItem('gameList', JSON.stringify(list));
+      localStorage.setItem('gameList', list);
       this.gameList = list;
     },
     'childProp.need_sms': function(sms) {
       localStorage.setItem('needSms', sms);
+      console.log("sms in watch", sms );
       this.needSms = sms;
     },
     'childProp.is_sms': function(sms) {
       localStorage.setItem('isSms', sms);
-
+      console.log("issms in watch", sms );
       this.isSms = sms;
     },
 
     'immediate': true,
   },
-  created() {
+  mounted() {
     this.clearForm();
     this.eventId = localStorage.getItem('event_id');
-    this.formList = localStorage.getItem('formData');
+    console.log("in mount", this.eventId);
     this.needSms = localStorage.getItem('needSms');
-    this.gameList = localStorage.getItem('gameList');
     this.isSms = localStorage.getItem('isSms');
-    console.log('is apply sms', this.isSms);
-    console.log('in apply dialog', this.gameList);
   },
   methods: {
     clearForm: function() {

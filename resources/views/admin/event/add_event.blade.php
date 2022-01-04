@@ -137,7 +137,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label required">活动内容</label>
                     <div class="layui-input-block">
-                        <textarea id="editor" name='content'> {{ $type['content'] ?? '' }}</textarea>
+                        <script id="editor" name="content" type="text/plain" style="width:auto;height:500px;"></script>
                     </div>
                 </div>
 
@@ -154,18 +154,40 @@
     </div>
 @endsection
 @section('footer')
-    <script src="{{ asset('static/ckeditor/ckeditor.js') }}" charset="utf-8"></script>
+    <script type="text/javascript" src="{{ asset('static/ueditor/ueditor.config.js') }}" charset="utf-8"></script>
+    <script type="text/javascript" src="{{ asset('static/ueditor/ueditor.all.js') }}" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8" src="{{ asset('static/ueditor/lang/zh-cn/zh-cn.js') }}"></script>
+
     <script>
-     ClassicEditor
-    .create( document.querySelector( '#editor' ))
-    .then( newEditor => {
-        editor = newEditor;
-    })
-    .catch( error => {
-        console.log( error );
-    } );
+        var text = "{{ $type['content'] ?? '' }}";
+    
+           var doc = new DOMParser().parseFromString(text, 'text/html');
 
 
+     
+        
+
+
+
+        var ue = UE.getEditor('editor');
+        //对编辑器的操作最好在编辑器ready之后再做
+        ue.ready(function() {
+            //设置编辑器的内容
+            ue.setContent();
+            //获取html内容，返回: <p>hello</p>
+            // console.log(doc.documentElement.textContent);
+            // var html = ue.execCommand('insertHtml', doc.documentElement.textContent);
+            //获取纯文本内容，返回: hello
+            // var txt = ue.getContentTxt();
+        });
+        $(function(){
+            window.setTimeout(setContent,1000);
+        });
+
+        function setContent(){
+        UE.getEditor('editor').execCommand('insertHtml',doc.documentElement.textContent);
+        }
+    
         var mani_type = "{{ route('admin_mani_event') }}";
         var uploader = "{{ route('admin_upload') }}";
         var content = "{{ route('admin_upload_content') }}";
@@ -223,13 +245,11 @@
 
             //监听提交
             form.on('submit(saveBtn)', function(data) {
-                let content = editor.getData();
                 $.ajax({
                     url: mani_type,
                     data: {
-                        "data" : data.field,
-                    "content" : content
-                },
+                        "data": data.field,
+                    },
                     method: 'POST',
                     success: function(data) {
                         let type_id = "{{ $type['id'] ?? -1 }}";

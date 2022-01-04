@@ -55,8 +55,10 @@ class EventModel extends Model
     public function getContent()
     {
         $data = $this->data;
-        $res['content'] = self::find($data['event_id'])->value('content');
-        $res['name'] = self::find($data['event_id'])->value('name');
+
+        $res['content'] = self::where('id', $data['event_id'])->value('content');
+        $res['name'] = self::where('id', $data['event_id'])->value('name');
+
         return $res;
     }
 }

@@ -55,6 +55,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('admin/login', [LoginController::class, 'index'])->name('admin.login.index');
 Route::post('admin/login', [LoginController::class, 'login'])->name('admin.login.login');
 Route::get('admin/captcha', [LoginController::class, 'captcha'])->name('admin.login.captcha');
+Route::get('/uploadContent', [UploadController::class, 'eventContent'])->name('admin_upload_content');
 
 /*
 | 后台路由
@@ -145,7 +146,7 @@ Route::middleware(['admin'])->prefix('admin')->group(function () {
 
     //活动add_event
     Route::get('/add_event/{id?}', [EventController::class, 'event'])->name('admin_add_event');
-    Route::post('/uploadContent', [UploadController::class, 'eventContent'])->name('admin_upload_content');
+
     Route::post('/uploadPhoto', [UploadController::class, 'eventPhotoUpload'])->name('admin_upload');
     Route::post('/mani_event', [EventController::class, 'maniEvent'])->name('admin_mani_event');
 

@@ -38,14 +38,23 @@ class FormModel extends Model
 
         $eventId = $data['event_id'];
 
-        $column = ['id','name','type','option'];
+        $eventModel = new EventModel();
 
-        $rawForm = self::where('event_id', $eventId)->select($column)->orderBy('sort', 'desc')->get()->toArray();
+        $eventTypeModel = new EventTypeModel();
+
+        $column = ['id', 'name', 'type', 'option'];
+
+        $rawForm = self::where('event_id', $eventId)->select($column)->orderBy('sort', 'asc')->get()->toArray();
 
         foreach ($rawForm as &$value) {
             $value['option'] = explode(',', $value['option']);
         }
-
-        return $rawForm;
+        $res = [];
+        $eventData = $eventModel::where('id', $eventId)->select('is_sms', 'need_sms')->first();
+        $res['form'] = $rawForm;
+        $res['type'] = $eventTypeModel->where('status', 1)->select('id', 'name')->get()->toArray();
+        $res['is_sms'] = $eventData->is_sms;
+        $res['need_sms'] = $eventData->need_sms;
+        return $res;
     }
 }

@@ -118,7 +118,7 @@ class EventTypeModel extends CommonModel
 
         $column = ['id', 'name', 'status', 'created_at', 'updated_at', 'sort'];
 
-        $item = self::select($column)->where($where)->paginate($limit, '*', 'page', $page);
+        $item = self::select($column)->orderBy('id', 'desc')->where($where)->paginate($limit, '*', 'page', $page);
 
         $result = [];
 

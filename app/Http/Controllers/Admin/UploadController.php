@@ -67,4 +67,9 @@ class UploadController extends Controller
             return self::json_fail([], $e);
         }
     }
+
+    public function eventContent()
+    {
+        return self::json_success([]);
+    }
 }

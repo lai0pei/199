@@ -18,6 +18,7 @@
 namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class UserApplyModel extends CommonModel
@@ -60,7 +61,7 @@ class UserApplyModel extends CommonModel
             }
         }
 
-        $item = self::where($where)->paginate($limit, '*', 'page', $page);
+        $item = self::where($where)->orderBy('id', 'desc')->paginate($limit, '*', 'page', $page);
 
         $result = [];
 
@@ -181,6 +182,16 @@ class UserApplyModel extends CommonModel
     public function userAppr()
     {
         return self::where('status', 0)->count();
+    }
+
+    public function getTotalNumber()
+    {
+        return self::count();
+    }
+
+    public function getTodayEvent()
+    {
+        return self::whereDate('created_at', Carbon::today())->count();
     }
 
     private function getEventName($id)

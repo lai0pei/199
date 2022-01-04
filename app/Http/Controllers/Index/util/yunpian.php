@@ -20,7 +20,7 @@ namespace App\Http\Controllers\Index\util;
 use Illuminate\Support\Facades\Log;
 use LogicException;
 
-trait yunpian
+trait YunPian
 {
     protected $url = 'https://sms.yunpian.com/v2/sms/single_send.json';
 

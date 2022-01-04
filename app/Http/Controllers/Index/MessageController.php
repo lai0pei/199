@@ -18,9 +18,9 @@
 namespace App\Http\Controllers\Index;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Index\util\generateCode;
-use App\Http\Controllers\Index\util\juhe;
-use App\Http\Controllers\Index\util\yunpian;
+use App\Http\Controllers\Index\util\GenerateCode;
+use App\Http\Controllers\Index\util\JuHe;
+use App\Http\Controllers\Index\util\YunPian;
 use App\Models\Admin\ConfigModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -28,9 +28,9 @@ use LogicException;
 
 class MessageController extends Controller
 {
-    use juhe;
-    use yunpian;
-    use generateCode;
+    use JuHe;
+    use YunPian;
+    use GenerateCode;
 
     public function __construct(Request $request)
     {
@@ -58,35 +58,32 @@ class MessageController extends Controller
 
             $code = $this->getCode($mobile);
 
-            return self::json_success([], '发送成功');
+            if ($smsConfig['status'] === 1) {
+                $params = [
+                    // 模板id
+                    'tpl_id' => $smsConfig['ju_id'],
+                    // 您申请的接口调用Key
+                    'key' => $smsConfig['ju_key'],
+                    //发送的手机号
+                    'mobile' => $mobile,
+                    //结合自己的模板中的变量进行设置，如果没有变量，可以删除此参数
+                    'tpl_value' => urlencode('#code#=' . $code),
+                ];
 
-            // if ($smsConfig['status'] == 1) {
+                if ($this->juheSms($params)) {
+                    return self::json_success([], '发送成功');
+                }
+            } else {
+                $params = [
+                    'apikey' => $smsConfig['cloud_key'],
+                    'mobile' => $mobile,
+                    'text' => str_replace('#code#', $code, $smsConfig['cloud_temp']),
+                ];
 
-            //     $params = [
-            //         // 模板id
-            //         'tpl_id' => $smsConfig['ju_id'],
-            //         // 您申请的接口调用Key
-            //         'key' => $smsConfig['ju_key'],
-            //         //发送的手机号
-            //         'mobile' => $mobile,
-            //         //结合自己的模板中的变量进行设置，如果没有变量，可以删除此参数
-            //         'tpl_value' => urlencode('#code#=' . $code),
-            //     ];
-
-            //     if ($this->juheSms($params)) {
-            //         return self::json_success([], '发送成功');
-            //     }
-            // } else {
-            //     $params = [
-            //         'apikey' => $smsConfig['cloud_key'],
-            //         'mobile' => $mobile,
-            //         'text' => str_replace("#code#", $code, $smsConfig['cloud_temp']),
-            //     ];
-
-            //     if ($this->yunPianSms($params)) {
-            //         return self::json_success([], '发送成功');
-            //     }
-            // }
+                if ($this->yunPianSms($params)) {
+                    return self::json_success([], '发送成功');
+                }
+            }
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }

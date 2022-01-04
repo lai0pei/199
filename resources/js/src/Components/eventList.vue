@@ -112,21 +112,28 @@ export default {
     getDialog: async function(data) {
       this.showModal = true;
       let form = [];
+      let eventType = [];
+      let need_sms = "";
+      let is_sms = "";
       await axios
           .post(route('get_index_form'), {
             event_id: data.id,
           })
           .then(function(response) {
-            form = response.data.data;
+            form = response.data.data.form;
+            eventType = response.data.data.type;
+            need_sms = response.data.data.need_sms;
+            is_sms = response.data.data.is_sms;
           })
           .catch(function(error) {
             console.error(error);
           });
+      
       this.formList.formData = form;
+      this.formList.game_list = eventType;
       this.formList.event_id = data.id;
-      this.formList.need_sms = data.need_sms;
-      this.formList.game_list = this.eventType;
-      this.formList.is_sms = data.is_sms;
+      this.formList.need_sms = need_sms;
+      this.formList.is_sms = is_sms;
     },
     fromApplyDialog: function() {
       this.showModal = false;

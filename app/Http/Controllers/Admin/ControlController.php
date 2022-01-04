@@ -19,7 +19,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\ControlModel;
-use App\Models\Admin\EventModel;
 use App\Models\Admin\MobileModel;
 use App\Models\Admin\SmsEventModel;
 use App\Models\Admin\UserApplyModel;
@@ -29,13 +28,12 @@ class ControlController extends Controller
     public function control()
     {
         $smsModel = new SmsEventModel();
-        $eventModel = new EventModel();
         $userModel = new UserApplyModel();
         $mobileModel = new MobileModel();
         $totalMember = $smsModel->getNewMember();
-        $totalEventMember = $eventModel->getTotalNumber();
+        $totalEventMember = $userModel->getTotalNumber();
         $today = $smsModel->getTodayMember();
-        $totalEvent = $eventModel->getTodayEvent();
+        $totalEvent = $userModel->getTodayEvent();
         $userAppr = $userModel->userAppr();
         $smsAppr = $smsModel->smsAppr();
         $vip = $mobileModel->getCount();

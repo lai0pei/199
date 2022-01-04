@@ -54,7 +54,7 @@ class MobileModel extends CommonModel
             }
         }
 
-        $item = self::where($where)->orderbydesc('id')->paginate($limit, '*', 'page', $page);
+        $item = self::where($where)->orderBy('id', 'desc')->paginate($limit, '*', 'page', $page);
 
         $result = [];
 

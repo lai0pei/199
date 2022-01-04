@@ -35,7 +35,6 @@ class EventController extends Controller
         $model = new EventModel($this->request->route()->parameters());
         $data = $model->getEventBy();
         $types = (new EventTypeModel())->getAllType();
-
         return view('admin.event.add_event', ['type' => $data, 'event' => $types]);
     }
 

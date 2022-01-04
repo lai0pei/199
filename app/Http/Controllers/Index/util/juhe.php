@@ -20,7 +20,7 @@ namespace App\Http\Controllers\Index\util;
 use Illuminate\Support\Facades\Log;
 use LogicException;
 
-trait juhe
+trait JuHe
 {
     protected $juheUrl = 'http://v.juhe.cn/sms/send?';
 
