@@ -5,20 +5,34 @@
  * |-----------------------------------------------------------------------------------------------------------
  * | 开发者: 云飞
  * |-----------------------------------------------------------------------------------------------------------
- * | 文件: admin.php
+ * | 文件: MobileAuthendication.php
  * |-----------------------------------------------------------------------------------------------------------
  * | 项目: VIP活动申请
  * |-----------------------------------------------------------------------------------------------------------
- * | 创建时间: Tuesday, 4th January 2022 1:00:52 pm
+ * | 创建时间: Wednesday, 5th January 2022 9:19:12 am
  * |-----------------------------------------------------------------------------------------------------------
  * | Copyright 2022 - 2025
  * |-----------------------------------------------------------------------------------------------------------
  */
-//后台 配置
-return [
-    "ip" =>  env('APP_IP', ''),
-    "ueditor_json" => 'static/ueditor/config.json',
-    "logo_size" => ['width'=>256,'height'=>71],
-    "button_size" => ['width'=>292,'height'=>63],
-    "crousel_size" => ['width'=>1500,'height'=>454],
-];
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class MobileAuthendication
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
+     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
+     */
+    public function handle(Request $request, Closure $next)
+    {   
+        dd($_SERVER);
+        dd(request()->ip());
+        return $next($request);
+    }
+}

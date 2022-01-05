@@ -60,11 +60,12 @@ class EventModel extends CommonModel
     public function maniEvent()
     {
         $input = $this->data;
+
         $data = $input['data'];
 
         DB::beginTransaction();
 
-        if ($data['id'] == -1) {
+        if ($data['id'] === '-1') {
             $add = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
@@ -87,7 +88,6 @@ class EventModel extends CommonModel
 
             if ($status === false) {
                 DB::rollBack();
-
                 throw new LogicException('添加失败');
             }
 

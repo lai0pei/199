@@ -6,7 +6,7 @@
                 <legend>云片短信</legend>
             </fieldset>
 
-            <form class="layui-form layui-form-pane" action="" lay-filter="example">
+            <form class="layui-form layui-form-pane" action="" lay-filter="example" onsubmit="return false">
                 <div class="layui-form-item">
                     <label class="layui-form-label">API Key</label>
                     <div class="layui-input-block">

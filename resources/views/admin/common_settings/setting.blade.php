@@ -1,109 +1,198 @@
 @extends('common.template')
 @section('style')
+    <style>
+        .normal-item {
+            width: 7rem;
+        }
 
+        .normal-btn {
+            margin-left: 2rem;
+        }
+        .cruosel{
+          display : table;
+          margin-left : 8.8rem;
+          margin-top : 1rem;
+        }
+        .urlInput{
+          width: 12.9rem;
+        }
+    </style>
 @endsection
 
 @section('content')
 
     <div class="layui-container">
         <div class="layuimini-main">
-            <label class="layui-form-label required">活动图片</label>
-
-            <div class="layui-upload">
-                <button type="button" class="layui-btn" id="test1">上传图片</button>
-                <div class="layui-upload-list">
-                  <img class="layui-upload-img" id="demo1">
-                  <p id="demoText"></p>
+          <form class="layui-form" action="" onsubmit="return false">
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px; border-color: grey;">
+                <legend>前台：顶部图片上传</legend>
+            </fieldset>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <label class="layui-form-label required normal-item">首页logo</label>
+                    <div class="layui-upload-drag" id="logo">
+                        <i class="layui-icon"></i>
+                        <p>点击上传, 前台左边logo</p>
+                        <input type='hidden' id="logoData" name="logo" value="{{ $logo['logo'] ?? '' }}">
+                        <div class="layui-hide" id='uploadView'>
+                            <hr>
+                            <img src="{{ $logo['logo'] ?? '' }}" alt="活动图片" style="max-width: 196px">
+                        </div>
+                    </div>
                 </div>
-                <div style="width: 95px;">
-                  <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-                    <div class="layui-progress-bar" lay-percent=""></div>
-                  </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label required normal-item">首页右上方图片</label>
+                    <div class="layui-upload-drag" id="searchBtn">
+                        <i class="layui-icon"></i>
+                        <p>点击上传, 前台右边图标</p>
+                        <input type='hidden' id="searchBtnData" name="searchBtn" value="{{ $logo['searchBtn'] ?? '' }}">
+                        <div class="layui-hide" id='searchBtnView'>
+                            <hr>
+                            <img src="{{ $logo['searchBtn'] ?? '' }}" alt="活动图片" style="max-width: 196px">
+                        </div>
+                    </div>
                 </div>
-              </div>   
-               
-              <a name="list-progress"> </a>
-                
-              <div style="margin-top: 10px;">
+            </div>
+            
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px; border-color: grey;">
+                <legend>前台：轮播图上传</legend>
+            </fieldset>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <label class="layui-form-label required normal-item">第一张轮播图</label>
+                    <div class="layui-input-inline urlInput">
+                        <input type="text" name="1Url" placeholder="图片跳转路径"  value="{{ $logo['1Url'] ?? '' }}"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-upload-drag cruosel" id="1Wall">
+                        <i class="layui-icon"></i>
+                        <p>点击上传, 前台右边图标</p>
+                        <input type='hidden' id="1WallData" name="1Wall" value="{{ $logo['1Wall'] ?? '' }}">
+                        <div class="layui-hide" id='1View'>
+                            <hr>
+                            <img src="{{ $logo['1Wall'] ?? '' }}" alt="活动图片" style="max-width: 196px">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label required normal-item">第二张轮播图</label>
+                    <div class="layui-input-inline urlInput">
+                        <input type="text" name="2Url" placeholder="图片跳转路径" value="{{ $logo['2Url'] ?? '' }}"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-upload-drag cruosel" id="2Wall">
+                        <i class="layui-icon"></i>
+                        <p>点击上传, 前台右边图标</p>
+                        <input type='hidden' id="2WallData" name="2Wall" value="{{ $logo['2Wall'] ?? '' }}">
+                        <div class="layui-hide" id='2View'>
+                            <hr>
+                            <img src="{{ $logo['2Wall'] ?? '' }}" alt="活动图片" style="max-width: 196px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <label class="layui-form-label required normal-item">第三张轮播图</label>
+                    <div class="layui-input-inline urlInput">
+                        <input type="text" name="3Url" placeholder="图片跳转路径" value="{{ $logo['3Url'] ?? '' }}"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-upload-drag cruosel" id="3Wall">
+                        <i class="layui-icon"></i>
+                        <p>点击上传, 前台右边图标</p>
+                        <input type='hidden' id="3WallData" name="3Wall" value="{{ $logo['3Wall'] ?? '' }}">
+                        <div class="layui-hide" id='3View'>
+                            <hr>
+                            <img src="{{ $logo['3Wall'] ?? '' }}" alt="活动图片" style="max-width: 196px">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label required normal-item">第四张轮播图</label>
+                    <div class="layui-input-inline urlInput">
+                        <input type="text" name="4Url" placeholder="图片跳转路径" value="{{ $logo['4Url'] ?? '' }}"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-upload-drag cruosel " id="4Wall">
+                        <i class="layui-icon"></i>
+                        <p>点击上传, 前台右边图标</p>
+                        <input type='hidden' id="4WallData" name="4Wall" value="{{ $logo['4Wall'] ?? '' }}">
+                        <div class="layui-hide" id='4View'>
+                            <hr>
+                            <img src="{{ $logo['4Wall'] ?? '' }}" alt="活动图片" style="max-width: 196px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <label class="layui-form-label required normal-item">第五张轮播图</label>
+                    <div class="layui-input-inline urlInput">
+                        <input type="text" name="5Url" placeholder="图片跳转路径" value="{{ $logo['5Url'] ?? '' }}"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-upload-drag cruosel" id="5Wall">
+                        <i class="layui-icon"></i>
+                        <p>点击上传, 前台右边图标</p>
+                        <input type='hidden' id="5WallData" name="5Wall" value="{{ $logo['5Wall'] ?? '' }}">
+                        <div class="layui-hide" id='5View'>
+                            <hr>
+                            <img src="{{ $logo['5Wall'] ?? '' }}" alt="活动图片" style="max-width: 196px">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <label class="layui-form-label required normal-item">第六张轮播图</label>
+                    <div class="layui-input-inline urlInput">
+                        <input type="text" name="6Url" placeholder="图片跳转路径" value="{{ $logo['6Url'] ?? '' }}"
+                            autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-upload-drag cruosel" id="6Wall">
+                        <i class="layui-icon"></i>
+                        <p>点击上传, 前台右边图标</p>
+                        <input type='hidden' id="6WallData" name="6Wall" value="{{ $logo['6Wall'] ?? '' }}">
+                        <div class="layui-hide" id='6View'>
+                            <hr>
+                            <img src="{{ $logo['6Wall'] ?? '' }}" alt="活动图片" style="max-width: 196px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    @if (checkAuth('event_add'))
+                        <button class="layui-btn layui-btn-normal normal-btn" lay-submit lay-filter="saveBtn">提交</button>
+                    @endif
+                </div>
+            </div>
+          </form>
         </div>
     </div>
 @endsection
 
 @section('footer')
+    <script src="{{ asset('static/upload/upload.js') }}" charset="utf-8"></script>
     <script>
-        var saveSms = "{{route('admin_save_sms')}}";
-        var status = "{{$sms['status'] ?? 0}}";
-
-
-
-    
-        layui.use(['form'], function() {
-            var form = layui.form,
-                layer = layui.layer;
-
-  
-
-            //监听提交
-            form.on('submit(save)', function(data) {
-                    
-                      
-                    $.ajax({
-                    url: saveSms,
-                    data: {
-                            'data': JSON.stringify(data.field),
-                        },
-                    method: 'POST',
-                    success: function(data) {
-                        if (data.code == 1) {
-                            layer.msg(data.msg);
-                               window.parent.location.reload();
-                        } else {
-                            layer.msg(data.msg);
-                        }
-                    }
-                });
-
-            });
-
-        });
-
-        //常规使用 - 普通图片上传
-  var uploadInst = upload.render({
-    elem: '#test1'
-    ,url: 'https://httpbin.org/post' //此处用的是第三方的 http 请求演示，实际使用时改成您自己的上传接口即可。
-    ,before: function(obj){
-      //预读本地文件示例，不支持ie8
-      obj.preview(function(index, file, result){
-        $('#demo1').attr('src', result); //图片链接（base64）
-      });
-      
-      element.progress('demo', '0%'); //进度条复位
-      layer.msg('上传中', {icon: 16, time: 0});
-    }
-    ,done: function(res){
-      //如果上传失败
-      if(res.code > 0){
-        return layer.msg('上传失败');
-      }
-      //上传成功的一些操作
-      //……
-      $('#demoText').html(''); //置空上传失败的状态
-    }
-    ,error: function(){
-      //演示失败状态，并实现重传
-      var demoText = $('#demoText');
-      demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-      demoText.find('.demo-reload').on('click', function(){
-        uploadInst.upload();
-      });
-    }
-    //进度条
-    ,progress: function(n, elem, e){
-      element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
-      if(n == 100){
-        layer.msg('上传完毕', {icon: 1});
-      }
-    }
-  });
+      var logo = "{{ $logo['logo'] ??''}}";
+       if ("" !== logo) {
+                layui.$('#uploadView').removeClass('layui-hide');
+                layui.$('#searchBtnView').removeClass('layui-hide');
+                layui.$('#1View').removeClass('layui-hide');
+                layui.$('#2View').removeClass('layui-hide');
+                layui.$('#3View').removeClass('layui-hide');
+                layui.$('#4View').removeClass('layui-hide');
+                layui.$('#5View').removeClass('layui-hide');
+                layui.$('#6View').removeClass('layui-hide');
+          }
+        var uploader = "{{ route('admin_logo_upload') }}";
+        var searchBtn = "{{ route('admin_btn_confirm') }}";
+        var cruosel = "{{ route('admin_cruosel_confirm') }}";
+        var save = "{{ route('admin_index_confirm') }}";
     </script>
 @endsection

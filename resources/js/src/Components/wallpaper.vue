@@ -9,7 +9,7 @@
       class="rounded-md"
     >
       <div v-for="item in photo" :key="item">
-        <img :src="item" alt="轮播图" class="w-full " />
+        <img :src="item" alt="轮播图" class="w-full" />
       </div>
     </Swiper>
   </div>

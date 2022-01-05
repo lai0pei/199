@@ -46,8 +46,8 @@
 <body class="layui-layout-body layuimini-all">
     @yield('content')
     <script src="{{ asset('static/layui/layui.js') }}" charset="utf-8"></script>
-    {{-- <script src="{{ asset('static/lib/jquery-3.4.1/jquery-3.4.1.min.js') }}" charset="utf-8"></script> --}}
-    <script src="{{ asset('static/jquery/jquery-3.6.0.js') }}" charset="utf-8"></script>
+    <script src="{{ asset('static/lib/jquery-3.4.1/jquery-3.4.1.min.js') }}" charset="utf-8"></script>
+    {{-- <script src="{{ asset('static/jquery/jquery-3.6.0.js') }}" charset="utf-8"></script> --}}
     <script src="{{ asset('static/layuimini/one_page/js/lay-config.js?v=2.0.0') }}" charset="utf-8"></script>
 
 

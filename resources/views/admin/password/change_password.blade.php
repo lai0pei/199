@@ -10,7 +10,7 @@
 <div class="layui-container">
     <div class="layui-form layuimini-form password-form">
         <div class="layuimini-main">
-        <form class="layui-form" action="" lay-filter="reset_form">
+        <form class="layui-form" action="" lay-filter="reset_form" onsubmit="return false">
             <div class="layui-form-item">
                 <label class="layui-form-label">账号名称</label>
                 <div class="layui-input-block">

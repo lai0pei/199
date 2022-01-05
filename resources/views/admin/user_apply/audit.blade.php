@@ -23,7 +23,7 @@
 @section('content')
     <div class="layui-form layuimini-form">
         <div class="layui-form-item">
-            <form class="layui-form" action="">
+            <form class="layui-form" action="" onsubmit="return false">
                 <input type="hidden" value="{{ $data['id'] ?? '' }}" class="layui-input" name="id" disabled>
                 <label class="layui-form-label required">用户名</label>
                 <div class="layui-input-block">
@@ -104,9 +104,8 @@
 
                             setTimeout(function() {
                                 console.log("hir");
-                                var index = layer.getFrameIndex(window
+                                var index = parent.layer.getFrameIndex(window
                                 .name); //先得到当前iframe层的索引
-                                console.log(index);
                                 parent.$('button[lay-filter="data-search-btn"]')
                             .click(); //刷新列表
                                 parent.layer.close(index); //再执行关闭

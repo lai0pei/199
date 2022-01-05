@@ -23,7 +23,7 @@
 @section('content')
     <div class="layui-form layuimini-form">
         <div class="layui-form-item">
-            <form class="layui-form" action="">
+            <form class="layui-form" action="" onsubmit="return false">
 
                 <input type="hidden" value="{{ $data['id'] ?? '' }}" class="layui-input" name="id" disabled>
                 <label class="layui-form-label required">会员账号</label>

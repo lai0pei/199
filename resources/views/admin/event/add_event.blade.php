@@ -35,7 +35,7 @@
 @section('content')
     <div class="layuimini-container">
         <div class="layui-form layuimini-form">
-            <form class="layui-form" action="" id="addGoodsForm">
+            <form class="layui-form" action="" id="addGoodsForm" onsubmit="return false">
                 <div class="layui-form-item">
                     <input type="hidden" name="id" value="{{ $type['id'] ?? -1 }}" class="layui-input">
                     <label class="layui-form-label required">活动名称</label>
@@ -66,7 +66,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">外联地址</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="external_url" placeholder="http://www.google.com"
+                        <input type="text" name="external_url" placeholder="比如:http://www.baidu.com"
                             value="{{ $type['external_url'] ?? '' }}" class="layui-input">
                     </div>
                 </div>
@@ -126,7 +126,7 @@
                     <div class="layui-upload-drag" id="type_url">
                         <i class="layui-icon"></i>
                         <p>点击上传，或将文件拖拽到此处</p>
-                        <input type='hidden' id="type_pic" name="type_pic" value="">
+                        <input type='hidden' id="type_pic" name="type_pic" value="{{ $type['type_pic'] ?? '' }}">
                         <div class="layui-hide" id='uploadView'>
                             <hr>
                             <img src="{{ $type['type_pic'] ?? '' }}" alt="活动图片" style="max-width: 196px">
@@ -201,33 +201,12 @@
                 element = layui.element,
                 laydate = layui.laydate;
 
-            //编辑后
-            // layedit.set({
-            //     uploadImage: {
-            //         url: uploader, //接口url
-            //         type: 'post', //默认post
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //         },
-            //     },
-            // });
-
             //编辑 赋值
             var content = "{{ $type['content'] ?? '' }}";
             var isEventPic = "{{ $type['type_pic'] ?? '' }}";
             if ("" !== isEventPic) {
                 layui.$('#uploadView').removeClass('layui-hide');
             }
-
-            // if(-1 !== isEventPic){
-            // layedit.setContent(editor, content, false);
-            // }
-
-            // form.verify({
-            //     'contentVerify': function(value) {
-            //         layedit.sync(editor);
-            //     }
-            // });
 
             //开启公历节日
             laydate.render({

@@ -10,7 +10,7 @@
             <fieldset class="table-search-fieldset">
                 <legend>搜索信息</legend>
                 <div style="margin: 10px 10px 10px 10px">
-                    <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action="">
+                    <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action="" onsubmit="return false">
                         <div class="layui-form-item">
                             <div class="layui-inline">
                                 <label class="layui-form-label">所有活动</label>

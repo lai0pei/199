@@ -128,7 +128,7 @@ class FormModel extends CommonModel
 
         DB::beginTransaction();
 
-        if ($data['id'] === -1) {
+        if ($data['id'] === '-1') {
             $add = [
                 'name' => $data['name'],
                 'type' => $data['type'],

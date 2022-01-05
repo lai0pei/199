@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\SmsConfigController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\UploadController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\UploadLogoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -68,7 +69,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/getChart', [ControlController::class, 'getChart'])->name('admin_getChart');
 
     //管理员 页面 和 接口
-    Route::get('/person', [AdminController::class, 'person'])->name('admin_person');
+    Route::get('/person', [AdminController::class, 'person']);
     Route::get('/add_person', [AdminController::class, 'addPerson'])->name('admin_person_add');
     Route::get('/edit_person/{id?}', [AdminController::class, 'editPerson'])->name('admin_person_edit');
     Route::get('/view_person/{id?}', [AdminController::class, 'viewPerson'])->name('admin_person_view');
@@ -76,11 +77,11 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/save_admin', [AdminController::class, 'saveAdmin'])->name('admin_save_admin');
     Route::post('/delete_admin', [AdminController::class, 'deleteAdmin'])->name('admin_person_delete');
     Route::get('/list_admin', [AdminController::class, 'listAdmin'])->name('admin.admin_list');
-    Route::get('/edit_admin', [AdminController::class, 'addNewAdmin'])->name('admin_edit_person');
+    Route::get('/edit_admin', [AdminController::class, 'addNewAdmin']);
 
     //管理组
-    Route::get('/admin_group', [AdminGroupController::class, 'group'])->name('admin_group');
-    Route::get('/group_add/{id?}', [AdminGroupController::class, 'groupAdd'])->name('group_add');
+    Route::get('/admin_group', [AdminGroupController::class, 'group']);
+    Route::get('/group_add_index/{id?}', [AdminGroupController::class, 'groupAdd'])->name('group_add_index');
     Route::post('/group_add/{id?}', [AdminGroupController::class, 'newGroup'])->name('group_add');
     Route::post('/group_delete/{id?}', [AdminGroupController::class, 'deleteGroup'])->name('group_delete');
     Route::get('/permission/{role_id?}', [PermissionMenuController::class, 'getPermission'])->name('admin_permission');
@@ -91,55 +92,61 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::get('/get_role/{id?}', [RoleController::class, 'getRole'])->name('admin_get_role');
 
     //修改密码
-    Route::get('/change_password', [ChangePasswordController::class, 'password'])->name('admin_password');
+    Route::get('/change_password', [ChangePasswordController::class, 'password']);
     Route::post('/change_password', [ChangePasswordController::class, 'changePassword'])->name('admin_password_change');
 
     //权限列表
-    Route::get('/auth_permission', [AuthPermissionController::class, 'auth'])->name('admin_auth_permission');
+    Route::get('/auth_permission', [AuthPermissionController::class, 'auth']);
     Route::get('/permission_show', [AuthPermissionController::class, 'authList'])->name('admin_permission_show');
     Route::get('/view_permission/{id?}', [AuthPermissionController::class, 'viewPermission'])->name('admin_view_permission');
 
     //日志列表
-    Route::get('/log', [LogController::class, 'log'])->name('admin_log');
+    Route::get('/log', [LogController::class, 'log']);
     Route::get('/getLog', [LogController::class, 'getLog'])->name('admin_getLog');
     Route::get('/detailLog/{id?}', [LogController::class, 'detailLog'])->name('admin_detailLog');
 
     //短信配置
-    Route::get('/sms_config', [SmsConfigController::class, 'sms_config'])->name('admin_sms_config');
+    Route::get('/sms_config', [SmsConfigController::class, 'sms_config']);
     Route::post('/save_sms', [SmsConfigController::class, 'saveSmsConfig'])->name('admin_save_sms');
 
     //ip地址
-    Route::get('/allow_ip', [IpController::class, 'allow_ip'])->name('admin_allow_ip');
+    Route::get('/allow_ip', [IpController::class, 'allow_ip']);
     Route::post('/mani_ip', [IpController::class, 'mani_ip'])->name('admin_mani_ip');
     Route::get('/add_ip/{id?}', [IpController::class, 'add_ip'])->name('admin_add_ip');
     Route::get('/ip_list', [IpController::class, 'ip_list'])->name('admin_ip_list');
     Route::post('/delete_ip', [IpController::class, 'ip_delete'])->name('admin_delete_ip');
 
     //公共配置
-    Route::get('/common_settings', [CommonSettingController::class, 'common'])->name('admin_common_settings');
+    Route::get('/common_settings', [CommonSettingController::class, 'common']);
+    Route::post('/logo_upload', [UploadLogoController::class, 'logoUpload'])->name('admin_logo_upload');
+    Route::post('/logo_confirm', [CommonSettingController::class, 'confirm'])->name('admin_index_confirm');
+    Route::post('/btn_confirm', [UploadLogoController::class, 'btnConfirm'])->name('admin_btn_confirm');
+    Route::post('/cruosel_confirm', [UploadLogoController::class, 'cruoselConfirm'])->name('admin_cruosel_confirm');
+    
+
 
     //拒绝
-    Route::get('/bulk_refuse', [ConfigsController::class, 'refuse'])->name('admin_bulk_refuseMsg');
+    Route::get('/bulk_refuse', [ConfigsController::class, 'refuse']);
     Route::post('/refuse_save', [ConfigsController::class, 'refuseSave'])->name('admin_bulk_save');
 
     //通过
-    Route::get('/bulk_pass', [ConfigsController::class, 'pass'])->name('admin_bulk_pass');
+    Route::get('/bulk_pass', [ConfigsController::class, 'pass']);
     Route::post('/pass_save', [ConfigsController::class, 'passSave'])->name('admin_pass_save');
 
     //链接
-    Route::get('/link_management', [ConfigsController::class, 'link'])->name('admin_link_management');
+    Route::get('/link_management', [ConfigsController::class, 'link']);
     Route::post('/link_save', [ConfigsController::class, 'linkSave'])->name('admin_link_save');
 
     //游戏
-    Route::get('/game_management', [ConfigsController::class, 'game'])->name('admin_game_management');
+    Route::get('/game_management', [ConfigsController::class, 'game']);
     Route::post('/game_save', [ConfigsController::class, 'gameSave'])->name('admin_game_save');
 
     //公告
-    Route::get('/announcement', [ConfigsController::class, 'announcement'])->name('admin_announcement');
+    Route::get('/announcement', [ConfigsController::class, 'announcement']);
     Route::post('/announcement_save', [ConfigsController::class, 'announcementSave'])->name('admin_announcement_save');
 
     //活动类型
-    Route::get('/event_type', [EventTypeController::class, 'type'])->name('admin_event_type');
+    Route::get('/event_type', [EventTypeController::class, 'type']);
     Route::post('/mani_type', [EventTypeController::class, 'maniType'])->name('admin_mani_type');
     Route::get('/add_type/{id?}', [EventTypeController::class, 'addType'])->name('admin_add_type');
     Route::get('/type_list', [EventTypeController::class, 'typeList'])->name('admin_type_list');
@@ -152,7 +159,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/mani_event', [EventController::class, 'maniEvent'])->name('admin_mani_event');
 
     //活动列表
-    Route::get('/event_lists', [EventController::class, 'list'])->name('admin_event_list');
+    Route::get('/event_lists', [EventController::class, 'list']);
     Route::get('/get_list', [EventController::class, 'getEventList'])->name('admin_get_event');
     Route::post('/delete_event/{id?}', [EventController::class, 'deleteEvent'])->name('admin_delete_event');
 
@@ -164,7 +171,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/form_add', [FormController::class, 'formAdd'])->name('admin_form_add');
 
     //手机管理
-    Route::get('/mobile_management', [MobileController::class, 'mobile'])->name('admin_mobile_management');
+    Route::get('/mobile_management', [MobileController::class, 'mobile']);
     Route::post('/importExcel', [UploadController::class, 'importExcel'])->name('admin_import_excel');
     Route::post('/exportExcel', [UploadController::class, 'exportExcel'])->name('admin_export_excel');
     Route::get('/getMobile', [MobileController::class, 'getMobile'])->name('admin_get_mobile');
@@ -174,7 +181,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/oneClick', [MobileController::class, 'oneClick'])->name('admin_ mobile_oneClick');
 
     //用户申请记录
-    Route::get('/user_apply', [UserController::class, 'user'])->name('admin_user_apply');
+    Route::get('/user_apply', [UserController::class, 'user']);
     Route::get('/user_apply_list', [UserController::class, 'userList'])->name('admin_user_list');
     Route::get('/userAuditIndex/{id?}', [UserController::class, 'userAuditIndex'])->name('admin_user_audit');
     Route::post('/save_audit_user', [UserController::class, 'saveAudit'])->name('admin_save_audit');
@@ -183,7 +190,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/bulk_pass', [UserController::class, 'pass'])->name('admin_bulk_pass');
 
     //短信申请记录
-    Route::get('/sms_apply', [SmsController::class, 'sms'])->name('admin_sms_apply');
+    Route::get('/sms_apply', [SmsController::class, 'sms']);
     Route::get('/sms_list', [SmsController::class, 'smsEventList'])->name('admin_sms_list');
     Route::get('/smsAuditIndex/{id?}', [SmsController::class, 'smsAuditIndex'])->name('admin_sms_audit');
     Route::post('/save_audit_sms', [SmsController::class, 'saveSms'])->name('admin_audit_sms');
@@ -198,4 +205,5 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::get('/init', [AuthMenuController::class, 'init'])->name('admin.init');
     //post 接口
     Route::post('/logout', [LoginController::class, 'logout'])->name('admin_logout');
+    Route::post('/', [LoginController::class, 'logout'])->name('admin_logout');
 });

@@ -7,7 +7,7 @@
     <div class="layui-container">
         <div class="layuimini-main">
 
-            <form class="layui-form layui-form-pane" action="">
+            <form class="layui-form layui-form-pane" action="" onsubmit="return false">
                 <div class="layui-form-item">
                     <label class="layui-form-label required">首页</label>
                     <div class="layui-input-block">

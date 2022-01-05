@@ -7,7 +7,7 @@
     <div class="layui-container">
         <div class="layuimini-main">
 
-            <form class="layui-form layui-form-pane" action="">
+            <form class="layui-form layui-form-pane" action="" onsubmit="return false">
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">批量拒绝通过内容</label>
                     <div class="layui-input-block">

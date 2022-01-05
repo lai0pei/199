@@ -138,7 +138,7 @@ class RoleModel extends CommonModel
 
         DB::beginTransaction();
         //添加
-        if ($data['id'] === -1) {
+        if ($data['id'] === '-1') {
             if (isset($role)) {
                 throw new LogicException('同名称已存在');
             }

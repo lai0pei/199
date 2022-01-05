@@ -50,7 +50,7 @@
 @section('footer')
     <script>
         var allRole = "{{ route('admin_get_role_permission') }}";
-        var addPage = "{{ route('group_add') }}";
+        var addPage = "{{ route('group_add_index') }}";
         var delete_page = "{{ route('group_delete') }}";
         var permission = "{{ route('admin_permission') }}";
 

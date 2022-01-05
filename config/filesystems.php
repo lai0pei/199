@@ -58,6 +58,8 @@ return [
     'event' => 'events',
     'userApply' => 'userApply',
     'common' => 'images',
+    'logo' => 'logo',
+    'crousel' => 'crousel',
 
     /*
     |--------------------------------------------------------------------------
