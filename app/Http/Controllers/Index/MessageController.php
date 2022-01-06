@@ -46,22 +46,22 @@ class MessageController extends Controller
             'captcha' => 'required',
         ], );
         try {
-            if ($validator->fails()) {
-                throw new LogicException('请求数据不正确');
-            }
+            // if ($validator->fails()) {
+            //     throw new LogicException('请求数据不正确');
+            // }
             $mobile = $all['mobile'];
             $captch = $all['captcha'];
 
-            if (!captcha_check($captch)) {
-                throw new LogicException('验证码不正确');
-            }
+            // if (! captcha_check($captch)) {
+            //     throw new LogicException('验证码不正确');
+            // }
 
-            if (!$smsConfig) {
+            if (! $smsConfig) {
                 throw new LogicException('短信配置有误,请联系客服');
             }
-            
-            $code = $this->getCode($mobile);
 
+            $code = $this->getCode($mobile);
+            return self::json_success([], '发送成功');
             if ($smsConfig['status'] === 1) {
                 $params = [
                     // 模板id

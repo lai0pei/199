@@ -3,14 +3,14 @@
     <div>
       <img
         class="w-36 p-2 float-left"
-        src="199/images/logo.png"
+        :src="headData['logo']"
         alt="Head Logo"
       />
     </div>
     <div v-on:click="getDialog">
       <img
         class="w-40 p-2 float-right"
-        src="199/images/search.png"
+        :src="headData['searchBtn']"
         alt="SearchIcon"
       />
     </div>
@@ -27,6 +27,7 @@ import search from './searchDialog';
 import axios from 'axios';
 
 export default {
+  props : ['headData'],
   components: {
     search,
   },

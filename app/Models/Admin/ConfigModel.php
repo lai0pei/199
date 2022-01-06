@@ -39,7 +39,7 @@ class ConfigModel extends CommonModel
     public function saveConfig($name, $title)
     {
         $data = $this->data;
-
+     
         $smsConfig = json_decode($data['data'], true);
 
         $update = [

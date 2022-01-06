@@ -1,35 +1,99 @@
 <template>
-  <div class="w-full bottom-0 fixed block bg-slate-900 rounded-t-lg max-w-screen-sm">
-  <nav class="content-center max-w-screen-sm">
-    <ul class="grid grid-cols-4 h-16 text-center">
-      <li>
-        <a :href="list.home" class="text-white text-xs block pt-2 rounded-md"><span><img src="199/images/f_img01.png" alt="首页图标" class="w-8 h-8 mx-auto"></span>首页</a>
-      </li>
-      <li>
-        <a :href="list.app" class="text-white text-xs block pt-2 rounded-md"><span><img src="199/images/f_img02.png" alt="app图标" class="w-8 h-8 mx-auto"></span>下载新版APP</a>
-      </li>
-      <li>
-        <a :href="list.speed" class="text-white text-xs block pt-2 rounded-md"><span><img src="199/images/f_img03.png" alt="路由图标" class="w-8 h-8 mx-auto"></span>线路检查</a>
-      </li>
-      <li>
-        <a :href="list.chat" class="text-white text-xs block pt-2 rounded-md"><span><img src="199/images/f_img04.png" alt="在线图标" class="w-8 h-8 mx-auto"></span>在线客服</a>
-      </li>
-    </ul>
-  </nav>
-  </div>
+<div>
+  <van-tabbar v-model="active" class=" max-w-screen-sm bg-black" active-color="#D9C37F" inactive-color="#fff" @change="onChange">
+    <van-tabbar-item class="bg-black" >
+      <span>首页</span>
+      <template #icon="props">
+        <img
+          :src="props.active ? icon[0].active : icon[0].inactive"
+          alt="图片"
+        />
+      </template>
+    </van-tabbar-item>
+    <van-tabbar-item class="bg-black">
+      <span>下载新版APP</span>
+      <template #icon="props">
+        <img
+          :src="props.active ? icon[1].active : icon[1].inactive"
+          alt="图片"
+        />
+      </template>
+    </van-tabbar-item>
+    <van-tabbar-item class="bg-black" ><span> 线路检查 </span>
+      <template #icon="props">
+        <img
+          :src="props.active ? icon[2].active : icon[2].inactive"
+          alt="图片"
+        /> </template
+    ></van-tabbar-item>
+    <van-tabbar-item class="bg-black">  
+      <span>在线客服</span>
+      <template #icon="props">
+        <img
+          :src="props.active ? icon[3].active : icon[3].inactive"
+          alt="图片"
+        /> </template
+    ></van-tabbar-item>
+  </van-tabbar>
+</div>
 </template>
 
 <script>
 export default {
-  name: 'myFooding',
-  props: ['footer'],
+  name: "myFooding",
+  props: ["footer"],
   data() {
     return {
-      list: [],
+      active: 0,
+      icon: [
+        {
+          inactive: "199/images/f_img01.png",
+          active: "199/images/f_img01_on.png",
+        },
+        {
+          inactive: "199/images/f_img02.png",
+          active: "199/images/f_img02_on.png",
+        },
+        {
+          inactive: "199/images/f_img03.png",
+          active: "199/images/f_img03_on.png",
+        },
+        {
+          inactive: "199/images/f_img04.png",
+          active: "199/images/f_img04_on.png",
+        },
+      ],
+      list : [],
+
     };
   },
   mounted() {
     this.list = this.footer;
   },
+  methods : {
+    onChange : function(index){
+      let link = "";
+      switch (true){
+        case index === 1 : link = this.list.app;
+        break;
+        case index === 2: link = this.list.speed;
+        break;
+        case index === 3: link = this.list.chat;
+        break;
+        default : link = this.list.home;
+      }
+      window.location.href = link;
+    
+    }
+  }
 };
 </script>
+
+<style scoped>
+.van-tabbar-item{
+  background : black;
+}
+.van-tabbar--fixed{
+  left : auto;
+}
+</style>

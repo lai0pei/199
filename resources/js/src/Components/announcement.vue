@@ -13,51 +13,31 @@
     <span class=""
       ><img
         src="199/images/icon01.png"
-        class="float-left w-9 h-auto mr-2"
+        class="float-left w-9 h-auto"
         alt="公告"
       />
     </span>
-    <seamless
-      :class-option="classOption"
-      class="overflow-hidden m-0"
-    >
-      <ul>
-        <li v-for="(list,key) in listData" :key="key"
-          class="
-            text-yellow-300 text-xs
-            float-left
-            leading-6
-            h-6
-
-          "
-        >
-          {{ list }}
-        </li>
-      </ul>
-    </seamless>
+  <van-notice-bar :text="listData" background="black" color="#e7ce83" scrollable :autoplay="3000" />
   </div>
 </template>
 
 <script>
-import seamless from 'vue-seamless-scroll';
 export default {
-  components: {
-    seamless,
-  },
   props: ['announce'],
   mounted() {
     this.listData = this.announce.announcement;
   },
   data() {
     return {
-      listData: [],
-      classOption: {
-        direction: 2,
-        step: 0.5,
-        autoPlay: true,
-        limitMoveNum: 0,
-      },
+      listData: "",
     };
   },
 };
 </script>
+
+<style scoped>
+.van-notice-bar{
+  height : 1.8rem;
+  padding : 0;
+}
+</style>

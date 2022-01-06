@@ -45,7 +45,7 @@ class UserApplyModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['event_id'] !== '') {
                 $where['event_id'] = $param['event_id'];
@@ -153,13 +153,12 @@ class UserApplyModel extends CommonModel
         try {
             $ids = array_column($data['data'], 'id');
             $count = count($ids);
-            if ($status == self::PASS) {
+            if ($status === self::PASS) {
                 $pass = (new ConfigModel())->getConfig('bulkPass');
-                $msg = ($pass['pass'])??"";
-
+                $msg = $pass['pass'] ?? '';
             } else {
                 $deny = (new ConfigModel())->getConfig('bulkDeny');
-                $msg = ($deny['refuse'])??"";
+                $msg = $deny['refuse'] ?? '';
             }
             $audit = [
                 'status' => $status,

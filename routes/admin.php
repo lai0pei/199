@@ -35,8 +35,8 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SmsConfigController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\UploadController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UploadLogoController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -122,8 +122,6 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/logo_confirm', [CommonSettingController::class, 'confirm'])->name('admin_index_confirm');
     Route::post('/btn_confirm', [UploadLogoController::class, 'btnConfirm'])->name('admin_btn_confirm');
     Route::post('/cruosel_confirm', [UploadLogoController::class, 'cruoselConfirm'])->name('admin_cruosel_confirm');
-    
-
 
     //拒绝
     Route::get('/bulk_refuse', [ConfigsController::class, 'refuse']);
@@ -205,5 +203,4 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::get('/init', [AuthMenuController::class, 'init'])->name('admin.init');
     //post 接口
     Route::post('/logout', [LoginController::class, 'logout'])->name('admin_logout');
-    Route::post('/', [LoginController::class, 'logout'])->name('admin_logout');
 });

@@ -11,7 +11,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label required">首页</label>
                     <div class="layui-input-block">
-                        <input type="text" name="home" lay-verify="required|url" lay-reqtext="首页前台" placeholder="请输入前台链接"
+                        <input type="text" name="home" lay-reqtext="首页前台" placeholder="请输入前台链接"
                             value="{{ $link['home'] ?? '' }}" class="layui-input">
 
                     </div>

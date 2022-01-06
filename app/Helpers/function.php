@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Cache;
 use App\Models\Admin\AuthMenuModel;
+use Illuminate\Support\Facades\Cache;
 
 function checkAuth($name = '')
 {
@@ -9,7 +9,7 @@ function checkAuth($name = '')
     $permission = Cache::get($key);
     if (empty($permission)) {
         $data = session('permission');
-        if(empty($data)){
+        if (empty($data)) {
             (new AuthMenuModel())->setPermission();
             $data = session('permission');
         }

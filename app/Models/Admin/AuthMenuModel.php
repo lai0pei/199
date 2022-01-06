@@ -88,7 +88,7 @@ class AuthMenuModel extends CommonModel
         $user_id = session('user_id');
         $key = 'admin_menu_' . session('user_id');
         $menus = Cache::get($key);
-        if (!empty($menus)) {
+        if (! empty($menus)) {
             return $menus;
         }
         $permissions = $this->getPermission($user_id);
@@ -98,28 +98,14 @@ class AuthMenuModel extends CommonModel
         }
         $this->setPermission();
         $init = [];
-        $init['homeInfo'] = ['title' => '活动分析', 'href' => route('admin_control')];
-        $init['logoInfo'] = ['title' => '活动页面', 'image' => asset('image/logo.png'), 'href' => ''];
+        $init['homeInfo'] = ['title' => '活动报告', 'href' => route('admin_control')];
+        $init['logoInfo'] = ['title' => '后台管理', 'image' => asset('image/logo.png'), 'href' => ''];
 
         $main_menu = $this->topChild($permissions['top_permission'], $permissions['child_permission'], $permissions['grand_permission']);
 
         $init['menuInfo'] = array_values($main_menu);
         Cache::put($key, $init, now()->addMinute(60));
         return $init;
-    }
-
-    /**
-     * getMenu
-     *
-     * @param  mixed $pid
-     */
-    private function getMenu($pid)
-    {
-        $columns = ['id', 'p_id', 'title', 'href', 'icon', 'target', 'is_shortcut'];
-        $where = [];
-        $where['p_id'] = $pid;
-        $where['status'] = 1;
-        return self::where($where)->orderBy('sort')->get($columns)->toArray();
     }
 
     public function setPermission()
@@ -134,6 +120,20 @@ class AuthMenuModel extends CommonModel
         $column = ['id', 'name'];
         $permission_menu = PermissionMenuModel::whereIn('id', $list)->get($column)->toArray();
         session(['permission' => $permission_menu]);
+    }
+
+    /**
+     * getMenu
+     *
+     * @param  mixed $pid
+     */
+    private function getMenu($pid)
+    {
+        $columns = ['id', 'p_id', 'title', 'href', 'icon', 'target', 'is_shortcut'];
+        $where = [];
+        $where['p_id'] = $pid;
+        $where['status'] = 1;
+        return self::where($where)->orderBy('sort')->get($columns)->toArray();
     }
     /**
      * getPermission

@@ -83,7 +83,7 @@ class EventModel extends CommonModel
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
-          
+
             $status = self::insert($add);
 
             if ($status === false) {

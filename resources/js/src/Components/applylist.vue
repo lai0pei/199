@@ -38,7 +38,7 @@ export default {
     return {
       listData: [],
       classOption: {
-        step: 0.25,
+        step: 0.5,
         autoPlay: true,
         openTouch: true,
         limitMoveNum: 0,

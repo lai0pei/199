@@ -8,7 +8,7 @@ layui.use(['form', 'upload'], function () {
         $.ajax({
             url: save,
             data: {
-                'data': data.field,
+                'data': JSON.stringify(data.field),
             },
             method: 'POST',
             success: function (res) {

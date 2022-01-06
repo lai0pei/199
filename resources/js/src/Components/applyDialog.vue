@@ -49,6 +49,7 @@
                       class="allForms mt-1 rounded-md"
                       v-model="formName.numberForm[form.id]"
                     />
+                   
                   </div>
                   <div v-if="form.type == 2">
                     <input
@@ -60,7 +61,7 @@
                     />
                   </div>
                   <div v-if="form.type == 3">
-                    <input
+                 <input
                       type="text"
                       v-bind:placeholder="form.name"
                       alt="时间"
@@ -98,7 +99,7 @@
                       class="allForms mt-1 rounded-md"
                       v-model="formName.selectForm[form.id]"
                     >
-                      <option  disabled value="">
+                      <option disabled value="">
                         {{ form.name }}
                       </option>
                       <option
@@ -111,13 +112,12 @@
                   </div>
                 </li>
                 <div>
-                  <div  v-if="isSms == 1">
+                  <div v-if="isSms == 1">
                     <select
                       class="allForms mt-1 rounded-md"
                       v-model="myGameList"
-
                     >
-                      <option disabled value="" >
+                      <option disabled>
                         {{ selectGame }}
                       </option>
                       <option
@@ -129,17 +129,22 @@
                       </option>
                     </select>
                   </div>
+                  <div class="">
+                    <van-loading type="spinner" size="26" class="absolute float-right mt-1 mr-12" v-show="showLoading">
+                    </van-loading>
                   <input
                     placeholder="填写验证码"
                     class="captcha rounded-md mt-1 w-36"
                     v-model="userCaptcha"
                   />
+                
                   <img
                     :src="captcha"
                     alt="验证码"
                     v-on:click="getCaptcha"
-                    class="float-right rounded-md mt-1"
+                    class="float-right rounded-md mt-1" v-show="!showLoading"
                   />
+                  </div>
                 </div>
                 <div v-if="needSms == 1">
                   <div>
@@ -163,14 +168,14 @@
                       :disabled="counting"
                       class="getMessage mt-1 rounded-md float-right bg-black"
                     >
-                      <count-down
+                      <van-count-down
                         v-if="counting"
                         :time="timeOut"
                         :auto-start="counting"
                         class="text-white"
                         format="ss 秒"
                         @finish="countFinish"
-                      ></count-down>
+                      ></van-count-down>
                       <span v-else class="text-xs">{{ messageText }}</span>
                     </button>
                   </div>
@@ -180,7 +185,7 @@
                 <span class="float-left"
                   ><button
                     v-on:click="closeDialog"
-                    class="btnSubmit bg-eventBtn block m-auto"
+                    class="btnSubmit bg-eventBtn block m-auto font-bold"
                   >
                     取消
                   </button></span
@@ -188,7 +193,7 @@
                 <span class="float-right"
                   ><button
                     v-on:click="submit"
-                    class="btnSubmit bg-eventBtn block m-auto"
+                    class="btnSubmit bg-eventBtn block m-auto font-bold"
                   >
                     点击申请
                   </button></span
@@ -208,15 +213,13 @@
 </template>
 
 <script>
-import axios from 'axios';
-import VueCoreImageUpload from 'vue-core-image-upload';
-import countDown from 'vant/lib/count-down';
+import axios from "axios";
+import VueCoreImageUpload from "vue-core-image-upload";
 
 export default {
-  props: {childProp: Object},
+  props: { childProp: Object },
   components: {
     VueCoreImageUpload,
-    countDown,
   },
   data() {
     return {
@@ -228,130 +231,132 @@ export default {
         timeForm: [],
         selectForm: [],
       },
-      username: '',
+      username: "",
+      showLoading : true,
       limit: 2,
       isPreview: false,
       type: 2,
       imageReady: false,
       imagePreview: [],
       imageUrl: [],
-      uploadId: '',
+      uploadId: "",
       formId: [],
-      isPhone: '',
-      eventId: '',
-      captcha: '',
-      userCaptcha: '',
-      mobileNumber: '',
+      isPhone: "",
+      eventId: "",
+      captcha: "",
+      userCaptcha: "",
+      mobileNumber: "",
       timeOut: 15 * 1000,
       counting: false,
       timeWrap: null,
-      messageText: '获取验证码',
+      messageText: "获取验证码",
       disable: false,
-      smsNumber: '',
+      smsNumber: "",
       needSms: false,
       gameList: [],
-      selectGame: '请选择游戏',
-      myGameList: [],
+      selectGame: "请选择游戏",
+      myGameList: 1,
       isSms: false,
     };
   },
   watch: {
-    'deep': true,
-    'childProp.event_id': function(event_id) {
-      localStorage.setItem('event_id', event_id);
-      console.log("event in watch", event_id );
+    deep: true,
+    "childProp.event_id": function (event_id) {
+      localStorage.setItem("event_id", event_id);
+      console.log("event in watch", event_id);
       this.eventId = event_id;
     },
-    'childProp.formData': function(formData) {
+    "childProp.formData": function (formData) {
       if (formData.length != 0) {
-        localStorage.setItem('formData', formData);
+        localStorage.setItem("formData", formData);
         this.formList = formData;
       }
       this.getCaptcha();
     },
-    'childProp.game_list': function(list) {
-      localStorage.setItem('gameList', list);
+    "childProp.game_list": function (list) {
+      localStorage.setItem("gameList", list);
       this.gameList = list;
     },
-    'childProp.need_sms': function(sms) {
-      localStorage.setItem('needSms', sms);
-      console.log("sms in watch", sms );
+    "childProp.need_sms": function (sms) {
+      localStorage.setItem("needSms", sms);
+      console.log("sms in watch", sms);
       this.needSms = sms;
     },
-    'childProp.is_sms': function(sms) {
-      localStorage.setItem('isSms', sms);
-      console.log("issms in watch", sms );
+    "childProp.is_sms": function (sms) {
+      localStorage.setItem("isSms", sms);
+      console.log("issms in watch", sms);
       this.isSms = sms;
     },
 
-    'immediate': true,
+    immediate: true,
   },
   mounted() {
     this.clearForm();
-    this.eventId = localStorage.getItem('event_id');
+    this.eventId = localStorage.getItem("event_id");
     console.log("in mount", this.eventId);
-    this.needSms = localStorage.getItem('needSms');
-    this.isSms = localStorage.getItem('isSms');
+    this.needSms = localStorage.getItem("needSms");
+    this.isSms = localStorage.getItem("isSms");
+    this.eventId = 1;
   },
   methods: {
-    clearForm: function() {
+    clearForm: function () {
       this.formList = [];
       this.imagePreview = [];
       this.isSms = false;
       this.needSms = false;
       this.gameList = [];
-      this.imageReady = '';
+      this.imageReady = "";
       this.imageUrl = [];
-      this.username = '';
+      this.username = "";
       this.formName.inputForm = [];
       this.formName.numberForm = [];
       this.formName.phoneForm = [];
       this.formName.timeForm = [];
       this.formName.selectForm = [];
     },
-    submit: async function() {
-      if (this.username == '') {
-        this.$toast('请填写会员账号');
+    submit: async function () {
+      if (this.username == "") {
+        this.$toast("请填写会员账号");
         return true;
       }
 
-      if ('' == this.userCaptcha) {
-        this.$toast('请填写验证码');
+      if ("" == this.userCaptcha) {
+        this.$toast("请填写验证码");
         return true;
       }
 
-      if (1 == this.needSms && '' == this.mobileNumber) {
-        this.$toast('请填写手机号码');
+      if (1 == this.needSms && "" == this.mobileNumber) {
+        this.$toast("请填写手机号码");
         return true;
       }
 
       const that = this;
       await axios
-          .post(route('apply_form'), {
-            eventId: this.eventId,
-            username: this.username,
-            form: this.formName,
-            imageUrl: this.imageUrl,
-            captcha: this.userCaptcha,
-            mobile: this.mobileNumber,
-            smsNumber: this.smsNumber,
-            needSms: this.needSms,
-            gameName: this.myGameList,
-            isSms: this.isSms,
-          })
-          .then(function(response) {
-            that.$toast(response.data.msg);
-            if (response.data.code == 1) {
-              that.clearForm();
-              that.closeDialog();
-            }
-            that.getCaptcha();
-          })
-          .catch(function(error) {
-            that.$toast('申请有误,请刷新页面');
-          });
+        .post(route("apply_form"), {
+          eventId: this.eventId,
+          username: this.username,
+          form: this.formName,
+          imageUrl: this.imageUrl,
+          captcha: this.userCaptcha,
+          mobile: this.mobileNumber,
+          smsNumber: this.smsNumber,
+          needSms: this.needSms,
+          gameName: this.myGameList,
+          isSms: this.isSms,
+        })
+        .then(function (response) {
+          that.$toast(response.data.msg);
+          if (response.data.code == 1) {
+            that.clearForm();
+            that.closeDialog();
+          }
+          that.getCaptcha();
+        })
+        .catch(function (error) {
+          that.$toast("申请有误,请刷新页面");
+        });
     },
-    imageuploaded: function(response) {
+    imageuploaded: function (response) {
       if (response.code == 1) {
         this.imageReady = true;
         this.imagePreview = response.data.src;
@@ -359,49 +364,49 @@ export default {
           id: response.data.form_id,
           value: this.imagePreview,
         });
-        this.$toast('上传成功');
+        this.$toast("上传成功");
       } else {
-        this.$toast('上传失败');
+        this.$toast("上传失败");
       }
     },
-    closeDialog: function() {
-      this.$emit('fromApplyDialog');
+    closeDialog: function () {
+      this.$emit("fromApplyDialog");
     },
-    getCaptcha: async function() {
+    getCaptcha: async function () {
       const that = this;
-      await axios.get(route('index_captcha')).then(function(response) {
+      await axios.get(route("index_captcha")).then(function (response) {
         that.captcha = response.data;
+        that.showLoading = false;
       });
     },
-    getMessage: async function() {
-      if ('' == this.userCaptcha) {
-        this.$toast('请填写验证码');
+    getMessage: async function () {
+      if ("" == this.userCaptcha) {
+        this.$toast("请填写验证码");
         return true;
       }
 
-      if ('' == this.mobileNumber) {
-        this.$toast('请填写手机号码');
+      if ("" == this.mobileNumber) {
+        this.$toast("请填写手机号码");
         return true;
       }
 
       const that = this;
       await axios
-          .post(route('sms_message'), {
-            mobile: this.mobileNumber,
-            captcha: this.userCaptcha,
-          })
-          .then(function(response) {
-            const res = response.data;
-            if (res.code == 1) {
-              that.counting = true;
-              that.getCaptcha();
-            }
-            that.$toast(res.msg);
-          });
+        .post(route("sms_message"), {
+          mobile: this.mobileNumber,
+          captcha: this.userCaptcha,
+        })
+        .then(function (response) {
+          const res = response.data;
+          if (res.code == 1) {
+            that.counting = true;
+            that.getCaptcha();
+          }
+          that.$toast(res.msg);
+        });
     },
-    countFinish: function() {
-      console.log('倒计时结束');
-      this.messageText = '再次获取';
+    countFinish: function () {
+      this.messageText = "再次获取";
       this.counting = false;
     },
   },
@@ -430,7 +435,9 @@ export default {
   background: #000;
   box-sizing: border-box;
 }
-
+.van-count-down {
+  color: white;
+}
 .getMessage {
   width: 4.5rem;
   height: 2rem;
@@ -439,8 +446,8 @@ export default {
   color: white;
 }
 .btnSubmit {
-  width: 6.2rem;
-  background-size: 6.2rem;
+  width: 6.25rem;
+  background-size: 6.25rem;
 }
 .g-core-image-upload-btn {
   padding-top: 0.3rem;
@@ -451,7 +458,7 @@ export default {
 
 .modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 500;
   top: 0;
   left: 0;
   width: 100%;

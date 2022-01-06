@@ -1,145 +1,160 @@
 <template>
   <div class="relative pb-16">
-    <div class="rounded-lg bg-zinc-800 mt-2 mx-2">
-      <div class="overflow-auto whitespace-nowrap">
-        <a
-          class="text-gray-400 text-center p-2 inline-block rounded-md"
-          v-for="(item, index) in eventType"
-          :key="index"
-          :class="{
-            'bg-eventBg': eventTypeId == index,
-            'text-black': eventTypeId == index,
-          }"
-          ><span v-on:click="selectEvent(index)">{{ item.name }}</span></a
-        >
+    <van-skeleton :loading="loading" :row="7">
+      <div class="rounded-lg bg-zinc-800 mt-2 mx-2">
+        <div class="overflow-auto whitespace-nowrap">
+          <a
+            class="text-gray-400 text-center p-2 inline-block rounded-md"
+            v-for="(item, index) in eventType"
+            :key="index" 
+            :class="{
+              'bg-eventBg': eventTypeId == index,
+              'text-black': eventTypeId == index,
+            }"
+            ><span v-on:click="selectEvent(index)">{{ item.name }}</span></a
+          >
+        </div>
       </div>
-    </div>
-    <div>
-      <ul>
-        <li v-for="(list, index) in cEventList" :key="index">
-          <div class="mx-2 mt-2 mb-10">
-            <div v-if="'' == list.external_url">
-              <img :src="list.type_pic" alt="图片" class="rounded-md w-full" />
-            </div>
-            <div v-else>
-              <a :href="list.external_url"
-                ><img :src="list.type_pic" alt="图片" class="rounded-md w-full"
+      <div>
+        <ul>
+          <li v-for="(list, index) in cEventList" :key="index">
+            <div class="mx-2 mt-2 mb-10">
+              <div v-if="'' == list.external_url">
+                <img
+                  :src="list.type_pic"
+                  alt="图片"
+                  class="rounded-md w-full"
+                />
+              </div>
+              <div v-else>
+                <a :href="list.external_url"
+                  ><img
+                    :src="list.type_pic"
+                    alt="图片"
+                    class="rounded-md w-full"
+                /></a>
+              </div>
+              <a class="float-left w-20 mt-2 ml-2" v-on:click="getDialog(list)"
+                ><img src="/199/images/btn01.png" alt="点击按钮"
               /></a>
+              <span class="float-right mt-2 mr-2"
+                ><img
+                  src="/199/images/icon02.png"
+                  alt="申请详情"
+                  class="w-4 float-left mr-1"
+                /><span
+                  class="text-neutral-400 text-xs float-right"
+                  @click="detail(list)"
+                  >活动规则</span
+                ></span
+              >
             </div>
-            <a class="float-left w-20 mt-2 ml-2" v-on:click="getDialog(list)"
-              ><img src="/199/images/btn01.png" alt="点击按钮"
-            /></a>
-            <span class="float-right mt-2 mr-2"
-              ><img
-                src="/199/images/icon02.png"
-                alt="申请详情"
-                class="w-4 float-left mr-1"
-              /><span class="text-neutral-400 text-xs float-right" @click="detail(list)"
-                >活动规则</span
-              ></span
-            >
-          </div>
-        </li>
-      </ul>
-    </div>
-       <applyDialog
-            v-if="showModal"
-            :childProp="formList"
-            v-on:fromApplyDialog="showModal = false"
-          ></applyDialog>
+          </li>
+        </ul>
+      </div>
+
+      <applyDialog
+        v-if="showModal"
+        :childProp="formList"
+        v-on:fromApplyDialog="showModal = false"
+      ></applyDialog>
+    </van-skeleton>
   </div>
 </template>
 
 
 <script>
-import axios from 'axios';
-import applyDialog from './applyDialog';
+import axios from "axios";
+import applyDialog from "./applyDialog";
 
 export default {
   components: {
     applyDialog,
   },
-  props: {passedEventList: Array},
+  props: { passedEventList: Array },
   data() {
     return {
+      selectedIndex : 3,
+      loading: true,
       showModal: false,
       eventType: [],
       eventTypeId: 0, // init index
       cEventList: [],
-      eventId: '',
+      eventId: "",
       gameList: [],
       formList: {
-        'event_id': [],
-        'formData': [],
-        'need_sms': [],
-        'game_list': [],
-        'is_sms': [],
+        event_id: [],
+        formData: [],
+        need_sms: [],
+        game_list: [],
+        is_sms: [],
       },
     };
   },
   mounted() {
     this.makeEventList();
-    const eventId = localStorage.getItem('eventId');
+    const eventId = localStorage.getItem("eventId");
     if (eventId !== null && typeof eventId == Number) {
       this.eventTypeId = eventId;
     }
-
     this.selectEvent(this.eventTypeId);
+    this.selectedIndex = 3;
+    this.loading = false;
   },
   methods: {
-    selectEvent: function(eventId) {
-      localStorage.removeItem('eventId');
+    selectEvent: function (eventId) {
+      localStorage.removeItem("eventId");
       localStorage.eventId = eventId;
       this.eventTypeId = eventId;
       this.assignEventList(eventId);
     },
-    assignEventList: function(index) {
+    assignEventList: function (index) {
       this.cEventList = [];
       const eventData = this.passedEventList[index];
 
       if (
         undefined !== eventData &&
-        Object.keys(eventData['event']).length !== 0
+        Object.keys(eventData["event"]).length !== 0
       ) {
-        this.cEventList = Object.values(eventData['event']);
+        this.cEventList = Object.values(eventData["event"]);
       }
     },
-    makeEventList: function() {
+    makeEventList: function () {
       this.passedEventList.forEach((data) => {
-        this.eventType.push({id: data.type_id, name: data.name});
+        this.eventType.push({ id: data.type_id, name: data.name });
       });
     },
-    getDialog: async function(data) {
+    getDialog: async function (data) {
       this.showModal = true;
       let form = [];
       let eventType = [];
       let need_sms = "";
       let is_sms = "";
       await axios
-          .post(route('get_index_form'), {
-            event_id: data.id,
-          })
-          .then(function(response) {
-            form = response.data.data.form;
-            eventType = response.data.data.type;
-            need_sms = response.data.data.need_sms;
-            is_sms = response.data.data.is_sms;
-          })
-          .catch(function(error) {
-            console.error(error);
-          });
-      
+        .post(route("get_index_form"), {
+          event_id: data.id,
+        })
+        .then(function (response) {
+          form = response.data.data.form;
+          eventType = response.data.data.type;
+          need_sms = response.data.data.need_sms;
+          is_sms = response.data.data.is_sms;
+        })
+        .catch(function (error) {
+          console.error(error);
+        });
+
       this.formList.formData = form;
       this.formList.game_list = eventType;
       this.formList.event_id = data.id;
       this.formList.need_sms = need_sms;
       this.formList.is_sms = is_sms;
     },
-    fromApplyDialog: function() {
+    fromApplyDialog: function () {
       this.showModal = false;
     },
-    detail: function(data) {
-      this.$inertia.get(route('detail'), {'event_id': data.id});
+    detail: function (data) {
+      this.$inertia.get(route("detail"), { event_id: data.id });
     },
   },
 };

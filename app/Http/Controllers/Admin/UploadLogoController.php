@@ -17,20 +17,18 @@ class UploadLogoController extends Controller
 
     public function logoUpload()
     {
-
         $request = $this->request;
         $logo = config('filesystems.logo');
         $size = config('admin.logo_size');
         $file = $request->file('file');
         try {
-
             $this->checkSize($file, $size);
 
             $time = Carbon::now()->format('Y-m-d');
 
             $path = $logo . '/' . $time;
 
-            if (!Storage::exists($path)) {
+            if (! Storage::exists($path)) {
                 Storage::makeDirectory($path, 7777, true, true);
             }
 
@@ -50,13 +48,11 @@ class UploadLogoController extends Controller
 
     public function cruoselConfirm()
     {
-
         $request = $this->request;
         $crousel = config('filesystems.crousel');
         $size = config('admin.crousel_size');
         $file = $request->file('file');
         try {
-
             $this->checkSize($file, $size);
 
             $result = $this->storePic($file, $crousel);
@@ -72,17 +68,14 @@ class UploadLogoController extends Controller
 
     public function btnConfirm()
     {
-
         $request = $this->request;
         $logo = config('filesystems.logo');
         $size = config('admin.button_size');
         $file = $request->file('file');
         try {
-
             $this->checkSize($file, $size);
 
             $result = $this->storePic($file, $logo);
-
         } catch (LogicException $e) {
             $result['code'] = self::FAIL;
             $result['msg'] = $e->getMessage();
@@ -96,11 +89,11 @@ class UploadLogoController extends Controller
     private function checkSize($file, $config)
     {
         [$width, $height] = getimagesize($file);
-    
-        if ($width !== (integer) $config['width']) {
+
+        if ($width !== (int) $config['width']) {
             throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
         }
-        if ($height !== (integer) $config['height']) {
+        if ($height !== (int) $config['height']) {
             throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
         }
     }
@@ -111,7 +104,7 @@ class UploadLogoController extends Controller
 
         $path = $config . '/' . $time;
 
-        if (!Storage::exists($path)) {
+        if (! Storage::exists($path)) {
             Storage::makeDirectory($path, 7777, true, true);
         }
 
@@ -121,5 +114,4 @@ class UploadLogoController extends Controller
         $result['data'] = ['src' => asset('storage/' . $url)];
         return $result;
     }
-
 }

@@ -36,7 +36,7 @@
                 </li>
                 <div>
                   <select class="allForms mt-1 rounded-md" v-model="eventId">
-                    <option selected>
+                    <option selected disabled>
                       {{ selectGame }}
                     </option>
                     <option
@@ -73,7 +73,7 @@
                 <span class="float-left"
                   ><button
                     v-on:click="closeDialog"
-                    class="btnSubmit bg-eventBtn block m-auto"
+                    class="btnSubmit bg-eventBtn block m-auto font-bold"
                   >
                     {{ btnText }}
                   </button></span
@@ -81,7 +81,7 @@
                 <span class="float-right"
                   ><button
                     v-on:click="submit"
-                    class="btnSubmit bg-eventBtn block m-auto"
+                    class="btnSubmit bg-eventBtn block m-auto font-bold"
                     v-if="showButton"
                   >
                     点击申请
@@ -108,7 +108,7 @@ export default {
   data() {
     return {
       username: '',
-      eventId: '',
+      eventId: 1,
       eventList: [],
       selectGame: '请选择活动',
       is_result: false,
@@ -130,7 +130,8 @@ export default {
   mounted() {
     this.clearForm();
     this.eventList = localStorage.getItem('eventList');
-    console.log('in mounted search dialog', this.eventList);
+    this.eventId = 1;
+
   },
   methods: {
     clearForm: function() {
@@ -228,8 +229,8 @@ td,th {
   color: white;
 }
 .btnSubmit {
-  width: 6.2rem;
-  background-size: 6.2rem;
+  width: 6.25rem;
+  background-size: 6.25rem;
 }
 .g-core-image-upload-btn {
   padding-top: 0.3rem;
@@ -240,7 +241,7 @@ td,th {
 
 .modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 500;
   top: 0;
   left: 0;
   width: 100%;

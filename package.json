@@ -16,7 +16,6 @@
         "deepmerge": "^4.2.2",
         "eslint": "^8.6.0",
         "eslint-config-google": "^0.14.0",
-        "eslint-loader": "^4.0.2",
         "eslint-plugin-vue": "^8.2.0",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
@@ -33,14 +32,10 @@
         "postcss-import": "^14.0.2",
         "tailwindcss": "^3.0.7",
         "vant": "^2.12.37",
-        "vue-base64-file-upload": "^1.0.4",
         "vue-core-image-upload": "^2.4.13",
-        "vue-easy-toast": "^1.0.5",
         "vue-js-modal": "^2.0.1",
         "vue-loader": "^15.9.8",
-        "vue-pull-refresh": "^0.2.7",
         "vue-seamless-scroll": "^1.1.23",
-        "vue-template-compiler": "^2.6.14",
-        "vue2-swiper": "^0.0.13"
+        "vue-template-compiler": "^2.6.14"
     }
 }

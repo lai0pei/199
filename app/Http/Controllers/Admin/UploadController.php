@@ -46,7 +46,7 @@ class UploadController extends Controller
 
         $path = $event . '/' . $time;
 
-        if (!Storage::exists($path)) {
+        if (! Storage::exists($path)) {
             Storage::makeDirectory($path, 7777, true, true);
         }
 
@@ -72,7 +72,7 @@ class UploadController extends Controller
     public function ueditor()
     {
         $config = File::get(public_path(config('admin.ueditor_json')));
-        if (!empty($config)) {
+        if (! empty($config)) {
             $myDomain = request()->getSchemeAndHttpHost();
             $replaced = str_replace('#url#', $myDomain, $config);
             $replaced = str_replace('#imgPath#', 'storage', $replaced);
@@ -93,11 +93,11 @@ class UploadController extends Controller
 
             $path = $common . '/' . $time;
 
-            if (!Storage::exists($path)) {
+            if (! Storage::exists($path)) {
                 Storage::makeDirectory($path, 7777, true, true);
             }
             $url = Storage::disk('public')->put($path, $request->file('upfile'));
-            $result['state'] = "SUCCESS";
+            $result['state'] = 'SUCCESS';
             $result['url'] = '/storage/' . $url;
             $result['title'] = $name;
             $result['original'] = $name;
@@ -107,6 +107,4 @@ class UploadController extends Controller
 
         return self::json($result);
     }
-
-  
 }

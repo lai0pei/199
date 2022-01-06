@@ -1,6 +1,6 @@
 <template>
 <div>
-<myHeading></myHeading>
+<myHeading :head-data='logo'></myHeading>
 <div class="relative top">
 <div class="text-center myTitle">{{name}}</div>
 <div v-html="content" style="overflow-y=auto">
@@ -34,7 +34,7 @@ export default {
     myHeading,
     myFoot,
   },
-  props: ['footer', 'content', 'name'],
+  props: ['footer', 'content', 'name','logo'],
 
 };
 </script>

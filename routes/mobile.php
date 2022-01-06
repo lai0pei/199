@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Route;
     Route::post('/getEventList', [IndexController::class, 'getAllEvent'])->name('event_list');
 
     Route::post('/checkForm', [IndexController::class, 'checkForm'])->name('check_form');
-    
+
     Route::get('/test', [TestController::class, 'test']);
 // });
 
@@ -45,4 +45,3 @@ Route::get('/detail', [IndexController::class, 'detail'])->name('detail');
 
 Route::get('/getCaptcha', [IndexController::class, 'captcha'])->name('index_captcha');
 //函数 测试接口
-
