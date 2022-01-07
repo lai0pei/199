@@ -49,6 +49,7 @@ class ControlModel extends Model
     public function getLast7Day()
     {
         $day = -9;
+        $allDay = [];
         for ($day; $day < 1; $day++) {
             array_push($allDay, (date('Y-m-d', strtotime($day . ' day'))));
         }
