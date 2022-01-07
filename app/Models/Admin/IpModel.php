@@ -19,11 +19,16 @@ class IpModel extends CommonModel
         $this->data = $data;
     }
 
-    public function getIp()
+    /**
+     * 获取允许登录IP
+     *
+     * @return array
+     */
+    public function getIp(): array
     {
         $data = $this->data;
 
-        if (! empty($data['id'])) {
+        if (!empty($data['id'])) {
             $res = self::find($data['id'])->toArray();
         } else {
             $res = [];
@@ -31,14 +36,19 @@ class IpModel extends CommonModel
         return $res;
     }
 
-    public function mani_ip()
+    /**
+     * Ip操作
+     *
+     * @return bool
+     */
+    public function maniIp(): bool
     {
         $data = $this->data;
         $admin_id = session('user_id');
 
         DB::beginTransaction();
 
-        if ($data['id'] === -1) {
+        if ((int) $data['id'] === -1) {
             $add = [
                 'ip' => $data['ip'],
                 'description' => $data['description'],
@@ -88,7 +98,12 @@ class IpModel extends CommonModel
         return true;
     }
 
-    public function listIp()
+    /**
+     * listIp
+     *
+     * @return array
+     */
+    public function listIp(): array
     {
         $data = $this->data;
         $limit = $data['limit'] ?? 15;
@@ -96,14 +111,14 @@ class IpModel extends CommonModel
 
         $where = [];
 
-        if (! empty($data['searchParams'])) {
+        if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['ip'] !== '') {
                 $where['ip'] = $param['ip'];
             }
         }
 
-        $column = ['id', 'ip', 'admin_id', 'description','created_at','updated_at'];
+        $column = ['id', 'ip', 'admin_id', 'description', 'created_at', 'updated_at'];
 
         $item = self::select($column)->where($where)->paginate($limit, '*', 'page', $page);
 
@@ -121,11 +136,16 @@ class IpModel extends CommonModel
         }
 
         $res['data'] = $result;
-        $res['count'] = $item->count();
+        $res['count'] = self::count();
         return $res;
     }
 
-    public function ip_delete()
+    /**
+     * ipDelete
+     *
+     * @return bool
+     */
+    public function ipDelete(): bool
     {
         $data = $this->data;
 
@@ -148,7 +168,12 @@ class IpModel extends CommonModel
         return true;
     }
 
-    public function getAllIp()
+    /**
+     * getAllIp
+     *
+     * @return array
+     */
+    public function getAllIp(): array
     {
         return self::select('ip')->get()->toArray();
     }

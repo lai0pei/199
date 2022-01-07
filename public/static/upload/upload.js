@@ -13,10 +13,9 @@ layui.use(['form', 'upload'], function () {
             method: 'POST',
             success: function (res) {
                 if (res.code == 1) {
-                    layer.msg(res.msg);
-                    window.parent.location.reload();
+                    layer.msg(data.msg, { icon: 6, time: SUCCESS_TIME, shade: 0.2 })
                 } else {
-                    layer.msg(res.msg);
+                    layer.msg('访问失败', { icon: 6, time: SUCCESS_TIME, shade: 0.2 })
                 }
             }
         });
@@ -103,7 +102,7 @@ layui.use(['form', 'upload'], function () {
         },
     });
 
-    
+
 
     //查询按钮 上传
     upload.render({

@@ -47,6 +47,11 @@ class AuthMenuModel extends CommonModel
         $this->data = $data;
     }
 
+    public function __destruct()
+    {
+        unset($this->data);
+    }
+
     /**
      * 新添加 菜单
      *
@@ -55,6 +60,7 @@ class AuthMenuModel extends CommonModel
     public function createAuthMenu()
     {
         $data = $this->data;
+
         $menus = [
             'title' => $data['title'],
             'p_id' => $data['p_id'],
@@ -85,41 +91,68 @@ class AuthMenuModel extends CommonModel
      */
     public function menuInit()
     {
-        $user_id = session('user_id');
+        $this->adminId = session('user_id');
+
         $key = 'admin_menu_' . session('user_id');
+
         $menus = Cache::get($key);
-        if (! empty($menus)) {
+
+        if (isset($menus)) {
             return $menus;
         }
-        $permissions = $this->getPermission($user_id);
+
+        $permissions = $this->setPermission();
 
         if ($permissions === []) {
-            return [];
+            return false;
         }
-        $this->setPermission();
-        $init = [];
+
         $init['homeInfo'] = ['title' => '活动报告', 'href' => route('admin_control')];
+
         $init['logoInfo'] = ['title' => '后台管理', 'image' => asset('image/logo.png'), 'href' => ''];
 
         $main_menu = $this->topChild($permissions['top_permission'], $permissions['child_permission'], $permissions['grand_permission']);
 
         $init['menuInfo'] = array_values($main_menu);
-        Cache::put($key, $init, now()->addMinute(60));
+
+        Cache::put($key, $init, now()->addMinutes(60));
+
         return $init;
     }
-
+    /**
+     * 获取用户权限
+     *
+     * @param  mixed $user_id
+     *
+     * @return array
+     */
     public function setPermission()
     {
         $user_id = session('user_id');
+
         $role_id = AdminModel::where('id', $user_id)->value('role_id');
+
         $permission = AuthGroupModel::where('role_id', $role_id)->value('auth_id');
-        if (empty($permission)) {
+
+        if ((empty($permission) || RoleModel::where('id', $role_id)->value('status') === 0) && $user_id !== 1) {
+            session()->forget('user_id');
+
             return [];
         }
+
         $list = explode(',', $permission);
-        $column = ['id', 'name'];
-        $permission_menu = PermissionMenuModel::whereIn('id', $list)->get($column)->toArray();
+
+        $permission_menu = PermissionMenuModel::whereIn('id', $list)->get()->toArray();
+
         session(['permission' => $permission_menu]);
+
+        $res['top_permission'] = array_unique(array_column($permission_menu, 'grand_auth_id'));
+
+        $res['child_permission'] = array_unique(array_column($permission_menu, 'parent_auth_id'));
+
+        $res['grand_permission'] = array_unique(array_column($permission_menu, 'current_auth_id'));
+
+        return $res;
     }
 
     /**
@@ -130,38 +163,18 @@ class AuthMenuModel extends CommonModel
     private function getMenu($pid)
     {
         $columns = ['id', 'p_id', 'title', 'href', 'icon', 'target', 'is_shortcut'];
+
         $where = [];
+
         $where['p_id'] = $pid;
+
         $where['status'] = 1;
+
         return self::where($where)->orderBy('sort')->get($columns)->toArray();
     }
-    /**
-     * getPermission
-     *
-     * @param  mixed $user_id
-     *
-     * @return void
-     */
-    private function getPermission($user_id)
-    {
-        $role_id = AdminModel::where('id', $user_id)->value('role_id');
-        $permission = AuthGroupModel::where('role_id', $role_id)->value('auth_id');
-
-        if (empty($permission)) {
-            return [];
-        }
-        $list = explode(',', $permission);
-        $permission_menu = PermissionMenuModel::whereIn('id', $list)->get()->toArray();
-
-        $res['top_permission'] = array_unique(array_column($permission_menu, 'grand_auth_id'));
-        $res['child_permission'] = array_unique(array_column($permission_menu, 'parent_auth_id'));
-        $res['grand_permission'] = array_unique(array_column($permission_menu, 'current_auth_id'));
-
-        return $res;
-    }
 
     /**
-     * topChild
+     * 查用户权限
      *
      * @param  mixed $top_permission
      * @param  mixed $child_permission
@@ -172,6 +185,7 @@ class AuthMenuModel extends CommonModel
         $top_menu = [];
         $child_menu = [];
         $grand_menu = [];
+
         foreach ($this->getMenu(0) as $topK => $topV) {
             if (in_array($topV['id'], $top_permission)) {
                 $top_menu[$topK] = $this->groupData($topV);
@@ -187,11 +201,13 @@ class AuthMenuModel extends CommonModel
                         }
 
                         $child_menu[$childK]['child'] = array_values($grand_menu);
+
                         unset($grand_menu);
                     }
                 }
 
                 $top_menu[$topK]['child'] = array_values($child_menu);
+
                 unset($child_menu);
             }
         }

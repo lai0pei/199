@@ -46,7 +46,7 @@ class AuthMenuController extends Controller
      */
     public function index()
     {
-        return view('admin.authmenu.index', ['admin_name' => (new AdminModel())->getName() ?? '昵称' ]);
+        return view('admin.authmenu.index', ['admin_name' => (new AdminModel())->getName() ?? '昵称']);
     }
 
     /**
@@ -83,7 +83,7 @@ class AuthMenuController extends Controller
      */
     public function clear()
     {
-        Cache::flush();
+        Cache::forget('admin_menu_' . session('user_id'));
         return self::json_success([], '缓存已清除');
     }
 

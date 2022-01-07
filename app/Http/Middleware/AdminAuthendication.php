@@ -18,9 +18,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
-class AdminAuthendication
+class AdminAuthendication extends Middleware
 {
     /**
      * Handle an incoming request.
@@ -30,9 +30,9 @@ class AdminAuthendication
      *
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next, ...$guards)
     {
-        if (empty(session('user_id'))) {
+        if (session('user_id') === null) {
             return redirect(route('admin.login.index'));
         }
 

@@ -16,9 +16,9 @@ class CreateAdmin extends Migration
     {
         Schema::create('admin', function (Blueprint $table) {
             $table->id()->comment('管理员编号')->autoIncrement('id');
-            $table->string('account',100)->unique()->comment('管理员');
+            $table->string('account',100)->comment('管理员');
             $table->string('password',200)->comment('密码');
-            $table->string('user_name',100)->unique()->comment('昵称');
+            $table->string('user_name',100)->comment('昵称');
             $table->string('reg_ip', 100)->nullable()->comment('注册Ip');
             $table->string('number', 100)->nullable()->comment('联系号码');
             $table->string('last_ip', 100)->nullable()->comment('登录Ip');

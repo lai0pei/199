@@ -28,7 +28,7 @@ class AdminController extends Controller
     /**
      * __construct
      *
-     * @param  mixed $request
+     * @param  Request $request
      *
      * @return void
      */

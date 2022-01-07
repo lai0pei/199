@@ -169,8 +169,19 @@
                                 method: 'POST',
                                 success: function(data) {
                                     if (data.code == 1) {
-                                        layer.msg(data.msg);
-                                        window.parent.location.reload();
+                                        layer.msg(data.msg, {
+                                            icon: 6,
+                                            time: SUCCESS_TIME,
+                                            shade: 0.2
+                                        });
+                                        setTimeout(function() {
+                                            var index = layer.getFrameIndex(
+                                                window.name); //先得到当前iframe层的索引
+                                            $('button[lay-filter="data-search-btn"]')
+                                                .click(); //刷新列表
+                                            layer.close(index); //再执行关闭
+
+                                        }, SUCCESS_TIME)
                                     } else {
                                         layer.msg(data.msg);
                                     }
@@ -313,24 +324,7 @@
                         layer.close(index); //再执行关闭
 
                     }, SUCCESS_TIME)
-                    //上传成功的一些操作
-                    //……
-                    // $('#demoText').html(''); //置空上传失败的状态
                 },
-                error: function() {
-                        //演示失败状态，并实现重传
-
-                    }
-                    //进度条
-                    ,
-                progress: function(n, elem, e) {
-                    element.progress('demo', n + '%'); //可配合 layui 进度条元素使用
-                    if (n == 100) {
-                        layer.msg('上传完毕', {
-                            icon: 1
-                        });
-                    }
-                }
             });
 
             //监听排序事件

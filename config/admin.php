@@ -21,4 +21,6 @@ return [
     "logo_size" => ['width'=>256,'height'=>71],
     "button_size" => ['width'=>292,'height'=>63],
     "crousel_size" => ['width'=>1500,'height'=>454],
+    "event_size" => ['width'=>1400,'height'=>360],
+    
 ];

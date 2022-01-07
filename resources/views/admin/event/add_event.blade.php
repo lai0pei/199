@@ -1,122 +1,126 @@
 @extends('common.template')
 @section('style')
     <style>
-        .layui-form {
-            padding: 2%;
-        }
-
         .layui-form-label {
             width: 8rem;
         }
 
-        .spread {
-            padding-top: 1rem;
+        .layui-input-inline,
+        .layui-form-label {
+            margin-top: 1rem;
         }
 
-        .layui-upload-img {
-            width: 15%;
-            padding-left: 5.8rem;
-        }
-
-        .layui-upload {
-            padding-left: 4rem;
-        }
-
-        .progress {
-            padding-left: 6rem;
+        .description {
+            width: 24rem;
         }
 
         .layui-input-block {
-            padding-left: 3rem;
+            margin-left: 10rem;
         }
 
     </style>
 @endsection
 @section('content')
-    <div class="layuimini-container">
+    <div class="layui-container">
         <div class="layui-form layuimini-form">
             <form class="layui-form" action="" id="addGoodsForm" onsubmit="return false">
-                <div class="layui-form-item">
-                    <input type="hidden" name="id" value="{{ $type['id'] ?? -1 }}" class="layui-input">
-                    <label class="layui-form-label required">活动名称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="name" lay-verify="required" lay-reqtext="活动名不能为空" placeholder="例如:新年优惠"
-                            value="{{ $type['name'] ?? '' }}" class="layui-input">
+                <div class="layui-row">
+                    <div class="layui-col-md6 layui-col-xs12 layui-col-sm12">
+                        <input type="hidden" name="id" value="{{ $type['id'] ?? -1 }}" class="layui-input">
+                        <label class="layui-form-label required">活动名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" lay-verify="required" lay-reqtext="活动名不能为空" placeholder="例如:新年优惠"
+                                value="{{ $type['name'] ?? '' }}" class="layui-input">
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label required">活动类型</label>
-                    <div class="layui-input-inline">
-                        <select name="type_id" lay-verify="required" lay-reqtext="请选择活动类型" id="selectId">
-                            @foreach ($event as $key => $value)
-                                <option value="{{ $key + 1 }}">{{ $value['name'] }}</option>
-                            @endforeach
+                    <div class="layui-col-md6 layui-col-xs12 layui-col-sm12">
+                        <label class="layui-form-label required">活动类型</label>
+                        <div class="layui-input-inline">
+                            <select name="type_id" lay-verify="required" lay-reqtext="请选择活动类型" id="selectId">
+                                @foreach ($event as $key => $value)
+                                    <option value="{{ $key + 1 }}">{{ $value['name'] }}</option>
+                                @endforeach
 
-                        </select>
+                            </select>
+                        </div>
                     </div>
                 </div>
+                <br>
+                <div class="layui-row">
+                    <div class="layui-col-md6 layui-col-xs12 layui-col-sm12 ">
+                        <label class="layui-form-label required">活动排序</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="sort" lay-verify="required" lay-reqtext="活动排序不能为空"
+                                placeholder="排序小排前" value="{{ $type['sort'] ?? '' }}" class="layui-input sort">
+                        </div>
+                    </div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label required">活动排序</label>
-                    <div class="layui-input-inline">
-                        <input type="number" name="sort" lay-verify="required" lay-reqtext="活动排序不能为空" placeholder="例如:0"
-                            value="{{ $type['sort'] ?? '' }}" class="layui-input">
+
+                    <div class="layui-col-md6 layui-col-xs12 layui-col-sm12 ">
+                        <label class="layui-form-label">外联地址</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="external_url" placeholder="不跳转选择空白"
+                                value="{{ $type['external_url'] ?? '' }}" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="layui-form-item ">
+                    <label class="layui-form-label">活动时间</label>
+                    <div class="layui-inline" id="eventTime">
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" name="start" id="start" class="layui-input"
+                                placeholder="开始日期" value="{{ $type['start_time'] ?? '' }}">
+                        </div>
+
+                        <div class="layui-input-inline">
+                            <input type="text" autocomplete="off" id="end" name="end" class="layui-input"
+                                placeholder="结束日期" value="{{ $type['end_time'] ?? '' }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12 ">
+                        <label class="layui-form-label">开启活动</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|关闭"
+                                {{ $type['status_check'] ?? '' }}>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
+                        <label class="layui-form-label">显示</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="display" lay-skin="switch" id='display' lay-text="显示|屏蔽"
+                                {{ $type['display_check'] ?? '' }}>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
+                        <label class="layui-form-label">短信验证码</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="need_sms" lay-skin="switch" id='need_sms' lay-text="需要|不需"
+                                {{ $type['need_sms_check'] ?? '' }}>
+                        </div>
+                    </div>
+                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
+                        <label class="layui-form-label">每日限制</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_daily" lay-skin="switch" id='is_daily' lay-text="限制|不限"
+                                {{ $type['is_daily_check'] ?? '' }}>
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">外联地址</label>
+                    <label class="layui-form-label required">限制次数</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="external_url" placeholder="比如:http://www.baidu.com"
-                            value="{{ $type['external_url'] ?? '' }}" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">活动开始时间</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" name="start" id="start"
-                            value="{{ $type['start_time'] ?? '' }}" placeholder="请选择开始时间">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">活动结束时间</label>
-                    <div class="layui-input-inline">
-                        <input type="text" class="layui-input" id="end" name="end"
-                            value="{{ $type['end_time'] ?? '' }}" placeholder="请选择结束时间">
-                    </div>
-                </div>
-                <div class="layui-form-item spread">
-                    <label class="layui-form-label">是否开启活动</label>
-                    <div class="layui-input-inline">
-                        <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|关闭"
-                            {{ $type['status_check'] ?? '' }}>
+                        <input type="number" name="daily_limit" placeholder="不限时,次数无效"
+                            value="{{ $type['daily_limit'] ?? '' }}" class="layui-input ">
                     </div>
                 </div>
                 <div class="layui-form-item">
-                    <label class="layui-form-label">是否显示</label>
+                    <label class="layui-form-label required">注释</label>
                     <div class="layui-input-inline">
-                        <input type="checkbox" name="display" lay-skin="switch" id='display' lay-text="显示|屏蔽"
-                            {{ $type['display_check'] ?? '' }}>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">短信验证码申请</label>
-                    <div class="layui-input-inline">
-                        <input type="checkbox" name="need_sms" lay-skin="switch" id='need_sms' lay-text="需要|不需"
-                            {{ $type['need_sms_check'] ?? '' }}>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">是否显每日限制</label>
-                    <div class="layui-input-inline">
-                        <input type="checkbox" name="is_daily" lay-skin="switch" id='is_daily' lay-text="限制|不限"
-                            {{ $type['is_daily_check'] ?? '' }}>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label required">每日限制次数</label>
-                    <div class="layui-input-inline">
-                        <input type="number" name="daily_limit" placeholder="例如:0"
-                            value="{{ $type['daily_limit'] ?? '' }}" class="layui-input">
+                        <input type="text" name="description" placeholder="前台活动申请时显示"
+                            value="{{ $type['description'] ?? '' }}" class="layui-input description">
                     </div>
                 </div>
 
@@ -137,7 +141,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label required">活动内容</label>
                     <div class="layui-input-block">
-                        <script id="editor" name="content" type="text/plain" style="width:auto;height:500px;"></script>
+                        <script id="editor" name="content" type="text/plain" style="width:auto;height:300px;"></script>
                     </div>
                 </div>
 
@@ -159,13 +163,18 @@
     <script type="text/javascript" charset="utf-8" src="{{ asset('static/ueditor/lang/zh-cn/zh-cn.js') }}"></script>
 
     <script>
-        var text = "{{ $type['content'] ?? '' }}";
-    
-           var doc = new DOMParser().parseFromString(text, 'text/html');
+        var id = "{{ $type['id'] ?? -1 }}";
 
+        if (id !== -1) {
+            var doc = new DOMParser().parseFromString(decodeURI("{{ $type['content'] ?? '' }}"), 'text/html');
+            $(function() {
+                window.setTimeout(setContent, 1000);
+            });
 
-     
-        
+            function setContent() {
+                UE.getEditor('editor').execCommand('insertHtml', doc.documentElement.textContent);
+            }
+        }
 
 
 
@@ -174,20 +183,10 @@
         ue.ready(function() {
             //设置编辑器的内容
             ue.setContent();
-            //获取html内容，返回: <p>hello</p>
-            // console.log(doc.documentElement.textContent);
-            // var html = ue.execCommand('insertHtml', doc.documentElement.textContent);
-            //获取纯文本内容，返回: hello
-            // var txt = ue.getContentTxt();
-        });
-        $(function(){
-            window.setTimeout(setContent,1000);
+
         });
 
-        function setContent(){
-        UE.getEditor('editor').execCommand('insertHtml',doc.documentElement.textContent);
-        }
-    
+
         var mani_type = "{{ route('admin_mani_event') }}";
         var uploader = "{{ route('admin_upload') }}";
         var content = "{{ route('admin_upload_content') }}";
@@ -204,22 +203,15 @@
             //编辑 赋值
             var content = "{{ $type['content'] ?? '' }}";
             var isEventPic = "{{ $type['type_pic'] ?? '' }}";
-            if ("" !== isEventPic) {
+            console.log(isEventPic);
+            if ('' !== isEventPic) {
                 layui.$('#uploadView').removeClass('layui-hide');
             }
 
             //开启公历节日
             laydate.render({
-                elem: '#end',
-                calendar: true,
-
-            });
-
-            //开启公历节日
-            laydate.render({
-                elem: '#start',
-                calendar: true,
-
+                elem: '#eventTime',
+                range: ['#start', '#end']
             });
 
             //监听提交
@@ -240,8 +232,6 @@
                                 shade: 0.2
                             });
                             if (-1 == type_id) {
-                                // $("#addGoodsForm")[0].reset();
-                                // layui.form.render();
                                 location.reload();
                             } else {
                                 setTimeout(function() {
@@ -257,7 +247,11 @@
 
 
                         } else {
-                            layer.msg(data.msg);
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: SUCCESS_TIME,
+                                shade: 0.2
+                            });
                         }
                     }
                 });
@@ -290,6 +284,10 @@
                     });
                 },
                 done: function(res) {
+                    if (res.data.length == 0) {
+                        layer.msg(res.msg);
+                        return false;
+                    }
                     //如果上传失败
                     if (res.code !== 0) {
                         return layer.msg('上传失败');
@@ -299,7 +297,11 @@
                     $('#type_pic').attr('value', res.data.src);
                     //上传成功的一些操作
                     //……
-                    layer.msg('上传成功');
+                    layer.msg(res.msg, {
+                        icon: 6,
+                        time: SUCCESS_TIME,
+                        shade: 0.2
+                    });
                     layui.$('#uploadView').removeClass('layui-hide').find('img').attr('src', res
                         .data.src);
 

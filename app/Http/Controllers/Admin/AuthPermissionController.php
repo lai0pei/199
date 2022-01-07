@@ -15,7 +15,8 @@ class AuthPermissionController extends Controller
 
     public function auth()
     {
-        return view('admin.auth_permission.auth');
+        $data = (new PermissionMenuModel($this->request->all()))->menuType();
+        return view('admin.auth_permission.auth', ['data' => $data]);
     }
 
     public function authList()

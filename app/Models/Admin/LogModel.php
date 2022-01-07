@@ -80,7 +80,7 @@ class LogModel extends CommonModel
         $page = $data['page'] ?? 1;
 
         $where = [];
-
+        $param['start'] = "";
         if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['user'] !== '') {
@@ -92,12 +92,15 @@ class LogModel extends CommonModel
             if ($param['ip'] !== '') {
                 $where['ip'] = $param['ip'];
             }
-            if ($param['start'] !== '') {
-                $where['created_at'] = $param['start'];
-            }
         }
 
-        $item = self::where($where)->orderbydesc('id')->paginate($limit, '*', 'page', $page);
+        if ($param['start'] === '') {
+            $query = self::where($where);
+        } else {
+            $query = self::whereBetween('created_at', [$param['start'], $param['end']])->where($where);
+        }
+
+        $item = $query->orderbydesc('id')->paginate($limit, '*', 'page', $page);
 
         $result = [];
         foreach ($item->items() as $k => $v) {
@@ -109,7 +112,7 @@ class LogModel extends CommonModel
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
         }
         $res['data'] = $result;
-        $res['count'] = $item->count();
+        $res['count'] = self::count();
 
         return $res;
     }

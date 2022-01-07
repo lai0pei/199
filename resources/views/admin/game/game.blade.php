@@ -46,12 +46,7 @@
                     method: 'POST',
                     async : false,
                     success: function(data) {
-                        if (data.code == 1) {
-                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2})
-                           
-                        } else {
-                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2})
-                        }
+                        layer.msg(data.msg, { icon: 6, time: SUCCESS_TIME, shade: 0.2 })
                     }
                 });
                    

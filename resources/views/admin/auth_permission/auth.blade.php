@@ -15,7 +15,12 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">权限功能</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="name" autocomplete="off" class="layui-input">
+                                    <select name="name">
+                                        <option value="">请选择</option>
+                                        @foreach ($data as $ind => $item)
+                                            <option value="{{ $item }}">{{ $item }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="layui-inline">

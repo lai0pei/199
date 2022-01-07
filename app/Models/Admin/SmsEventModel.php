@@ -85,7 +85,7 @@ class SmsEventModel extends CommonModel
         }
 
         $res['data'] = $result;
-        $res['count'] = $item->count();
+        $res['count'] = self::count();
         return $res;
     }
 

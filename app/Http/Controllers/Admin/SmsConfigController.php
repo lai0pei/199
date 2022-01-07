@@ -13,7 +13,7 @@ class SmsConfigController extends Controller
         $this->request = $request;
     }
 
-    public function sms_config()
+    public function smsConfig()
     {
         $sms = (new ConfigModel())->getConfig('smsConfig');
         return view('admin.sms_config.sms_config', ['sms' => $sms]);

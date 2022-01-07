@@ -45,7 +45,7 @@ class RoleModel extends CommonModel
     /**
      * getAllRole
      *
-     * @return void
+     * @return array
      */
     public function getAllRole()
     {
@@ -65,7 +65,7 @@ class RoleModel extends CommonModel
     /**
      * getRoleByPermission
      *
-     * @return void
+     * @return array
      */
     public function getRoleByPermission()
     {
@@ -104,31 +104,31 @@ class RoleModel extends CommonModel
         return $res;
     }
 
+    /**
+     * 管理组合 编辑 和 添加页面 数据
+     *
+     * @return array
+     */
     public function maniRole()
     {
         $data = $this->data;
-        $fake = [
-            'id' => '-1',
-            'role_name' => '',
-            'status' => 1,
-        ];
 
-        if (! empty($data['id'])) {
-            return self::where('id', $data['id'])->get()->toArray()[0];
+        if (isset($data['id'])) {
+            return self::find($data['id'])->toArray();
         }
-        return $fake;
+        return [];
     }
 
     /**
      * newGroup
      *
-     * @return void
+     * @return boolean
      */
     public function newGroup()
     {
         $data = $this->data;
 
-        $role = self::where('role_name', $data['role_name'])->first();
+        $role = self::where('role_name', $data['role_name'])->value('id');
 
         $insert = [
             'role_name' => $data['role_name'],
@@ -138,7 +138,7 @@ class RoleModel extends CommonModel
 
         DB::beginTransaction();
         //添加
-        if ($data['id'] === '-1') {
+        if ((int) $data['id'] === -1) {
             if (isset($role)) {
                 throw new LogicException('同名称已存在');
             }
@@ -147,7 +147,7 @@ class RoleModel extends CommonModel
 
             $status = self::insertGetId($insert);
 
-            if ($status === false) {
+            if (! $status) {
                 DB::rollBack();
                 throw new LogicException('添加失败');
             }
@@ -165,9 +165,9 @@ class RoleModel extends CommonModel
             AuthGroupModel::insert($auth_group);
         } else { //保存
 
-            $edit = self::where('id', $data['id'])->first()->toArray();
+            $edit = self::where('role_name', $data['role_name'])->value('id');
 
-            if (! ($edit['id'] === $data['id'] && $edit['role_name'] === $data['role_name'])) {
+            if (isset($edit) && (int) $data['id'] !== $edit) {
                 throw new LogicException('同名称已存在');
             }
 
@@ -191,9 +191,9 @@ class RoleModel extends CommonModel
     /**
      * deleteGroup
      *
-     * @return void
+     * @return boolean
      */
-    public function deleteGroup()
+    public function deleteGroup() 
     {
         $data = $this->data;
 
@@ -205,13 +205,14 @@ class RoleModel extends CommonModel
             throw new LogicException('此管理员组不存在');
         }
 
-        if ($data['id'] === 1) {
+        if ((int) $data['id'] === 1) {
             throw new LogicException('总管理组不可删除');
         }
 
         $status = self::where('id', $data['id'])->delete();
 
-        if ($status === false) {
+        if (! $status) {
+
             DB::rollBack();
 
             throw new LogicException('删除失败');
@@ -227,8 +228,14 @@ class RoleModel extends CommonModel
 
         return true;
     }
-
-    public function getRoleNameById()
+    
+     
+    /**
+     * getRoleNameById
+     *
+     * @return array
+     */
+    public function getRoleNameById() : array
     {
         $data = $this->data;
 
@@ -243,8 +250,14 @@ class RoleModel extends CommonModel
         }
         return $res;
     }
-
-    private function countPermission($id)
+    
+    /**
+     * countPermission
+     *
+     * @param  mixed $id
+     * @return int
+     */
+    private function countPermission($id) :  int
     {
         $auth_group = new AuthGroupModel();
         $list = $auth_group::where('role_id', $id)->value('auth_id');

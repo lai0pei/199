@@ -44,7 +44,7 @@ class AdminGroupController extends Controller
     {
         try {
             if ((new RoleModel($this->request->all()))->newGroup()) {
-                return self::json_success([], '添加成功');
+                return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());

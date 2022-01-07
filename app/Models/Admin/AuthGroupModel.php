@@ -22,6 +22,11 @@ class AuthGroupModel extends CommonModel
         $this->data = $data;
     }
 
+    /**
+     * 权限提交
+     *
+     * @return array
+     */
     public function submitList()
     {
         $data = $this->data;
@@ -63,6 +68,7 @@ class AuthGroupModel extends CommonModel
         (new LogModel($log_data))->createLog();
 
         DB::commit();
+
         return true;
     }
 }

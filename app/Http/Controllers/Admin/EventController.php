@@ -29,7 +29,12 @@ class EventController extends Controller
     {
         $this->request = $request;
     }
-
+    
+    /**
+     * event
+     *
+     * @return void
+     */
     public function event()
     {
         $model = new EventModel($this->request->route()->parameters());

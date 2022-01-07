@@ -44,7 +44,7 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">用户Ip</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="ip" autocomplete="off" placeholder="请输入用户Ip"
+                                    <input type="text" name="ip" autocomplete="off"  lay-verify="ip" placeholder="请输入用户Ip"
                                         class="layui-input">
                                 </div>
                             </div>
@@ -102,6 +102,13 @@
                 layuimini = layui.layuimini;
             laydate = layui.laydate;
             form.render();
+
+            form.verify({
+                ip: [
+                    /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/,
+                    'IP地址不符合规则'
+                ]
+            });
 
             table.render({
                 elem: '#currentTableId',

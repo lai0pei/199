@@ -14,7 +14,7 @@ function checkAuth($name = '')
             $data = session('permission');
         }
         $permission = array_column($data, 'name');
-        Cache::put($key, $permission, now()->addMinute(60));
+        Cache::put($key, $permission, now()->addMinutes(60));
     }
 
     if (in_array($name, $permission)) {
@@ -26,4 +26,10 @@ function checkAuth($name = '')
 function checkSmsCode($mobile, $code)
 {
     return session()->get($mobile) === $code;
+}
+
+function typec($var, $var2)
+{
+    dump(gettype($var));
+    dd(gettype($var2));
 }

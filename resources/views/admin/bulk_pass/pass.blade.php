@@ -47,12 +47,7 @@
                     method: 'POST',
                     async : false,
                     success: function(data) {
-                        if (data.code == 1) {
-                            layer.msg(data.msg);
-                               location.reload();
-                        } else {
-                            layer.msg(data.msg);
-                        }
+                        layer.msg(data.msg, { icon: 6, time: SUCCESS_TIME, shade: 0.2 })
                     }
                 });
 

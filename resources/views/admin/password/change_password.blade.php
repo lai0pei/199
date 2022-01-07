@@ -46,19 +46,19 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">旧密码</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="old" autocomplete="off" class="layui-input" value="" maxlength="12">
+                        <input type="password" name="old" autocomplete="off" class="layui-input" value="" maxlength="20">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">新密码</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="new" autocomplete="off" class="layui-input" maxlength="12">
+                        <input type="password" name="new" autocomplete="off" class="layui-input" maxlength="20">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">再次输入</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="re_new" autocomplete="off" class="layui-input" maxlength="12">
+                        <input type="password" name="re_new" autocomplete="off" class="layui-input" maxlength="20">
                     </div>
                 </div>
             </div>

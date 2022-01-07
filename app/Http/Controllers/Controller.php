@@ -37,7 +37,7 @@ class Controller extends BaseController
      * @param  mixed $msg
      * @param  mixed $data
      *
-     * @return void
+     * @return json
      */
     protected static function json_return($data = [], $msg = '操作成功', $status = self::SUCCESS)
     {
@@ -54,7 +54,7 @@ class Controller extends BaseController
      * @param  mixed $msg
      * @param  mixed $data
      *
-     * @return void
+     * @return json
      */
     protected static function json_success($data = [], $msg = '操作成功')
     {
@@ -71,7 +71,7 @@ class Controller extends BaseController
      * @param  mixed $msg
      * @param  mixed $data
      *
-     * @return void
+     * @return json
      */
     protected static function json_fail($data = [], $msg = '操作失败')
     {
@@ -87,7 +87,7 @@ class Controller extends BaseController
      *
      * @param  mixed $data
      *
-     * @return void
+     * @return json
      */
     protected static function json($data = [])
     {

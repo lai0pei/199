@@ -158,7 +158,7 @@
                             shade: 0.2,
                             maxmin: true,
                             shadeClose: true,
-                            area: ['60%', '65%'],
+                            area: ['60%', '40%'],
                             content: addPage,
                         });
                         break;
@@ -248,7 +248,7 @@
                             shade: 0.2,
                             maxmin: true,
                             shadeClose: true,
-                            area: ['60%', '65%'],
+                            area: ['60%', '40%'],
                             content: addPage + '/' + data.id,
                         });
                         break;

@@ -106,15 +106,15 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::get('/detailLog/{id?}', [LogController::class, 'detailLog'])->name('admin_detailLog');
 
     //短信配置
-    Route::get('/sms_config', [SmsConfigController::class, 'sms_config']);
+    Route::get('/sms_config', [SmsConfigController::class, 'smsConfig']);
     Route::post('/save_sms', [SmsConfigController::class, 'saveSmsConfig'])->name('admin_save_sms');
 
     //ip地址
-    Route::get('/allow_ip', [IpController::class, 'allow_ip']);
-    Route::post('/mani_ip', [IpController::class, 'mani_ip'])->name('admin_mani_ip');
-    Route::get('/add_ip/{id?}', [IpController::class, 'add_ip'])->name('admin_add_ip');
-    Route::get('/ip_list', [IpController::class, 'ip_list'])->name('admin_ip_list');
-    Route::post('/delete_ip', [IpController::class, 'ip_delete'])->name('admin_delete_ip');
+    Route::get('/allow_ip', [IpController::class, 'allowIp']);
+    Route::post('/mani_ip', [IpController::class, 'maniIp'])->name('admin_mani_ip');
+    Route::get('/add_ip/{id?}', [IpController::class, 'addIp'])->name('admin_add_ip');
+    Route::get('/ip_list', [IpController::class, 'ipList'])->name('admin_ip_list');
+    Route::post('/delete_ip', [IpController::class, 'ipDelete'])->name('admin_delete_ip');
 
     //公共配置
     Route::get('/common_settings', [CommonSettingController::class, 'common']);
@@ -153,7 +153,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     //活动add_event
     Route::get('/add_event/{id?}', [EventController::class, 'event'])->name('admin_add_event');
 
-    Route::post('/uploadPhoto', [UploadController::class, 'eventPhotoUpload'])->name('admin_upload');
+    Route::post('/uploadPhoto', [UploadLogoController::class, 'eventPhotoUpload'])->name('admin_upload');
     Route::post('/mani_event', [EventController::class, 'maniEvent'])->name('admin_mani_event');
 
     //活动列表

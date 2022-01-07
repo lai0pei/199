@@ -36,16 +36,19 @@ class MobileModel extends CommonModel
     {
         $this->data = $data;
     }
-
-    public function getMobile()
+    
+    /**
+     * 获取手机号码
+     *
+     * @return array
+     */
+    public function getMobile() :array
     {
         $data = $this->data;
 
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
-
         $where = [];
-
         if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
 
@@ -65,12 +68,17 @@ class MobileModel extends CommonModel
         }
 
         $res['data'] = $result;
-        $res['count'] = $item->count();
+        $res['count'] = $this->getCount();
 
         return $res;
     }
-
-    public function deleteMobile()
+    
+    /**
+     * 删除号码
+     *
+     * @return bool
+     */
+    public function deleteMobile() : bool
     {
         $data = $this->data;
 
@@ -86,9 +94,8 @@ class MobileModel extends CommonModel
             throw new LogicException($e->getMessage());
         }
 
-        if ($status === false) {
+        if (!$status) {
             DB::rollBack();
-
             throw new LogicException('删除失败');
         }
 
@@ -101,7 +108,13 @@ class MobileModel extends CommonModel
         return true;
     }
 
-    public function maniMobile()
+        
+    /**
+     * 操作手机号码
+     *
+     * @return bool
+     */
+    public function maniMobile() : bool
     {
         $data = $this->data;
 
@@ -125,7 +138,12 @@ class MobileModel extends CommonModel
 
         return true;
     }
-
+    
+    /**
+     * 一键清空
+     *
+     * @return void
+     */
     public function oneClick()
     {
         self::truncate();
@@ -134,7 +152,12 @@ class MobileModel extends CommonModel
 
         (new LogModel($log_data))->createLog();
     }
-
+    
+    /**
+     * 数量
+     *
+     * @return void
+     */
     public function getCount()
     {
         return self::count();

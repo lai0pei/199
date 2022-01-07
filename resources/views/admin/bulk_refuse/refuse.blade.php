@@ -11,14 +11,15 @@
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">批量拒绝回复内容</label>
                     <div class="layui-input-block">
-                      <textarea name="refuse" placeholder="例如: 敬请谅解!" class="layui-textarea">{{$refuse['refuse'] ?? ''}}</textarea>
+                        <textarea name="refuse" placeholder="例如: 敬请谅解!"
+                            class="layui-textarea">{{ $refuse['refuse'] ?? '' }}</textarea>
                     </div>
-                  </div>
-                  <div class="layui-form-item">
+                </div>
+                <div class="layui-form-item">
                     @if (checkAuth('refuse_edit'))
-                    <button class="layui-btn" lay-submit="" lay-filter="save">提交</button>
+                        <button class="layui-btn" lay-submit="" lay-filter="save">提交</button>
                     @endif
-                  </div>
+                </div>
             </form>
         </div>
     </div>
@@ -26,36 +27,28 @@
 
 @section('footer')
     <script>
-        var saveRefuse= "{{route('admin_bulk_save')}}";
-    
+        var saveRefuse = "{{ route('admin_bulk_save') }}";
+
         layui.use(['form'], function() {
             var form = layui.form,
                 layer = layui.layer;
 
-  
+
 
             //监听提交
             form.on('submit(save)', function(data) {
 
-                    
-                    $.ajax({
+                $.ajax({
                     url: saveRefuse,
                     data: {
-                            'data': JSON.stringify(data.field),
-                        },
+                        'data': JSON.stringify(data.field),
+                    },
                     method: 'POST',
-                    async : false,
+                    async: false,
                     success: function(data) {
-                        if (data.code == 1) {
-                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2});
-                              location.reload();
-                        } else {
-                            layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2});
-                        }
+                        layer.msg(data.msg, { icon: 6, time: SUCCESS_TIME, shade: 0.2 })
                     }
                 });
-
-                   
 
             });
 

@@ -1,4 +1,19 @@
 <?php
+/*
+ * |-----------------------------------------------------------------------------------------------------------
+ * | Laravel 8 + PHP 8.0 + LayUI + 基于CMS 开发
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 开发者: 云飞
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 文件: IpController.php
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 项目: VIP活动申请
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 创建时间: Tuesday, 4th January 2022 8:04:00 am
+ * |-----------------------------------------------------------------------------------------------------------
+ * | Copyright 2022 - 2025
+ * |-----------------------------------------------------------------------------------------------------------
+ */
 
 namespace App\Http\Controllers\Admin;
 
@@ -14,21 +29,21 @@ class IpController extends Controller
         $this->request = $request;
     }
 
-    public function allow_ip()
+    public function allowIp()
     {
         return view('admin.allow_ip.ip');
     }
 
-    public function add_ip()
+    public function addIp()
     {
         $ip = (new IpModel($this->request->route()->parameters()))->getIp();
         return view('admin.allow_ip.add', ['ip' => $ip]);
     }
 
-    public function mani_ip()
+    public function maniIp()
     {
         try {
-            if ((new IpModel($this->request->all()))->mani_ip()) {
+            if ((new IpModel($this->request->all()))->maniIp()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
@@ -36,7 +51,7 @@ class IpController extends Controller
         }
     }
 
-    public function ip_list()
+    public function ipList()
     {
         $data = (new IpModel($this->request->all()))->listIp();
         $result['code'] = self::FAIL;
@@ -47,10 +62,10 @@ class IpController extends Controller
         return response()->json($result);
     }
 
-    public function ip_delete()
+    public function ipDelete()
     {
         try {
-            if ((new IpModel($this->request->all()))->ip_delete()) {
+            if ((new IpModel($this->request->all()))->ipDelete()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {

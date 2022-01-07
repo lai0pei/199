@@ -96,6 +96,19 @@
 @endsection
 @section('footer')
 <script>
+    var init = "{{route('admin.init')}}";
+
+    $(document).ready(function() {
+        $.ajax({
+                url : init,
+                success : function(data){
+                    if(!data){
+                        layer.msg('没有管理组合,权限');
+                        window.location.href = ("{{route('admin.login.login')}}");
+                    }
+                },
+            })
+    })
     layui.use(['jquery', 'layer', 'miniAdmin','miniTongji'], function () {
         var $ = layui.jquery,
             layer = layui.layer,
@@ -103,7 +116,7 @@
             miniTongji = layui.miniTongji;
 
         var options = {
-            iniUrl: "{{route('admin.init')}}",    // 初始化接口
+            iniUrl: init ,    // 初始化接口
             clearUrl: "{{route('admin.clear')}}", // 缓存清理接口
             urlHashLocation: true,      // 是否打开hash定位
             bgColorDefault: false,      // 主题默认配置

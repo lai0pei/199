@@ -25,9 +25,16 @@
                             </div>
                             <div class="layui-inline">
                                 <label class="layui-form-label">指定日期</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="start" id="created_at" readonly placeholder="选择日期"
-                                        autocomplete="off" class="layui-input">
+                                <div class="layui-inline" id="created_at" name="created_at">
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" id="start" name="start" class="layui-input"
+                                            placeholder="开始日期">
+                                    </div>
+                                    <div class="layui-form-mid">-</div>
+                                    <div class="layui-input-inline">
+                                        <input type="text" autocomplete="off" id="end" name="end" class="layui-input"
+                                            placeholder="结束日期">
+                                    </div>
                                 </div>
                             </div>
                             <div class="layui-inline">
@@ -129,7 +136,8 @@
             laydate.render({
                 elem: '#created_at',
                 trigger: 'click',
-                range: false
+                range: ['#start', '#end'],
+                format: 'yyyy-M-d'
             });
 
             // 监听搜索操作
@@ -218,7 +226,7 @@
 
             //监听排序事件
             table.on('sort(currentTableFilter)', function(
-            obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                obj) { //注：sort 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
                 // console.log(obj.field); //当前排序的字段名
                 // console.log(obj.type); //当前排序类型：desc（降序）、asc（升序）、null（空对象，默认排序）
                 // console.log(this); //当前排序的 th 对象

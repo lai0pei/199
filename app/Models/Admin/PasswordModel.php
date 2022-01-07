@@ -59,9 +59,9 @@ class PasswordModel extends CommonModel
 
         DB::beginTransaction();
 
-        $status = self::where('id', $user_id)->update($new_admin);
+        $status = self::where('id', $user_id)->where('is_delete', 0)->update($new_admin);
 
-        if ($status === false) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('修改密码失败');

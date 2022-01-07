@@ -39,9 +39,9 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
      *
      * @param  mixed $collection
      *
-     * @return void
+     * @return bool
      */
-    public function collection(Collection $collection)
+    public function collection(Collection $collection) : bool
     {
         DB::beginTransaction();
         try {
@@ -49,6 +49,7 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
             $error = 0;
             foreach ($collection as $v) {
                 if ($v[0] === null) {
+                    $error++;
                     continue;
                 }
                 if (! preg_match('/^[a-z0-9_]+$/i', $v[0])) {
@@ -84,6 +85,6 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
      */
     public function chunkSize(): int
     {
-        return 2000;
+        return 1000;
     }
 }

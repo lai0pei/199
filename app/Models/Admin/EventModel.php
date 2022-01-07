@@ -53,7 +53,6 @@ class EventModel extends CommonModel
         $event['display'] === 1 ? $event['display_check'] = 'checked' : 0;
         $event['is_daily'] === 1 ? $event['is_daily_check'] = 'checked' : 0;
         $event['need_sms'] === 1 ? $event['need_sms_check'] = 'checked' : 0;
-
         return $event;
     }
 
@@ -65,7 +64,7 @@ class EventModel extends CommonModel
 
         DB::beginTransaction();
 
-        if ($data['id'] === '-1') {
+        if ((int)$data['id'] === -1) {
             $add = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
@@ -75,6 +74,7 @@ class EventModel extends CommonModel
                 'display' => $data['display'] ?? '' === 'on' ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
+                'description' => $data['description'],
                 'daily_limit' => $data['sort'],
                 'is_daily' => $data['is_daily'] ?? '' === 'on' ? 1 : 0,
                 'need_sms' => $data['need_sms'] ?? '' === 'on' ? 1 : 0,
@@ -109,18 +109,15 @@ class EventModel extends CommonModel
                 'is_daily' => $data['is_daily'] ?? '' === 'on' ? 1 : 0,
                 'need_sms' => $data['need_sms'] ?? '' === 'on' ? 1 : 0,
                 'content' => $data['content'],
+                'description' => $data['description'],
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
 
-            if (! empty($data['type_pic'])) {
-                $save['type_pic'] = $data['type_pic'];
-            }
-
             $status = self::where('id', $data['id'])->update($save);
 
-            if ($status === false) {
+            if (!$status) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
@@ -178,7 +175,7 @@ class EventModel extends CommonModel
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
         }
         $res['data'] = $result;
-        $res['count'] = $item->count();
+        $res['count'] = self::count();
 
         return $res;
     }

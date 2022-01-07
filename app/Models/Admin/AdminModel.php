@@ -19,6 +19,7 @@ namespace App\Models\Admin;
 
 use App\Exceptions\LogicException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class AdminModel extends CommonModel
@@ -63,7 +64,7 @@ class AdminModel extends CommonModel
     {
         $data = $this->adminData;
 
-        $admin = AdminModel::where('account', $data['username'])->first();
+        $admin = AdminModel::where('account', $data['username'])->where('is_delete', 0)->first();
 
         $envIp = config('admin.ip');
         $allowIp = array_column((new IpModel())->getAllIp(), 'ip');
@@ -85,7 +86,9 @@ class AdminModel extends CommonModel
             throw new LogicException('该账号禁用 无法进行登录，请联系管理员');
         }
 
-        $this->setAdminSession($admin->id);
+        $this->adminId = $admin->id;
+
+        $this->setAdminSession();
 
         $admin->login_count += 1;
 
@@ -116,6 +119,8 @@ class AdminModel extends CommonModel
         $log = new LogModel($log_data);
 
         $log->createLog();
+
+        Cache::forget('admin_menu_' . session('user_id'));
 
         session()->flush();
     }
@@ -193,15 +198,15 @@ class AdminModel extends CommonModel
     public function addAdmin()
     {
         $data = $this->adminData;
-        $account = self::where('account', $data['account'])->value('account');
-        $user_name = self::where('user_name', $data['username'])->value('user_name');
+        $account = self::where('account', $data['account'])->where('is_delete', 0)->value('id');
+        $user_name = self::where('user_name', $data['username'])->where('is_delete', 0)->value('id');
 
-        if ($data['account'] === $account) {
-            throw new LogicException('账号已存在');
+        if (isset($account)) {
+            throw new LogicException('登录账号已存在');
         }
 
-        if ($data['username'] === $user_name) {
-            throw new LogicException('昵称存在');
+        if (isset($user_name)) {
+            throw new LogicException('昵称已存在');
         }
 
         $admin_password = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -224,7 +229,7 @@ class AdminModel extends CommonModel
 
         $status = self::insert($new_admin);
 
-        if ($status === false) {
+        if (! $status) {
             DB::rollBack();
             throw new LogicException('添加失败');
         }
@@ -260,7 +265,18 @@ class AdminModel extends CommonModel
             $save['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         }
 
-        if ($data['id'] === 1 && $data['status'] === 0) {
+        $accountId = self::where('account', $data['account'])->where('is_delete', 0)->value('id');
+        $userId = self::where('user_name', $data['username'])->where('is_delete', 0)->value('id');
+
+        if (isset($accountId) && (int) $data['id'] !== $accountId) {
+            throw new LogicException('登录账号已存在');
+        }
+
+        if (isset($userId) && (int) $data['id'] !== $userId) {
+            throw new LogicException('昵称已存在');
+        }
+
+        if ((int) $data['id'] === 1 && (int) $data['status'] === 0) {
             throw new LogicException('总管理员不可禁用');
         }
 
@@ -269,7 +285,7 @@ class AdminModel extends CommonModel
 
             $status = self::where('id', $data['id'])->update($save);
 
-            if ($status === false) {
+            if (! $status) {
                 DB::rollBack();
 
                 throw new LogicException('编辑失败');
@@ -295,21 +311,21 @@ class AdminModel extends CommonModel
 
         $admin = self::find($data['id']);
 
-        if (empty($admin)) {
+        if (! isset($admin)) {
             throw new LogicException('此管理员不存在');
         }
 
-        if ($data['id'] === 1) {
+        if ((int) $data['id'] === 1) {
             throw new LogicException('总管理员不可删除');
         }
 
-        // $delete = [
-        //     'is_delete' => 0,
-        // ];
+        $delete = [
+            'is_delete' => 1,
+        ];
 
-        $status = self::where('id', $data['id'])->delete();
+        $status = self::where('id', $data['id'])->update($delete);
 
-        if ($status === false) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
@@ -329,8 +345,8 @@ class AdminModel extends CommonModel
      *
      * @return void
      */
-    private function setAdminSession($user_id)
+    private function setAdminSession()
     {
-        return session()->put('user_id', $user_id);
+        return session()->put('user_id', $this->adminId);
     }
 }

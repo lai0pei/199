@@ -10,7 +10,7 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">IP</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="ip" autocomplete="off" class="layui-input">
+                                    <input type="text" name="ip" autocomplete="off" class="layui-input" placeholder="例如:127.0.0.1">
                                 </div>
                             </div>
                             <div class="layui-inline">
