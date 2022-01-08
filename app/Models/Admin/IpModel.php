@@ -28,7 +28,7 @@ class IpModel extends CommonModel
     {
         $data = $this->data;
 
-        if (!empty($data['id'])) {
+        if (! empty($data['id'])) {
             $res = self::find($data['id'])->toArray();
         } else {
             $res = [];
@@ -83,7 +83,7 @@ class IpModel extends CommonModel
 
         $status = self::where('id', $data['id'])->update($save);
 
-        if ($status === false) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('添加失败');
@@ -111,7 +111,7 @@ class IpModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['ip'] !== '') {
                 $where['ip'] = $param['ip'];

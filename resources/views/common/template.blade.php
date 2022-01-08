@@ -54,9 +54,9 @@
     <script type="text/javascript">
         // ajax 接口返回 页面显示 窗口 配置
         MODULE_NAME = '{{ $MODULE_NAME ?? '' }}';
-        SUCCESS_TIME = 2000;
-        FAIL_TIME = 2000;
-        TABLE_RESIZE_TIME = 3500;
+        SUCCESS_TIME = 300;
+        FAIL_TIME = 300;
+        TABLE_RESIZE_TIME = 300;
         AJAX_ERROR_TIP = '访问失败';
     </script>
 

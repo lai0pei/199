@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Index\IndexController;
 use App\Http\Controllers\Index\MessageController;
-use App\Http\Controllers\Index\TestController;
 use App\Http\Controllers\Index\UploadController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,28 +19,23 @@ use Illuminate\Support\Facades\Route;
 /*
 | 前台路由
  */
-// Route::middleware(['mobile'])->group(function () {
 
-    Route::post('/nav_link', [IndexController::class, 'navLink'])->name('index_nav');
+Route::post('/nav_link', [IndexController::class, 'navLink'])->name('index_nav');
 
-    Route::post('/getForm', [IndexController::class, 'getFormById'])->name('get_index_form');
+Route::post('/getForm', [IndexController::class, 'getFormById'])->name('get_index_form');
 
-    Route::post('/applyForm', [IndexController::class, 'applyForm'])->name('apply_form');
+Route::post('/applyForm', [IndexController::class, 'applyForm'])->name('apply_form');
 
-    Route::post('/uploadImage', [UploadController::class, 'uploadImage'])->name('uploadImage');
+Route::post('/uploadImage', [UploadController::class, 'uploadImage'])->name('uploadImage');
 
-    Route::post('/getMessage', [MessageController::class, 'smsMessage'])->name('sms_message');
+Route::post('/getMessage', [MessageController::class, 'smsMessage'])->name('sms_message');
 
-    Route::post('/getEventList', [IndexController::class, 'getAllEvent'])->name('event_list');
+Route::post('/getEventList', [IndexController::class, 'getAllEvent'])->name('event_list');
 
-    Route::post('/checkForm', [IndexController::class, 'checkForm'])->name('check_form');
+Route::post('/checkForm', [IndexController::class, 'checkForm'])->name('check_form');
 
-    Route::get('/test', [TestController::class, 'test']);
-// });
+Route::get('/getCaptcha', [IndexController::class, 'captcha'])->name('index_captcha');
 
 Route::get('/', [IndexController::class, 'index']);
 
 Route::get('/detail', [IndexController::class, 'detail'])->name('detail');
-
-Route::get('/getCaptcha', [IndexController::class, 'captcha'])->name('index_captcha');
-//函数 测试接口

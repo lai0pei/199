@@ -44,7 +44,7 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">用户Ip</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="ip" autocomplete="off"  lay-verify="ip" placeholder="请输入用户Ip"
+                                    <input type="text" name="ip" autocomplete="off" placeholder="请输入用户Ip"
                                         class="layui-input">
                                 </div>
                             </div>
@@ -103,18 +103,13 @@
             laydate = layui.laydate;
             form.render();
 
-            form.verify({
-                ip: [
-                    /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/,
-                    'IP地址不符合规则'
-                ]
-            });
 
             table.render({
                 elem: '#currentTableId',
                 url: getUserList,
                 toolbar: '#toolbarFilter',
                 defaultToolbar: ['filter'],
+                even : true,
                 cols: [
                     [{
                             type: 'checkbox',
@@ -126,13 +121,13 @@
                         },
                         {
                             field: 'username',
-                            title: '用户名称',
+                            title: '会员账号',
                             width: 120,
                             sort: true
                         },
                         {
                             field: 'event',
-                            title: '活动名称',
+                            title: '活动',
                             sort: true
                         },
                         {
@@ -208,7 +203,7 @@
                     case 'add':
                         var index = layer.open({
                             title: '',
-                            type: 2,
+                            type: 3,
                             shade: 0.2,
                             maxmin: false,
                             shadeClose: false,
@@ -349,7 +344,7 @@
                             shade: 0.2,
                             maxmin: true,
                             shadeClose: true,
-                            area: ['100%', '100%'],
+                            area: ['85%', '85%'],
                             content: audit + '/' + data.id,
                         });
                         break;

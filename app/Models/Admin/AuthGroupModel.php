@@ -25,9 +25,9 @@ class AuthGroupModel extends CommonModel
     /**
      * 权限提交
      *
-     * @return array
+     * @return bool
      */
-    public function submitList()
+    public function submitList(): bool
     {
         $data = $this->data;
 

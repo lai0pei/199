@@ -65,6 +65,7 @@
                 url: allRole,
                 toolbar: '#toolbarFilter',
                 defaultToolbar: ['filter'],
+                even : true,
                 cols: [
                     [{
                             field: 'id',

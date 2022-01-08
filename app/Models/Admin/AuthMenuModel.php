@@ -73,7 +73,7 @@ class AuthMenuModel extends CommonModel
             'status' => 1,
         ];
 
-        if (self::create($menus)) {
+        if (! self::insert($menus)) {
             throw new LogicException('菜单添加失败');
         }
 

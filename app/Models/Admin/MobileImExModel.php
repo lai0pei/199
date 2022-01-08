@@ -41,7 +41,7 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
      *
      * @return bool
      */
-    public function collection(Collection $collection) : bool
+    public function collection(Collection $collection): bool
     {
         DB::beginTransaction();
         try {

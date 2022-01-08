@@ -122,7 +122,7 @@ class RoleModel extends CommonModel
     /**
      * newGroup
      *
-     * @return boolean
+     * @return bool
      */
     public function newGroup()
     {
@@ -173,7 +173,7 @@ class RoleModel extends CommonModel
 
             $status = self::where('id', $data['id'])->update($insert);
 
-            if ($status === false) {
+            if (! $status) {
                 DB::rollBack();
                 throw new LogicException('保存失败');
             }
@@ -191,9 +191,9 @@ class RoleModel extends CommonModel
     /**
      * deleteGroup
      *
-     * @return boolean
+     * @return bool
      */
-    public function deleteGroup() 
+    public function deleteGroup()
     {
         $data = $this->data;
 
@@ -212,7 +212,6 @@ class RoleModel extends CommonModel
         $status = self::where('id', $data['id'])->delete();
 
         if (! $status) {
-
             DB::rollBack();
 
             throw new LogicException('删除失败');
@@ -228,14 +227,13 @@ class RoleModel extends CommonModel
 
         return true;
     }
-    
-     
+
     /**
      * getRoleNameById
      *
      * @return array
      */
-    public function getRoleNameById() : array
+    public function getRoleNameById(): array
     {
         $data = $this->data;
 
@@ -250,14 +248,15 @@ class RoleModel extends CommonModel
         }
         return $res;
     }
-    
+
     /**
      * countPermission
      *
      * @param  mixed $id
+     *
      * @return int
      */
-    private function countPermission($id) :  int
+    private function countPermission($id): int
     {
         $auth_group = new AuthGroupModel();
         $list = $auth_group::where('role_id', $id)->value('auth_id');

@@ -38,7 +38,12 @@
                         <div class="layui-input-inline">
                             <select name="type_id" lay-verify="required" lay-reqtext="请选择活动类型" id="selectId">
                                 @foreach ($event as $key => $value)
-                                    <option value="{{ $key + 1 }}">{{ $value['name'] }}</option>
+                                @php $selected = '';
+                                if(($type['type_id'] ?? '') == $key + 1){
+                                    $selected = 'selected="selected"';
+                                }
+                                @endphp
+                                    <option value="{{ $key + 1 }}" {{$selected}}>{{ $value['name'] }}</option>
                                 @endforeach
 
                             </select>
@@ -72,7 +77,7 @@
                             <input type="text" autocomplete="off" name="start" id="start" class="layui-input"
                                 placeholder="开始日期" value="{{ $type['start_time'] ?? '' }}">
                         </div>
-
+                      
                         <div class="layui-input-inline">
                             <input type="text" autocomplete="off" id="end" name="end" class="layui-input"
                                 placeholder="结束日期" value="{{ $type['end_time'] ?? '' }}">
@@ -88,7 +93,7 @@
                         </div>
                     </div>
                     <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
-                        <label class="layui-form-label">显示</label>
+                        <label class="layui-form-label">前台显示</label>
                         <div class="layui-input-inline">
                             <input type="checkbox" name="display" lay-skin="switch" id='display' lay-text="显示|屏蔽"
                                 {{ $type['display_check'] ?? '' }}>
@@ -130,7 +135,7 @@
                     <div class="layui-upload-drag" id="type_url">
                         <i class="layui-icon"></i>
                         <p>点击上传，或将文件拖拽到此处</p>
-                        <input type='hidden' id="type_pic" name="type_pic" value="{{ $type['type_pic'] ?? '' }}">
+                        <input type='hidden' id="type_pic" name="type_pic" value="{{ $type['type_pic'] ?? '' }}" lay-verify="required" lay-reqtext="活动图片不能为空">
                         <div class="layui-hide" id='uploadView'>
                             <hr>
                             <img src="{{ $type['type_pic'] ?? '' }}" alt="活动图片" style="max-width: 196px">
@@ -166,7 +171,7 @@
         var id = "{{ $type['id'] ?? -1 }}";
 
         if (id !== -1) {
-            var doc = new DOMParser().parseFromString(decodeURI("{{ $type['content'] ?? '' }}"), 'text/html');
+            var doc = new DOMParser().parseFromString("{{ $type['content'] ?? '' }}", 'text/html');
             $(function() {
                 window.setTimeout(setContent, 1000);
             });

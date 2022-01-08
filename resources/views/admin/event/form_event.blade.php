@@ -61,6 +61,7 @@
                 where: {
                     'id': event_id,
                 },
+                even : true,
                 toolbar: '#toolbarDemo',
                 defaultToolbar: ['filter', 'exports', 'print', ],
                 cols: [

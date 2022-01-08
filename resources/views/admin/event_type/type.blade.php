@@ -8,7 +8,7 @@
                     <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action="">
                         <div class="layui-form-item">
                             <div class="layui-inline">
-                                <label class="layui-form-label">角色名称</label>
+                                <label class="layui-form-label">类型名称</label>
                                 <div class="layui-input-inline">
                                     <input type="text" name="name" autocomplete="off" class="layui-input">
                                 </div>
@@ -61,6 +61,7 @@
                 url: api_url,
                 toolbar: '#toolbarDemo',
                 defaultToolbar: ['filter', 'exports', 'print', ],
+                even : true,
                 cols: [
                     [{
                             field: 'id',

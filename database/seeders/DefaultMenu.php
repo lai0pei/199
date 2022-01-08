@@ -25,7 +25,7 @@ class DefaultMenu extends Seeder
 
             6 => ['id' => 7, 'p_id' => 2, 'title' => 'VIP用户管理', 'auth_name' => 'vip_users', 'icon' => 'fa fa-user-secret', 'href' => '', 'sort' => 1, 'created_at' => now(), 'updated_at' => now()],
             7 => ['id' => 8, 'p_id' => 7, 'title' => '手机号管理', 'auth_name' => 'mobile_management', 'icon' => 'fa fa-mobile', 'href' => '6ucwfN@Bt/mobile_management', 'sort' => 0, 'created_at' => now(), 'updated_at' => now()],
-            8 => ['id' => 9, 'p_id' => 7, 'title' => '用户申请记录', 'auth_name' => 'user_apply', 'icon' => 'fa fa-reply-all', 'href' => '6ucwfN@Bt/user_apply', 'sort' => 1, 'created_at' => now(), 'updated_at' => now()],
+            8 => ['id' => 9, 'p_id' => 7, 'title' => '会员申请记录', 'auth_name' => 'user_apply', 'icon' => 'fa fa-reply-all', 'href' => '6ucwfN@Bt/user_apply', 'sort' => 1, 'created_at' => now(), 'updated_at' => now()],
             9 => ['id' => 10, 'p_id' => 7, 'title' => '用户短信申请', 'auth_name' => 'sms_apply', 'icon' => 'fa fa-comments-o', 'href' => '6ucwfN@Bt/sms_apply', 'sort' => 2, 'created_at' => now(), 'updated_at' => now()],
 
             10 => ['id' => 11, 'p_id' => 2, 'title' => '基本配置', 'auth_name' => 'basic_settings', 'icon' => 'fa fa-cog', 'href' => '', 'sort' => 2, 'created_at' => now(), 'updated_at' => now()],

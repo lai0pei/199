@@ -86,6 +86,31 @@ class UploadLogoController extends Controller
         return self::json($result);
     }
 
+    /**
+     * eventPhotoUpload
+     *
+     * @return void
+     */
+    public function eventPhotoUpload()
+    {
+        $request = $this->request;
+        $event = config('filesystems.event');
+        $size = config('admin.event_size');
+        $file = $request->file('file');
+        try {
+            $this->checkSize($file, $size);
+
+            $result = $this->storePic($file, $event);
+        } catch (LogicException $e) {
+            $result['code'] = self::FAIL;
+            $result['msg'] = $e->getMessage();
+            $result['data'] = [];
+            return self::json($result);
+        }
+
+        return self::json($result);
+    }
+
     private function checkSize($file, $config)
     {
         [$width, $height] = getimagesize($file);
@@ -113,30 +138,5 @@ class UploadLogoController extends Controller
         $result['msg'] = '上传成功';
         $result['data'] = ['src' => asset('storage/' . $url)];
         return $result;
-    }
-
-    /**
-     * eventPhotoUpload
-     *
-     * @return void
-     */
-    public function eventPhotoUpload()
-    {
-        $request = $this->request;
-        $event = config('filesystems.event');
-        $size = config('admin.event_size');
-        $file = $request->file('file');
-        try {
-            $this->checkSize($file, $size);
-
-            $result = $this->storePic($file, $event);
-        } catch (LogicException $e) {
-            $result['code'] = self::FAIL;
-            $result['msg'] = $e->getMessage();
-            $result['data'] = [];
-            return self::json($result);
-        }
-
-        return self::json($result);
     }
 }

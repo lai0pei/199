@@ -49,7 +49,6 @@
                       class="allForms mt-1 rounded-md"
                       v-model="formName.numberForm[form.id]"
                     />
-                   
                   </div>
                   <div v-if="form.type == 2">
                     <input
@@ -61,7 +60,7 @@
                     />
                   </div>
                   <div v-if="form.type == 3">
-                 <input
+                    <input
                       type="text"
                       v-bind:placeholder="form.name"
                       alt="时间"
@@ -99,7 +98,7 @@
                       class="allForms mt-1 rounded-md"
                       v-model="formName.selectForm[form.id]"
                     >
-                      <option disabled value="">
+                      <option disabled value="" selected>
                         {{ form.name }}
                       </option>
                       <option
@@ -130,20 +129,26 @@
                     </select>
                   </div>
                   <div class="">
-                    <van-loading type="spinner" size="26" class="absolute float-right mt-1 mr-12" v-show="showLoading">
+                    <van-loading
+                      type="spinner"
+                      size="26"
+                      class="absolute float-right mt-1 mr-12"
+                      v-show="showLoading"
+                    >
                     </van-loading>
-                  <input
-                    placeholder="填写验证码"
-                    class="captcha rounded-md mt-1 w-36"
-                    v-model="userCaptcha"
-                  />
-                
-                  <img
-                    :src="captcha"
-                    alt="验证码"
-                    v-on:click="getCaptcha"
-                    class="float-right rounded-md mt-1" v-show="!showLoading"
-                  />
+                    <input
+                      placeholder="填写验证码"
+                      class="captcha rounded-md mt-1 w-36"
+                      v-model="userCaptcha"
+                    />
+
+                    <img
+                      :src="captcha"
+                      alt="验证码"
+                      v-on:click="getCaptcha"
+                      class="float-right rounded-md mt-1"
+                      v-show="!showLoading"
+                    />
                   </div>
                 </div>
                 <div v-if="needSms == 1">
@@ -179,6 +184,11 @@
                       <span v-else class="text-xs">{{ messageText }}</span>
                     </button>
                   </div>
+                  <div>
+                    <p class="rounded-md mt-1 w-64 description">
+                      {{ description }}
+                    </p>
+                  </div>
                 </div>
               </ul>
               <div class="text-center mt-4">
@@ -201,6 +211,7 @@
               </div>
             </slot>
           </div>
+
           <div class="modal-footer">
             <slot name="footer">
               <br />
@@ -232,7 +243,7 @@ export default {
         selectForm: [],
       },
       username: "",
-      showLoading : true,
+      showLoading: true,
       limit: 2,
       isPreview: false,
       type: 2,
@@ -257,13 +268,13 @@ export default {
       selectGame: "请选择游戏",
       myGameList: 1,
       isSms: false,
+      description: "",
     };
   },
   watch: {
     deep: true,
     "childProp.event_id": function (event_id) {
       localStorage.setItem("event_id", event_id);
-      console.log("event in watch", event_id);
       this.eventId = event_id;
     },
     "childProp.formData": function (formData) {
@@ -279,13 +290,15 @@ export default {
     },
     "childProp.need_sms": function (sms) {
       localStorage.setItem("needSms", sms);
-      console.log("sms in watch", sms);
       this.needSms = sms;
     },
     "childProp.is_sms": function (sms) {
       localStorage.setItem("isSms", sms);
-      console.log("issms in watch", sms);
       this.isSms = sms;
+    },
+    "childProp.description": function (description) {
+      localStorage.setItem("description", description);
+      this.description = description;
     },
 
     immediate: true,
@@ -293,9 +306,9 @@ export default {
   mounted() {
     this.clearForm();
     this.eventId = localStorage.getItem("event_id");
-    console.log("in mount", this.eventId);
     this.needSms = localStorage.getItem("needSms");
     this.isSms = localStorage.getItem("isSms");
+    this.description = localStorage.getItem("description");
     this.eventId = 1;
   },
   methods: {
@@ -315,18 +328,7 @@ export default {
       this.formName.selectForm = [];
     },
     submit: async function () {
-      if (this.username == "") {
-        this.$toast("请填写会员账号");
-        return true;
-      }
-
-      if ("" == this.userCaptcha) {
-        this.$toast("请填写验证码");
-        return true;
-      }
-
-      if (1 == this.needSms && "" == this.mobileNumber) {
-        this.$toast("请填写手机号码");
+      if (this.validateUser() || this.validateForm()) {
         return true;
       }
 
@@ -355,6 +357,72 @@ export default {
         .catch(function (error) {
           that.$toast("申请有误,请刷新页面");
         });
+    },
+    validateForm: function () {
+      let form = this.formName;
+      let list = this.formList;
+      let res = false;
+
+      list.forEach((element) => {
+        switch (true) {
+          case element.type == 0:
+            if (form["inputForm"].length == 0) {
+              this.$toast("请填写" + element.name);
+              res = true;
+            }
+            break;
+          case element.type == 1:
+            if (form["numberForm"].length == 0) {
+              this.$toast("请填写" + element.name);
+              res = true;
+            }
+            break;
+          case element.type == 2:
+            if (form["phoneForm"].length == 0) {
+              this.$toast("请填写" + element.name);
+              res = true;
+            }
+
+            break;
+          case element.type == 3:
+            if (form["timeForm"].length == 0) {
+              this.$toast("请填写" + element.name);
+              res = true;
+            }
+            break;
+          case element.type == 4:
+            if (this.imageUrl == "") {
+              this.$toast("请选择" + element.name);
+              res = true;
+            }
+            break;
+          case element.type == 5:
+            if (form["selectForm"].length == 0) {
+              this.$toast("请填写" + element.name);
+              res = true;
+            }
+            break;
+        }
+      });
+      // 0 输入框, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框
+
+      return res;
+    },
+    validateUser: function () {
+      if (this.username == "") {
+        this.$toast("请填写会员账号");
+        return true;
+      }
+
+      if ("" == this.userCaptcha) {
+        this.$toast("请填写验证码");
+        return true;
+      }
+
+      if (1 == this.needSms && "" == this.mobileNumber) {
+        this.$toast("请填写手机号码");
+        return true;
+      }
     },
     imageuploaded: function (response) {
       if (response.code == 1) {
@@ -435,6 +503,13 @@ export default {
   background: #000;
   box-sizing: border-box;
 }
+
+.description {
+  color: white;
+  font-size: 0.8rem;
+  padding: 0 0.7rem;
+}
+
 .van-count-down {
   color: white;
 }

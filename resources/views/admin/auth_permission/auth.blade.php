@@ -57,6 +57,7 @@
                 url: getMenu,
                 toolbar: '#toolbarFilter',
                 defaultToolbar: ['filter',],
+                even : true,
                 cols: [[
                     {field: 'menu_title', title: '所属菜单', hide: false, sort: true},
                     {field: 'name', title: '权限标识', sort: true},

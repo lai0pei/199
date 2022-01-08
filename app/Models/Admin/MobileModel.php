@@ -36,13 +36,13 @@ class MobileModel extends CommonModel
     {
         $this->data = $data;
     }
-    
+
     /**
      * 获取手机号码
      *
      * @return array
      */
-    public function getMobile() :array
+    public function getMobile(): array
     {
         $data = $this->data;
 
@@ -72,13 +72,13 @@ class MobileModel extends CommonModel
 
         return $res;
     }
-    
+
     /**
      * 删除号码
      *
      * @return bool
      */
-    public function deleteMobile() : bool
+    public function deleteMobile(): bool
     {
         $data = $this->data;
 
@@ -94,7 +94,7 @@ class MobileModel extends CommonModel
             throw new LogicException($e->getMessage());
         }
 
-        if (!$status) {
+        if (! $status) {
             DB::rollBack();
             throw new LogicException('删除失败');
         }
@@ -108,13 +108,12 @@ class MobileModel extends CommonModel
         return true;
     }
 
-        
     /**
      * 操作手机号码
      *
      * @return bool
      */
-    public function maniMobile() : bool
+    public function maniMobile(): bool
     {
         $data = $this->data;
 
@@ -138,7 +137,7 @@ class MobileModel extends CommonModel
 
         return true;
     }
-    
+
     /**
      * 一键清空
      *
@@ -152,11 +151,9 @@ class MobileModel extends CommonModel
 
         (new LogModel($log_data))->createLog();
     }
-    
+
     /**
      * 数量
-     *
-     * @return void
      */
     public function getCount()
     {

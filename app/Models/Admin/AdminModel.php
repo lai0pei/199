@@ -33,16 +33,10 @@ class AdminModel extends CommonModel
      */
     protected $table = 'admin';
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['account', 'password', 'role_id', 'reg_ip', 'status', 'login_count', 'last_date', 'user_name'];
-
     public function __construct($data = [])
     {
         $this->adminData = $data;
+        $this->adminId = '';
     }
 
     /**
@@ -58,9 +52,9 @@ class AdminModel extends CommonModel
     /**
      * 管理员登录
      *
-     * @return void
+     * @return bool
      */
-    public function adminLogin()
+    public function adminLogin(): bool
     {
         $data = $this->adminData;
 
@@ -70,9 +64,9 @@ class AdminModel extends CommonModel
         $allowIp = array_column((new IpModel())->getAllIp(), 'ip');
         $adminIp = request()->ip();
 
-        if ($adminIp !== $envIp && ! in_array($adminIp, $allowIp)) {
-            throw new LogicException('Ip不允许');
-        }
+        // if ($adminIp !== $envIp && ! in_array($adminIp, $allowIp)) {
+        //     throw new LogicException('Ip不允许');
+        // }
 
         if (empty($admin)) {
             throw new LogicException('账号不存在');
@@ -132,12 +126,21 @@ class AdminModel extends CommonModel
      */
     public function getName()
     {
-        return self::where('id', session('user_id'))
+        $name = self::where('id', session('user_id'))
             ->where('status', 1)
             ->value('user_name');
+        if ($name === '') {
+            $name = '昵称';
+        }
+        return $name;
     }
 
-    public function listAdmin()
+    /**
+     * 管理员列表
+     *
+     * @return array
+     */
+    public function listAdmin(): array
     {
         $data = $this->adminData;
         $limit = $data['limit'] ?? 15;
@@ -191,11 +194,16 @@ class AdminModel extends CommonModel
             }
         }
         $res['data'] = $result;
-        $res['count'] = $item->count();
+        $res['count'] = self::count();
         return $res;
     }
 
-    public function addAdmin()
+    /**
+     * 管理员 添加
+     *
+     * @return bool
+     */
+    public function addAdmin(): bool
     {
         $data = $this->adminData;
         $account = self::where('account', $data['account'])->where('is_delete', 0)->value('id');
@@ -250,7 +258,12 @@ class AdminModel extends CommonModel
         return self::where('id', $data['id'])->get($column);
     }
 
-    public function saveAdmin()
+    /**
+     * 保存管理员
+     *
+     * @return bool
+     */
+    public function saveAdmin(): bool
     {
         $data = $this->adminData;
 
@@ -303,7 +316,12 @@ class AdminModel extends CommonModel
         }
     }
 
-    public function deleteAdmin()
+    /**
+     * 删除管理员
+     *
+     * @return bool
+     */
+    public function deleteAdmin(): bool
     {
         $data = $this->adminData;
 

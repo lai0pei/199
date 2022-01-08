@@ -25,11 +25,6 @@ function checkAuth($name = '')
 
 function checkSmsCode($mobile, $code)
 {
-    return session()->get($mobile) === $code;
+    return (int)session()->get($mobile) === (int)$code;
 }
 
-function typec($var, $var2)
-{
-    dump(gettype($var));
-    dd(gettype($var2));
-}

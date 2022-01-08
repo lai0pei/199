@@ -41,14 +41,19 @@ class FormModel extends CommonModel
         $this->data = $data;
     }
 
-    public function getFormList()
+    /**
+     * getFormList
+     *
+     * @return array
+     */
+    public function getFormList(): array
     {
         $data = $this->data;
 
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
 
-        if (! empty($data['searchParams'])) {
+        if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['id'] !== '') {
                 $data['id'] = $param['id'];
@@ -68,12 +73,17 @@ class FormModel extends CommonModel
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
         }
         $res['data'] = $result;
-        $res['count'] = $item->count();
+        $res['count'] = self::count();
 
         return $res;
     }
 
-    public function formDelete()
+    /**
+     * 删除
+     *
+     * @return bool
+     */
+    public function formDelete(): bool
     {
         $data = $this->data;
 
@@ -81,7 +91,7 @@ class FormModel extends CommonModel
 
         $status = self::where('id', $data['id'])->delete();
 
-        if ($status === false) {
+        if (!$status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
@@ -96,7 +106,12 @@ class FormModel extends CommonModel
         return true;
     }
 
-    public function getFormById()
+    /**
+     * 获取类型
+     *
+     * @return array
+     */
+    public function getFormById(): array
     {
         $data = $this->data;
 
@@ -110,7 +125,12 @@ class FormModel extends CommonModel
         return $res;
     }
 
-    public function getFormType()
+    /**
+     * getFormType
+     *
+     * @return array
+     */
+    public function getFormType(): array
     {
         return [
             '0' => self::TEXT,
@@ -122,13 +142,26 @@ class FormModel extends CommonModel
         ];
     }
 
-    public function formAdd()
+    /**
+     * formAdd
+     *
+     * @return bool
+     */
+    public function formAdd(): bool
     {
         $data = $this->data;
 
         DB::beginTransaction();
 
-        if ($data['id'] === '-1') {
+        if ((int) $data['type'] === 4) {
+            $id = self::where('event_id', $data['event_id'])->where('type', 4)->value('id');
+
+            if ($id !== null) {
+                throw new LogicException('最多一个图片框');
+            }
+        }
+
+        if ((int) $data['id'] === -1) {
             $add = [
                 'name' => $data['name'],
                 'type' => $data['type'],
@@ -141,7 +174,7 @@ class FormModel extends CommonModel
 
             $status = self::insert($add);
 
-            if ($status === false) {
+            if (!$status) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
@@ -166,7 +199,7 @@ class FormModel extends CommonModel
 
         $status = self::where('id', $data['id'])->update($save);
 
-        if ($status === false) {
+        if (!$status) {
             DB::rollBack();
 
             throw new LogicException('添加失败');
@@ -187,7 +220,13 @@ class FormModel extends CommonModel
     }
 
     // 表单类型 0 输入框, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框
-    private function getOptionName($id)
+    /**
+     * getOptionName
+     *
+     * @param  mixed $id
+     * @return string
+     */
+    private function getOptionName($id): string
     {
         switch (true) {
             case $id === 1:

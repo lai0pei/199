@@ -53,6 +53,8 @@ class EventModel extends CommonModel
         $event['display'] === 1 ? $event['display_check'] = 'checked' : 0;
         $event['is_daily'] === 1 ? $event['is_daily_check'] = 'checked' : 0;
         $event['need_sms'] === 1 ? $event['need_sms_check'] = 'checked' : 0;
+        $event['content'] = preg_replace('/[\t\n\r]/u','',$event['content']);
+   
         return $event;
     }
 
@@ -64,20 +66,24 @@ class EventModel extends CommonModel
 
         DB::beginTransaction();
 
-        if ((int)$data['id'] === -1) {
+        if ((int) $data['id'] === -1) {
+            if (self::where('name', $data['name'])->value('id') !== null) {
+                throw new LogicException('相同活动名称, 已存在');
+            }
+
             $add = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
                 'type_pic' => $data['type_pic'] ?? '',
                 'sort' => $data['sort'],
-                'status' => $data['status'] ?? '' === 'on' ? 1 : 0,
-                'display' => $data['display'] ?? '' === 'on' ? 1 : 0,
+                'status' => ($data['status'] ?? '') === 'on' ? 1 : 0,
+                'display' => ($data['display'] ?? '') === 'on' ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
                 'description' => $data['description'],
                 'daily_limit' => $data['sort'],
-                'is_daily' => $data['is_daily'] ?? '' === 'on' ? 1 : 0,
-                'need_sms' => $data['need_sms'] ?? '' === 'on' ? 1 : 0,
+                'is_daily' => ($data['is_daily'] ?? '') === 'on' ? 1 : 0,
+                'need_sms' => ($data['need_sms'] ?? '') === 'on' ? 1 : 0,
                 'content' => $data['content'],
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
@@ -86,7 +92,7 @@ class EventModel extends CommonModel
 
             $status = self::insert($add);
 
-            if ($status === false) {
+            if (! $status) {
                 DB::rollBack();
                 throw new LogicException('添加失败');
             }
@@ -94,20 +100,25 @@ class EventModel extends CommonModel
             $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '添加了新活动 [' . $data['name'] . ']'];
 
             (new LogModel($log_data))->createLog();
-
-            DB::commit();
         } else {
+            $id = self::where('name', $data['name'])->value('id');
+
+            if ($id !== null && $id !== (int) $data['id']) {
+                throw new LogicException('相同活动名称, 已存在');
+            }
+
             $save = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
+                'type_pic' => $data['type_pic'] ?? '',
                 'sort' => $data['sort'],
-                'status' => $data['status'] ?? '' === 'on' ? 1 : 0,
-                'display' => $data['display'] ?? '' === 'on' ? 1 : 0,
+                'status' => ($data['status'] ?? '') === 'on' ? 1 : 0,
+                'display' => ($data['display'] ?? '') === 'on' ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
                 'daily_limit' => $data['sort'],
-                'is_daily' => $data['is_daily'] ?? '' === 'on' ? 1 : 0,
-                'need_sms' => $data['need_sms'] ?? '' === 'on' ? 1 : 0,
+                'is_daily' => ($data['is_daily'] ?? '') === 'on' ? 1 : 0,
+                'need_sms' => ($data['need_sms'] ?? '') === 'on' ? 1 : 0,
                 'content' => $data['content'],
                 'description' => $data['description'],
                 'external_url' => $data['external_url'],
@@ -117,7 +128,7 @@ class EventModel extends CommonModel
 
             $status = self::where('id', $data['id'])->update($save);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
@@ -126,10 +137,8 @@ class EventModel extends CommonModel
             $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑了活动[' . $data['name'] . ']'];
 
             (new LogModel($log_data))->createLog();
-
-            DB::commit();
         }
-
+        DB::commit();
         return true;
     }
 

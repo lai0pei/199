@@ -29,11 +29,9 @@ class EventController extends Controller
     {
         $this->request = $request;
     }
-    
+
     /**
-     * event
-     *
-     * @return void
+     * 活动添加页面
      */
     public function event()
     {
@@ -43,12 +41,23 @@ class EventController extends Controller
         return view('admin.event.add_event', ['type' => $data, 'event' => $types]);
     }
 
+    /**
+     * 活动操作
+     */
     public function maniEvent()
-    {
-        $data = (new EventModel($this->request->all()))->maniEvent();
-        return self::json_success($data);
+    {   
+        try{
+            $data = (new EventModel($this->request->all()))->maniEvent();
+            return self::json_success($data);
+        }catch (LogicException $e){
+            return self::json_fail([],$e->getMessage());
+        }
+  
     }
 
+    /**
+     * 活动列表 页面
+     */
     public function list()
     {
         $model = new EventModel($this->request->all());
@@ -59,6 +68,9 @@ class EventController extends Controller
         return view('admin.event.event_list', ['data' => $types, 'status' => $status, 'display' => $display, 'daily' => $is_daily]);
     }
 
+    /**
+     * 活动列表 数据
+     */
     public function getEventList()
     {
         $data = (new EventModel($this->request->all()))->getEventList();
@@ -71,6 +83,9 @@ class EventController extends Controller
         return response()->json($result);
     }
 
+    /**
+     * 活动删除
+     */
     public function deleteEvent()
     {
         try {

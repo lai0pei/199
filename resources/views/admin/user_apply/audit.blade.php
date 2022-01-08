@@ -14,6 +14,17 @@
             padding: 8px;
         }
 
+        img {
+            max-width: 15rem;
+            transition: transform 0.25s ease;
+        }
+
+
+        img:hover {
+            -webkit-transform: scale(2);
+            transform: scale(2);
+        }
+
         tr:nth-child(even) {
             background-color: #dddddd;
         }
@@ -42,12 +53,13 @@
                             @foreach ($data['value'] as $v)
                                 <tr>
                                     <td>{{ $v['name'] }}</td>
-                                    @if(($v['type'] ?? '' == "photo"))
-                                    <td><img src={{ $v['value'] }} alt='图片'></td>
+                                    @if ($v['type'] ?? '' == 'photo')
+                                        <td><a href={{ $v['value'] }} target="_blank"><img src={{ $v['value'] }}
+                                                    alt='图片'></a></td>
                                     @else
-                                    <td>{{ $v['value'] }}</td>
+                                        <td>{{ $v['value'] }}</td>
                                     @endif
-                                    
+
                                 </tr>
                             @endforeach
                         </table>
@@ -105,9 +117,9 @@
                             setTimeout(function() {
                                 console.log("hir");
                                 var index = parent.layer.getFrameIndex(window
-                                .name); //先得到当前iframe层的索引
+                                    .name); //先得到当前iframe层的索引
                                 parent.$('button[lay-filter="data-search-btn"]')
-                            .click(); //刷新列表
+                                    .click(); //刷新列表
                                 parent.layer.close(index); //再执行关闭
 
                             }, SUCCESS_TIME);

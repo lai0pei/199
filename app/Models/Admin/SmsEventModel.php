@@ -149,7 +149,7 @@ class SmsEventModel extends CommonModel
             throw new LogicException($e->getMessage());
         }
 
-        if ($status === false) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
@@ -184,7 +184,7 @@ class SmsEventModel extends CommonModel
             throw new LogicException($e->getMessage());
         }
 
-        if ($status === false) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('审核失败');

@@ -88,6 +88,7 @@ export default {
         need_sms: [],
         game_list: [],
         is_sms: [],
+        description : [],
       },
     };
   },
@@ -130,6 +131,7 @@ export default {
       let eventType = [];
       let need_sms = "";
       let is_sms = "";
+       let description = "";
       await axios
         .post(route("get_index_form"), {
           event_id: data.id,
@@ -139,6 +141,7 @@ export default {
           eventType = response.data.data.type;
           need_sms = response.data.data.need_sms;
           is_sms = response.data.data.is_sms;
+          description = response.data.data.description;
         })
         .catch(function (error) {
           console.error(error);
@@ -149,6 +152,7 @@ export default {
       this.formList.event_id = data.id;
       this.formList.need_sms = need_sms;
       this.formList.is_sms = is_sms;
+      this.formList.description = description;
     },
     fromApplyDialog: function () {
       this.showModal = false;

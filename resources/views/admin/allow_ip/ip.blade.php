@@ -62,6 +62,7 @@
                 url: api_url,
                 toolbar: '#toolbarDemo',
                 defaultToolbar: ['filter', 'exports', 'print', ],
+                even : true,
                 cols: [
                     [{
                             field: 'id',

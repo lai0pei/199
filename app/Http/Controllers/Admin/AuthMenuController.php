@@ -17,7 +17,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use app\Exceptions\LogicException;
+use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AdminModel;
 use App\Models\Admin\AuthMenuModel;
@@ -46,7 +46,7 @@ class AuthMenuController extends Controller
      */
     public function index()
     {
-        return view('admin.authmenu.index', ['admin_name' => (new AdminModel())->getName() ?? '昵称']);
+        return view('admin.authmenu.index', ['admin_name' => (new AdminModel())->getName()]);
     }
 
     /**

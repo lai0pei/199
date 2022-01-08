@@ -31,13 +31,6 @@ class LogModel extends CommonModel
     protected $table = 'logs';
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['type', 'title', 'content', 'is_delete', 'ip', 'admin_id'];
-
-    /**
      * __construct
      *
      * @param  mixed $data
@@ -52,9 +45,9 @@ class LogModel extends CommonModel
     /**
      * 创造日志
      *
-     * @return void
+     * @return bool
      */
-    public function createLog()
+    public function createLog(): bool
     {
         $log = $this->log;
         $admin_id = session('user_id');
@@ -80,7 +73,7 @@ class LogModel extends CommonModel
         $page = $data['page'] ?? 1;
 
         $where = [];
-        $param['start'] = "";
+        $param['start'] = '';
         if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['user'] !== '') {

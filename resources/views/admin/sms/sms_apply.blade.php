@@ -157,6 +157,7 @@
                 url: getSmsList,
                 toolbar: '#toolbarFilter',
                 defaultToolbar: ['filter', 'export'],
+                even : true,
                 cols: [
                     [{
                             type: 'checkbox',
