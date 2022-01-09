@@ -56,6 +56,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('6ucwfN@Bt/login', [LoginController::class, 'index'])->name('admin.login.index');
 Route::post('6ucwfN@Bt/login', [LoginController::class, 'login'])->name('admin.login.login');
 Route::get('6ucwfN@Bt/captcha', [LoginController::class, 'captcha'])->name('admin.login.captcha');
+
 Route::get('/ueditor', [UploadController::class, 'ueditor'])->name('admin_upload_content');
 Route::post('/ueditor', [UploadController::class, 'ueditorUpload']);
 
@@ -170,7 +171,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
 
     //手机管理
     Route::get('/mobile_management', [MobileController::class, 'mobile']);
-    Route::post('/importExcel', [UploadController::class, 'importExcel'])->name('admin_import_excel');
+    Route::post('/importExcel', [UploadControfller::class, 'importExcel'])->name('admin_import_excel');
     Route::post('/exportExcel', [UploadController::class, 'exportExcel'])->name('admin_export_excel');
     Route::get('/getMobile', [MobileController::class, 'getMobile'])->name('admin_get_mobile');
     Route::post('/deleteMobile', [MobileController::class, 'deleteMobile'])->name('admin_delete_mobile');
@@ -186,6 +187,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/bulk_delete', [UserController::class, 'delete'])->name('admin_delete_audit');
     Route::post('/bulk_refuse', [UserController::class, 'refuse'])->name('admin_bulk_refuse');
     Route::post('/bulk_pass', [UserController::class, 'pass'])->name('admin_bulk_pass');
+    Route::get('/exportList', [UploadController::class, 'applyExport'])->name('applyExport');
 
     //短信申请记录
     Route::get('/sms_apply', [SmsController::class, 'sms']);
@@ -195,6 +197,9 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/bulksms_delete', [SmsController::class, 'deleteSms'])->name('admin_delete_sms');
     Route::post('/bulksms_refuse', [SmsController::class, 'refuseSms'])->name('admin_sms_refuse');
     Route::post('/bulksms_pass', [SmsController::class, 'passSms'])->name('admin_sms_pass');
+    Route::get('/exportSmsList', [UploadController::class, 'smsExport'])->name('sms_export');
+    Route::get('/sms_import_index', [SmsController::class, 'importIndex'])->name('sms_import_index');
+    Route::post('/sms_import_mani', [UploadController::class, 'smsImportMani'])->name('sms_import_mani');
 
     // |------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -203,4 +208,5 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::get('/init', [AuthMenuController::class, 'init'])->name('admin.init');
     //post 接口
     Route::post('/logout', [LoginController::class, 'logout'])->name('admin_logout');
+
 });

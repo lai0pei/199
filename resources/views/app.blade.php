@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="max-w-screen-sm m-auto">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class=" m-auto">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,6 +19,9 @@
     </body>
 </html>
 <style>
+html{
+ max-width: 27rem;
+}
 body{
     scrollbar-width: none;
 }

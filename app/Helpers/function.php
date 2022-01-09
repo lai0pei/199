@@ -25,6 +25,5 @@ function checkAuth($name = '')
 
 function checkSmsCode($mobile, $code)
 {
-    return (int)session()->get($mobile) === (int)$code;
+    return (int) session()->get($mobile) === (int) $code;
 }
-

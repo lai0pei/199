@@ -45,14 +45,13 @@ class EventController extends Controller
      * 活动操作
      */
     public function maniEvent()
-    {   
-        try{
+    {
+        try {
             $data = (new EventModel($this->request->all()))->maniEvent();
             return self::json_success($data);
-        }catch (LogicException $e){
-            return self::json_fail([],$e->getMessage());
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
         }
-  
     }
 
     /**

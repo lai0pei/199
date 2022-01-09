@@ -10,7 +10,8 @@
             <fieldset class="table-search-fieldset">
                 <legend>搜索信息</legend>
                 <div style="margin: 10px 10px 10px 10px">
-                    <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action="" onsubmit="return false">
+                    <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action=""
+                        onsubmit="return false">
                         <div class="layui-form-item">
                             <div class="layui-inline">
                                 <label class="layui-form-label">匹配</label>
@@ -95,6 +96,9 @@
                     @if (checkAuth('sms_bulk_refuse'))
                         <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
                     @endif
+                    <a href="{{route('sms_export')}}" style="float:right"><button class="layui-btn layui-btn-sm data-add-btn"> 导出数据 </button></a>
+                    <button class="layui-btn  layui-btn-sm data-add-btn" lay-event="import" style="float:right"> 导入数据 </button>
+
                 </div>
             </script>
 
@@ -116,18 +120,8 @@
         var deleteUser = "{{ route('admin_delete_sms') }}";
         var refuse = "{{ route('admin_sms_refuse') }}";
         var pass = "{{ route('admin_sms_pass') }}";
+        var importer = "{{route('sms_import_index')}}";
 
-
-        // $(document).ready(function() {
-        //     let time = localStorage.getItem('timeout');
-        //     if (time !== 0) {
-        //         $("#refresh").val(time);
-        //     }
-        // });
-
-
-
-        // document.cookie = $("#refresh").val();
         layui.use(['form', 'table', 'laydate'], function() {
             var $ = layui.jquery,
                 form = layui.form,
@@ -141,10 +135,10 @@
                 var val = data.value;
                 localStorage.removeItem('timeout');
                 localStorage.setItem('timeout', val);
-         
+
                 if (val == 0) {
-            
-                    clearInterval(id1) ;
+
+                    clearInterval(id1);
                 } else {
                     id1 = setInterval(() => {
                         $('button[lay-filter="data-search-btn"]').click(); //刷新列表
@@ -157,7 +151,7 @@
                 url: getSmsList,
                 toolbar: '#toolbarFilter',
                 defaultToolbar: ['filter', 'export'],
-                even : true,
+                even: true,
                 cols: [
                     [{
                             type: 'checkbox',
@@ -169,13 +163,13 @@
                         },
                         {
                             field: 'user_name',
-                            title: '用户名称',
+                            title: '会员账号',
                             width: 120,
                             sort: true
                         },
                         {
                             field: 'game',
-                            title: '活动名称',
+                            title: '活动',
                             sort: true
                         },
                         {
@@ -238,10 +232,6 @@
 
                 return false;
             });
-            //监听表格复选框选择
-            table.on('checkbox(currentTableFilter)', function(obj) {
-                console.log(obj)
-            });
 
             table.on('toolbar(currentTableFilter)', function(obj) {
                 console.log(obj);
@@ -260,9 +250,15 @@
                         });
                         break;
                     case 'batch-delete':
+                        var checkStatus = table.checkStatus('currentTableId'),
+                            data = checkStatus.data;
+                        if (data.length == 0) {
+                            layer.msg('请选择至少一个');
+                            layer.close(index);
+                            return true;
+                        }
                         layer.confirm('确认删除?', function(index) {
-                            var checkStatus = table.checkStatus('currentTableId'),
-                                data = checkStatus.data;
+
 
 
                             $.ajax({
@@ -299,9 +295,14 @@
                         });
                         break;
                     case 'batch-pass':
+                        var checkStatus = table.checkStatus('currentTableId'),
+                            data = checkStatus.data;
+                        if (data.length == 0) {
+                            layer.msg('请选择至少一个');
+                            layer.close(index);
+                            return true;
+                        }
                         layer.confirm('确认通过?', function(index) {
-                            var checkStatus = table.checkStatus('currentTableId'),
-                                data = checkStatus.data;
 
 
                             $.ajax({
@@ -335,9 +336,15 @@
                         });
                         break;
                     case 'batch-refuse':
+                        var checkStatus = table.checkStatus('currentTableId'),
+                            data = checkStatus.data;
+                        if (data.length == 0) {
+                            layer.msg('请选择至少一个');
+                            layer.close(index);
+                            return true;
+                        }
                         layer.confirm('确认拒绝?', function(index) {
-                            var checkStatus = table.checkStatus('currentTableId'),
-                                data = checkStatus.data;
+
 
                             $.ajax({
                                 url: refuse,
@@ -370,6 +377,18 @@
                             layer.close(index);
                         });
                         break;
+                    case 'import':
+                    var index = layer.open({
+                            title: '数据导入',
+                            type: 2,
+                            shade: 0.2,
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['50%', '50%'],
+                            content : importer,
+                        });
+                        break;
+                        break;
                     case 'link':
                         setTimeout(function() {
                             table.resize(); //
@@ -395,7 +414,7 @@
                             shade: 0.2,
                             maxmin: true,
                             shadeClose: true,
-                            area: ['100%', '100%'],
+                            area: ['80%', '80%'],
                             content: viewForm + '/' + data.id,
                         });
                         break;
@@ -406,7 +425,7 @@
                             shade: 0.2,
                             maxmin: true,
                             shadeClose: true,
-                            area: ['100%', '100%'],
+                            area: ['90%', '90%'],
                             content: smsAudit + '/' + data.id,
                         });
                         break;

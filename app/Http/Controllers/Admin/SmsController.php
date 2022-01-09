@@ -74,4 +74,9 @@ class SmsController extends Controller
             return self::json_fail($e->getMessage());
         }
     }
+
+    public function importIndex()
+    {
+        return view('admin.sms.import_sms');
+    }
 }

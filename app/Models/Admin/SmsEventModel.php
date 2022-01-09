@@ -20,8 +20,11 @@ namespace App\Models\Admin;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use LogicException;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class SmsEventModel extends CommonModel
+class SmsEventModel extends CommonModel implements WithMapping, FromCollection, WithHeadings
 {
     public const PASS = 1;
     public const REFUSE = 2;
@@ -65,7 +68,7 @@ class SmsEventModel extends CommonModel
         }
 
         $item = self::where($where)->orderBy('id', 'desc')->paginate($limit, '*', 'page', $page);
-
+   
         $result = [];
 
         foreach ($item->items() as $k => $v) {
@@ -212,6 +215,59 @@ class SmsEventModel extends CommonModel
     public function smsAppr()
     {
         return self::where('state', 0)->count();
+    }
+
+    public function collection()
+    {
+        return self::all();
+    }
+
+    /**
+     * @var smsApply
+     */
+    public function map($apply): array
+    {
+        switch (true) {
+            case $apply->state === 1:
+                $apply->state = '通过';
+                break;
+            case $apply->state === 2:
+                $apply->state = '拒绝';
+                break;
+            default:
+                $apply->state = '未审核';
+        }
+
+        if ($apply->is_match === 1) {
+            $apply->is_match = '匹配';
+        } else {
+            $apply->is_match = '不匹配';
+        }
+
+        return [
+            $apply->id,
+            $apply->username,
+            $apply->game,
+            $apply->apply_time,
+            $apply->send_remark,
+            $apply->ip,
+            $apply->is_match,
+            $apply->state,
+        ];
+    }
+
+    public function headings(): array
+    {
+        return [
+            '编号',
+            '会员名称',
+            '活动',
+            '申请时间',
+            '派送备注',
+            'ip',
+            '匹配',
+            '状态',
+        ];
     }
 
     private function matchName($id)

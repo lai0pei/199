@@ -99,7 +99,7 @@ class IndexController extends Controller
             //     throw new LogicException('短信验证码不正确');
             // }
 
-            if ((int)$input['isSms'] === 1) {
+            if ((int) $input['isSms'] === 1) {
                 $smsModel = new SmsApplyModel($input);
                 $smsModel->smsForm();
             } else {

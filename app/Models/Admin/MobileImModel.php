@@ -5,7 +5,7 @@
  * |-----------------------------------------------------------------------------------------------------------
  * | 开发者: 云飞
  * |-----------------------------------------------------------------------------------------------------------
- * | 文件: MobileImExModel.php
+ * | 文件: MobileImModel.php
  * |-----------------------------------------------------------------------------------------------------------
  * | 项目: VIP活动申请
  * |-----------------------------------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class MobileImExModel extends CommonModel implements ToCollection, WithChunkReading
+class MobileImModel extends CommonModel implements ToCollection, WithChunkReading
 {
     use Importable;
     /**
@@ -34,6 +34,11 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
      */
     protected $table = 'vip_mobile';
 
+    public function __construct()
+    {
+        ini_set('max_execution_time', 1000);
+        ini_set('memory_limit', -1);
+    }
     /**
      *  导入用户手机号
      *
@@ -49,21 +54,16 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
             $error = 0;
             foreach ($collection as $v) {
                 if ($v[0] === null) {
+                    continue;
+                }
+                if (! preg_match('/^[0-9_]+$/i', $v[0])) {
                     $error++;
                     continue;
                 }
-                if (! preg_match('/^[a-z0-9_]+$/i', $v[0])) {
-                    $error++;
-                    continue;
-                }
-                $status = self::insert(['mobile' => $v[0],
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-                if (! $status) {
-                    DB::rollBack();
-                    throw new LogicException('数据格式不正确');
-                }
+                self::insert(['mobile' => $v[0],
+                   'created_at' => now(),
+                   'updated_at' => now(),
+               ]);
                 $count++;
                 DB::commit();
             }
@@ -85,6 +85,6 @@ class MobileImExModel extends CommonModel implements ToCollection, WithChunkRead
      */
     public function chunkSize(): int
     {
-        return 1000;
+        return 50000;
     }
 }

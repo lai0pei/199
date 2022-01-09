@@ -10,7 +10,8 @@
             <fieldset class="table-search-fieldset">
                 <legend>搜索信息</legend>
                 <div style="margin: 10px 10px 10px 10px">
-                    <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action="" onsubmit="return false">
+                    <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action=""
+                        onsubmit="return false">
                         <div class="layui-form-item">
                             <div class="layui-inline">
                                 <label class="layui-form-label">所有活动</label>
@@ -39,6 +40,19 @@
                                 <div class="layui-input-inline">
                                     <input type="text" name="username" autocomplete="off" placeholder="请输入用户名称"
                                         class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">定时刷新</label>
+                                <div class="layui-input-inline">
+                                    <select id="refresh" lay-filter="refresh">
+                                        <option value="0">不刷新</option>
+                                        <option value="5">5秒</option>
+                                        <option value="10">10秒</option>
+                                        <option value="15">15秒</option>
+                                        <option value="20">20秒</option>
+                                        <option value="30">30秒</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="layui-inline">
@@ -71,6 +85,9 @@
                     @if (checkAuth('apply_bulk_refuse'))
                         <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
                     @endif
+                    <a href="{{ route('applyExport') }}" style="float:right;"> <button class="layui-btn layui-btn-sm data-add-btn"
+                                    lay-event="batch-export"> 导出数据 </button></a>
+
                 </div>
             </script>
 
@@ -93,8 +110,6 @@
         var refuse = "{{ route('admin_bulk_refuse') }}";
         var pass = "{{ route('admin_bulk_pass') }}";
 
-
-
         layui.use(['form', 'table', 'laydate'], function() {
             var $ = layui.jquery,
                 form = layui.form,
@@ -104,12 +119,29 @@
             form.render();
 
 
+            //设置刷新 第一步
+            form.on('select(refresh)', function(data) {
+                var val = data.value;
+                localStorage.removeItem('timeout');
+                localStorage.setItem('timeout', val);
+
+                if (val == 0) {
+
+                    clearInterval(id1);
+                } else {
+                    id1 = setInterval(() => {
+                        $('button[lay-filter="data-search-btn"]').click(); //刷新列表
+                    }, val * 1000);
+                }
+            });
+
+
             table.render({
                 elem: '#currentTableId',
                 url: getUserList,
                 toolbar: '#toolbarFilter',
                 defaultToolbar: ['filter'],
-                even : true,
+                even: true,
                 cols: [
                     [{
                             type: 'checkbox',
@@ -212,9 +244,14 @@
                         });
                         break;
                     case 'batch-delete':
+                        var checkStatus = table.checkStatus('currentTableId'),
+                            data = checkStatus.data;
+                        if (data.length == 0) {
+                            layer.msg('请选择至少一个');
+                            layer.close(index);
+                            return true;
+                        }
                         layer.confirm('确认删除?', function(index) {
-                            var checkStatus = table.checkStatus('currentTableId'),
-                                data = checkStatus.data;
 
                             $.ajax({
                                 url: deleteUser,
@@ -242,9 +279,15 @@
                         });
                         break;
                     case 'batch-pass':
+                        var checkStatus = table.checkStatus('currentTableId'),
+                            data = checkStatus.data;
+                        if (data.length == 0) {
+                            layer.msg('请选择至少一个');
+                            layer.close(index);
+                            return true;
+                        }
                         layer.confirm('确认通过?', function(index) {
-                            var checkStatus = table.checkStatus('currentTableId'),
-                                data = checkStatus.data;
+
 
                             $.ajax({
                                 url: pass,
@@ -275,9 +318,14 @@
                         });
                         break;
                     case 'batch-refuse':
+                        var checkStatus = table.checkStatus('currentTableId'),
+                            data = checkStatus.data;
+                        if (data.length == 0) {
+                            layer.msg('请选择至少一个');
+                            layer.close(index);
+                            return true;
+                        }
                         layer.confirm('确认拒绝?', function(index) {
-                            var checkStatus = table.checkStatus('currentTableId'),
-                                data = checkStatus.data;
 
 
                             $.ajax({
@@ -287,7 +335,7 @@
                                 },
                                 method: 'POST',
                                 success: function(res) {
-                                   
+
                                     layer.msg('审核拒绝' + data.length + '条记录', {
                                         icon: 6,
                                         time: SUCCESS_TIME,

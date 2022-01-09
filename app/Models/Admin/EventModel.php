@@ -53,8 +53,8 @@ class EventModel extends CommonModel
         $event['display'] === 1 ? $event['display_check'] = 'checked' : 0;
         $event['is_daily'] === 1 ? $event['is_daily_check'] = 'checked' : 0;
         $event['need_sms'] === 1 ? $event['need_sms_check'] = 'checked' : 0;
-        $event['content'] = preg_replace('/[\t\n\r]/u','',$event['content']);
-   
+        $event['content'] = preg_replace('/[\t\n\r]/u', '', $event['content']);
+
         return $event;
     }
 

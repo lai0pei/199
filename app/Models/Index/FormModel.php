@@ -50,7 +50,7 @@ class FormModel extends Model
             $value['option'] = explode(',', $value['option']);
         }
         $res = [];
-        $eventData = $eventModel::where('id', $eventId)->select('is_sms', 'need_sms','description')->first();
+        $eventData = $eventModel::where('id', $eventId)->select('is_sms', 'need_sms', 'description')->first();
         $res['form'] = $rawForm;
         $res['type'] = $eventTypeModel->where('status', 1)->select('id', 'name')->get()->toArray();
         $res['is_sms'] = $eventData->is_sms;

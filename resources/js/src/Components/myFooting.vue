@@ -1,6 +1,6 @@
 <template>
 <div>
-  <van-tabbar v-model="active" class=" max-w-screen-sm bg-black" active-color="#D9C37F" inactive-color="#fff" @change="onChange">
+  <van-tabbar v-model="active" class="bg-black" active-color="#D9C37F" inactive-color="#fff" @change="onChange">
     <van-tabbar-item class="bg-black" >
       <span>首页</span>
       <template #icon="props">
@@ -90,6 +90,9 @@ export default {
 </script>
 
 <style scoped>
+.van-tabbar{
+  max-width : 27rem;
+}
 .van-tabbar-item{
   background : black;
 }

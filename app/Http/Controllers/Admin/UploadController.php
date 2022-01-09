@@ -18,7 +18,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin\MobileImExModel;
+use App\Models\Admin\MobileImModel;
+use App\Models\Admin\SmsEventModel;
+use App\Models\Admin\UserApplyModel;
+use App\Models\Admin\SmsImportModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -36,8 +39,35 @@ class UploadController extends Controller
     public function importExcel()
     {
         try {
-            Excel::import(new MobileImExModel(), $this->request->file('file'));
+            Excel::import(new MobileImModel(), $this->request->file('file'));
 
+            return self::json_success([], '导入成功');
+        } catch (LogicException $e) {
+            return self::json_fail([], $e);
+        }
+    }
+
+    public function applyExport()
+    {
+        try {
+            return Excel::download(new UserApplyModel(), '会员申请.csv');
+        } catch (LogicException $e) {
+            return self::json_fail([], $e);
+        }
+    }
+
+    public function smsExport()
+    {
+        try {
+            return Excel::download(new SmsEventModel(), '会员短信申请.csv');
+        } catch (LogicException $e) {
+            return self::json_fail([], $e);
+        }
+    }
+
+    public function smsImportMani(){
+        try {
+            Excel::import(new SmsImportModel($this->request->all()), $this->request->file('file'));
             return self::json_success([], '导入成功');
         } catch (LogicException $e) {
             return self::json_fail([], $e);

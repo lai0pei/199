@@ -20,8 +20,11 @@ namespace App\Models\Admin;
 use App\Exceptions\LogicException;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithMapping;
 
-class UserApplyModel extends CommonModel
+class UserApplyModel extends CommonModel implements WithMapping, FromCollection, WithHeadings
 {
     public const PASS = 1;
     public const REFUSE = 2;
@@ -200,6 +203,50 @@ class UserApplyModel extends CommonModel
     public function getTodayEvent()
     {
         return self::whereDate('created_at', Carbon::today())->count();
+    }
+
+    public function collection()
+    {
+        return self::all();
+    }
+
+    /**
+     * @var UserApply
+     */
+    public function map($apply): array
+    {
+        switch (true) {
+            case $apply->status === 1:
+                $apply->status = '通过';
+                break;
+            case $apply->status === 2:
+                $apply->status = '拒绝';
+                break;
+            default:
+                $apply->status = '未审核';
+        }
+
+        return [
+            $apply->id,
+            $apply->username,
+            $apply->apply_time,
+            $apply->description,
+            $apply->status,
+            $apply->ip,
+
+        ];
+    }
+
+    public function headings(): array
+    {
+        return [
+            '编号',
+            '会员名称',
+            '申请时间',
+            '内容',
+            '状态',
+            'ip',
+        ];
     }
 
     private function getEventName($id)

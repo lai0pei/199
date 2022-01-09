@@ -2,16 +2,16 @@
   <div class="relative pb-16">
     <van-skeleton :loading="loading" :row="7">
       <div class="rounded-lg bg-zinc-800 mt-2 mx-2">
-        <div class="overflow-auto whitespace-nowrap">
-          <a
+        <div class="whitespace-nowrap verital" v-dragscroll="true" >
+          <a 
             class="text-gray-400 text-center p-2 inline-block rounded-md"
             v-for="(item, index) in eventType"
             :key="index" 
             :class="{
               'bg-eventBg': eventTypeId == index,
               'text-black': eventTypeId == index,
-            }"
-            ><span v-on:click="selectEvent(index)">{{ item.name }}</span></a
+            }"  v-on:click="selectEvent(index)"
+            ><span>{{ item.name }}</span></a
           >
         </div>
       </div>
@@ -66,8 +66,12 @@
 <script>
 import axios from "axios";
 import applyDialog from "./applyDialog";
+import { dragscroll } from 'vue-dragscroll';
 
 export default {
+   directives: {
+    dragscroll
+  },
   components: {
     applyDialog,
   },
@@ -163,3 +167,23 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.verital{
+
+  overflow-y : hidden;
+  cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.verital::-webkit-scrollbar{
+height: 100%;
+}
+
+</style>

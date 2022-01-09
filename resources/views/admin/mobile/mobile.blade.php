@@ -160,6 +160,11 @@
                     case 'batch-delete':
                         var checkStatus = table.checkStatus('currentTableId'),
                             data = checkStatus.data;
+                            if (data.length == 0) {
+                                layer.msg('请选择至少一个');
+                                layer.close(index);
+                                return true;
+                            }
                         layer.confirm('确认删除记录？', function(index) {
 
                             $.ajax({
@@ -299,7 +304,7 @@
                     ,
                 accept: "file",
                 //  exts: 'xls|xlsx|xlsm|xlt|xltx|xltm',
-                exts: 'xls|xlsx',
+                exts: 'xls|xlsx|csv',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -307,7 +312,7 @@
                     //预读本地文件示例，不支持ie8
 
                     element.progress('demo', '0%'); //进度条复位
-                    layer.msg('文件导入中。。。', {
+                    layer.msg('文件导入中,请耐心等待。。。', {
                         icon: 16,
                         time: 0
                     });

@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 
 class FormModel extends CommonModel
 {
-    public const TEXT = '输入框';
+    public const TEXT = '文本框';
     public const NUM = '数字框';
     public const PH = '手机号码';
     public const TIME = '时间框';
@@ -53,7 +53,7 @@ class FormModel extends CommonModel
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['id'] !== '') {
                 $data['id'] = $param['id'];
@@ -91,7 +91,7 @@ class FormModel extends CommonModel
 
         $status = self::where('id', $data['id'])->delete();
 
-        if (!$status) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
@@ -174,7 +174,7 @@ class FormModel extends CommonModel
 
             $status = self::insert($add);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
@@ -199,7 +199,7 @@ class FormModel extends CommonModel
 
         $status = self::where('id', $data['id'])->update($save);
 
-        if (!$status) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('添加失败');
@@ -219,11 +219,12 @@ class FormModel extends CommonModel
         return EventModel::find($id)->value('name');
     }
 
-    // 表单类型 0 输入框, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框
+    // 表单类型 0 文本框, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框
     /**
      * getOptionName
      *
      * @param  mixed $id
+     *
      * @return string
      */
     private function getOptionName($id): string
