@@ -9,14 +9,14 @@
                 <input type="hidden" name="id" value="{{ $form['id'] ?? -1 }}">
                 <input type="hidden" name="event_id" value="{{ $event_id ?? -1 }}">
                 <input type="text" name="name" lay-verify="required" lay-reqtext="请输入表单名称" placeholder="请输入表单名称"
-                    value="{{ $form['name'] ?? '' }}" class="layui-input" maxlength="12">
+                    value="{{ $form['name'] ?? '' }}" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label required">选项</label>
             <div class="layui-input-block">
                 <input type="text" name="option"  lay-reqtext="请输入表单选项" placeholder="多个选项用英文逗号(,)分隔, 仅下拉框需填"
-                    value="{{ $form['option'] ?? '' }}" class="layui-input" maxlength="12">
+                    value="{{ $form['option'] ?? '' }}" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">

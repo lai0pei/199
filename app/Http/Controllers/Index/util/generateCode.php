@@ -17,18 +17,21 @@
 
 namespace App\Http\Controllers\Index\util;
 
+use Illuminate\Support\Facades\Cache;
+
 trait GenerateCode
 {
     public function getCode($mobile)
-    {
-        session()->forget($mobile);
+    {   
+        $key = $mobile;
+        Cache::forget($key);
         $length = 5;
         $code = '';
         for ($i = 0; $i < $length; $i++) {
             $code .= mt_rand(0, 9);
         }
 
-        session()->put($mobile, $code);
+        Cache::put($key, $code);
 
         return $code;
     }

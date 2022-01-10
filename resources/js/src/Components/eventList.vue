@@ -1,29 +1,30 @@
 <template>
-  <div class="relative pb-16">
+  <div class="relative eventList">
     <van-skeleton :loading="loading" :row="7">
-      <div class="rounded-lg bg-zinc-800 mt-2 mx-2">
-        <div class="whitespace-nowrap verital" v-dragscroll="true" >
-          <a 
-            class="text-gray-400 text-center p-2 inline-block rounded-md"
+      <div class="rounded-lg  mt-2 mx-2 eventTypeBlock">
+        <div class="whitespace-nowrap verital" v-dragscroll="true">
+          <span
+            class="text-gray-400 text-center p-2 inline-block rounded-md hover:bg-eventBg hover:text-black"
             v-for="(item, index) in eventType"
             :key="index" 
             :class="{
               'bg-eventBg': eventTypeId == index,
               'text-black': eventTypeId == index,
-            }"  v-on:click="selectEvent(index)"
-            ><span>{{ item.name }}</span></a
+            }"
+            v-on:click="selectEvent(index)"
+            ><span>{{ item.name }}</span></span
           >
         </div>
       </div>
       <div>
         <ul>
           <li v-for="(list, index) in cEventList" :key="index">
-            <div class="mx-2 mt-2 mb-10">
+            <div class="mx-2 mt-2">
               <div v-if="'' == list.external_url">
                 <img
                   :src="list.type_pic"
                   alt="图片"
-                  class="rounded-md w-full"
+                  class="rounded-t-md rounded-x-md w-full"
                 />
               </div>
               <div v-else>
@@ -31,23 +32,23 @@
                   ><img
                     :src="list.type_pic"
                     alt="图片"
-                    class="rounded-md w-full"
+                    class="rounded-t-md rounded-x-md w-full"
                 /></a>
               </div>
+              <div class="eventBlock rounded-b-md rounded-x-md pb-2">
               <a class="float-left w-20 mt-2 ml-2" v-on:click="getDialog(list)"
                 ><img src="/199/images/btn01.png" alt="点击按钮"
               /></a>
-              <span class="float-right mt-2 mr-2"
+              <span class="float-right mt-2 mr-2" @click="detail(list)"
                 ><img
                   src="/199/images/icon02.png"
                   alt="申请详情"
-                  class="w-4 float-left mr-1"
-                /><span
-                  class="text-neutral-400 text-xs float-right"
-                  @click="detail(list)"
+                  class="w-5 float-left mr-1"
+                /><span class="text-neutral-400 text-sm float-right"
                   >活动规则</span
                 ></span
               >
+              </div>
             </div>
           </li>
         </ul>
@@ -66,11 +67,11 @@
 <script>
 import axios from "axios";
 import applyDialog from "./applyDialog";
-import { dragscroll } from 'vue-dragscroll';
+import { dragscroll } from "vue-dragscroll";
 
 export default {
-   directives: {
-    dragscroll
+  directives: {
+    dragscroll,
   },
   components: {
     applyDialog,
@@ -78,7 +79,7 @@ export default {
   props: { passedEventList: Array },
   data() {
     return {
-      selectedIndex : 3,
+      selectedIndex: 3,
       loading: true,
       showModal: false,
       eventType: [],
@@ -92,7 +93,7 @@ export default {
         need_sms: [],
         game_list: [],
         is_sms: [],
-        description : [],
+        description: [],
       },
     };
   },
@@ -135,7 +136,7 @@ export default {
       let eventType = [];
       let need_sms = "";
       let is_sms = "";
-       let description = "";
+      let description = "";
       await axios
         .post(route("get_index_form"), {
           event_id: data.id,
@@ -169,21 +170,37 @@ export default {
 </script>
 
 <style scoped>
-.verital{
+.eventBlock{
+  background: rgb(37,37,37);
+  display: flex;
+  justify-content: space-between;
+}
 
-  overflow-y : hidden;
+.eventTypeBlock{
+  background: rgb(37,37,37);
+}
+
+.verital {
+  scrollbar-width: none;
+  overflow: auto;
   cursor: pointer;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
-.verital::-webkit-scrollbar{
-height: 100%;
+.verital::-webkit-scrollbar {
+  display: none;
 }
-
+a,
+span {
+  cursor: pointer;
+}
+.eventList{
+  padding-bottom: 11%;
+}
 </style>

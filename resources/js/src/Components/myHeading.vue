@@ -1,11 +1,12 @@
 <template>
-  <div class="grid grid-cols-2 fixed w-full relative">
+  <div class="grid grid-cols-2 fixed w-full relative bg-black">
     <div>
+    <a href="/">
       <img
         class="w-36 p-2 float-left"
         :src="!headData['logo'] ? logo : headData['logo']"
         alt="Head Logo"
-      />
+      /></a>
     </div>
     <div v-on:click="getDialog">
       <img
@@ -22,6 +23,11 @@
   </div>
 </template>
 
+<style scoped>
+img {
+  cursor: pointer;
+}
+</style>
 <script>
 import search from "./searchDialog";
 import axios from "axios";

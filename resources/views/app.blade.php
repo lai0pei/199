@@ -14,7 +14,7 @@
         <script src="{{ mix('js/app.js') }}" defer></script>
 
     </head>
-    <body class="font-sans antialiased h-full bg-bgImg bg-fixed">
+    <body class="font-sans antialiased h-full bg-bgImg">
         @inertia
     </body>
 </html>
@@ -24,6 +24,9 @@ html{
 }
 body{
     scrollbar-width: none;
+    background : no-repeat;
+    background-position: center top;
+    background-color : rgb(26,27,32);
 }
 body::-webkit-scrollbar {
   display: none; /* for Chrome, Safari, and Opera */

@@ -1,5 +1,5 @@
 <template>
-  <div class="relative bg-black rounded-lg">
+  <div class="relative rounded-lg whole">
     <myHeading :head-data="logo"></myHeading>
     <myWallpaper :wallpaper="logo"></myWallpaper>
     <applyList :user-apply-list="applyList"></applyList>
@@ -10,6 +10,9 @@
 </template>
 
 <style>
+.whole{
+  background: rgba(0, 0, 0, 0.3);
+}
 </style>
 <script>
 import myHeading from "./Components/myHeading";

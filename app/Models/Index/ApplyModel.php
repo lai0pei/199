@@ -77,7 +77,7 @@ class ApplyModel extends Model
 
         $count = self::where('username', $username)->where('event_id', $eventId)->count();
 
-        if ($event['is_daily'] === 1 && $event['daily_limit'] === $count) {
+        if ($event['is_daily'] === 1 && ( $event['daily_limit'] === $count || $event['daily_limit'] === 0)) {
             throw new LogicException('今日申请次数，已超过' . $count . '次');
         }
 

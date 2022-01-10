@@ -92,12 +92,13 @@ class IndexController extends Controller
                 throw new LogicException('请求数据不正确');
             }
 
-            // if (! captcha_check($input['captcha'])) {
-            //     throw new LogicException('验证码不正确');
-            // }
-            // if ((int)$input['needSms'] === 1 && ! checkSmsCode($input['mobile'], $input['smsNumber'])) {
-            //     throw new LogicException('短信验证码不正确');
-            // }
+            if (! captcha_check($input['captcha'])) {
+                throw new LogicException('验证码不正确');
+            }
+         
+            if ((int)$input['needSms'] === 1 && ! checkSmsCode($input['mobile'], $input['smsNumber'])) {
+                throw new LogicException('短信验证码不正确');
+            }
 
             if ((int) $input['isSms'] === 1) {
                 $smsModel = new SmsApplyModel($input);

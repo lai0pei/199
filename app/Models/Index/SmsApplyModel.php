@@ -3,6 +3,7 @@
 namespace App\Models\Index;
 
 use App\Models\Admin\MobileModel;
+use Composer\EventDispatcher\Event;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use LogicException;

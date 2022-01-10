@@ -3,6 +3,7 @@
 use App\Http\Controllers\Index\IndexController;
 use App\Http\Controllers\Index\MessageController;
 use App\Http\Controllers\Index\UploadController;
+use App\Http\Controllers\Index\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,3 +40,5 @@ Route::get('/getCaptcha', [IndexController::class, 'captcha'])->name('index_capt
 Route::get('/', [IndexController::class, 'index']);
 
 Route::get('/detail', [IndexController::class, 'detail'])->name('detail');
+
+Route::get('/test', [TestController::class, 'test']);

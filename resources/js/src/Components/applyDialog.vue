@@ -122,7 +122,7 @@
                       <option
                         v-for="(game, index) in gameList"
                         :key="index"
-                        :value="game.id"
+                        :value="game.name"
                       >
                         {{ game.name }}
                       </option>
@@ -184,12 +184,12 @@
                       <span v-else class="text-xs">{{ messageText }}</span>
                     </button>
                   </div>
-                  <div>
+                </div>
+                 <div>
                     <p class="rounded-md mt-1 w-64 description">
                       {{ description }}
                     </p>
                   </div>
-                </div>
               </ul>
               <div class="text-center mt-4">
                 <span class="float-left"
@@ -558,6 +558,10 @@ export default {
   font-family: Helvetica, Arial, sans-serif;
   background-color: #232323;
   overflow: auto;
+}
+
+.modal-container::-webkit-scrollbar {
+  display: none;
 }
 
 .modal-header {

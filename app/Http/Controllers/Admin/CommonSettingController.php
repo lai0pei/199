@@ -20,7 +20,8 @@ class CommonSettingController extends Controller
     }
 
     public function confirm()
-    {
-        return self::json_success((new ConfigModel($this->request->all()))->saveConfig('logo', '更新了 前台 图片'));
+    {      
+        $request['data'] = stripUrl($this->request->input('data'));
+        return self::json_success((new ConfigModel($request))->saveConfig('logo', '更新了 前台 图片'));
     }
 }

@@ -65,7 +65,7 @@ class EventModel extends CommonModel
         $data = $input['data'];
 
         DB::beginTransaction();
-
+    
         if ((int) $data['id'] === -1) {
             if (self::where('name', $data['name'])->value('id') !== null) {
                 throw new LogicException('相同活动名称, 已存在');
@@ -74,17 +74,17 @@ class EventModel extends CommonModel
             $add = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
-                'type_pic' => $data['type_pic'] ?? '',
+                'type_pic' => stripUrl($data['type_pic'] ?? ''),
                 'sort' => $data['sort'],
                 'status' => ($data['status'] ?? '') === 'on' ? 1 : 0,
                 'display' => ($data['display'] ?? '') === 'on' ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
                 'description' => $data['description'],
-                'daily_limit' => $data['sort'],
+                'daily_limit' => $data['daily_limit'],
                 'is_daily' => ($data['is_daily'] ?? '') === 'on' ? 1 : 0,
                 'need_sms' => ($data['need_sms'] ?? '') === 'on' ? 1 : 0,
-                'content' => $data['content'],
+                'content' => stripUrl($data['content']),
                 'external_url' => $data['external_url'],
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -110,16 +110,16 @@ class EventModel extends CommonModel
             $save = [
                 'name' => $data['name'],
                 'type_id' => $data['type_id'],
-                'type_pic' => $data['type_pic'] ?? '',
+                'type_pic' => stripUrl($data['type_pic'] ?? ''),
                 'sort' => $data['sort'],
                 'status' => ($data['status'] ?? '') === 'on' ? 1 : 0,
                 'display' => ($data['display'] ?? '') === 'on' ? 1 : 0,
                 'start_time' => $data['start'],
                 'end_time' => $data['end'],
-                'daily_limit' => $data['sort'],
+                'daily_limit' => $data['daily_limit'],
                 'is_daily' => ($data['is_daily'] ?? '') === 'on' ? 1 : 0,
                 'need_sms' => ($data['need_sms'] ?? '') === 'on' ? 1 : 0,
-                'content' => $data['content'],
+                'content' => stripUrl($data['content']),
                 'description' => $data['description'],
                 'external_url' => $data['external_url'],
                 'created_at' => now(),

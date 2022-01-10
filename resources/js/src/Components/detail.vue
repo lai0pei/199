@@ -6,7 +6,7 @@
 <div v-html="content" style="overflow-y=auto">
 </div>
 </div>
-<myFoot :footer="footer"></myFoot>
+<myFoot :footer="footer" :nActive="-1"></myFoot>
 </div>
 </template>
 <style scoped>

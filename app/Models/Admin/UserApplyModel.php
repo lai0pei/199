@@ -126,7 +126,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
             $ids = array_column($data['data'], 'id');
             $count = count($ids);
             $status = self::whereIn('id', $ids)->delete();
-            $title = '删除了' . $count . '行用户申请记录';
+            $title = '删除了' . $count . '行活动申请记录';
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
@@ -159,9 +159,11 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
             if ($status === self::PASS) {
                 $pass = (new ConfigModel())->getConfig('bulkPass');
                 $msg = $pass['pass'] ?? '';
+                $tx = '通过';
             } else {
                 $deny = (new ConfigModel())->getConfig('bulkDeny');
                 $msg = $deny['refuse'] ?? '';
+                $tx = '拒绝';
             }
             $audit = [
                 'status' => $status,
@@ -169,7 +171,8 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
                 'description' => $msg,
             ];
             $status = self::whereIn('id', $ids)->update($audit);
-            $title = '审核了    ' . $count . '行用户申请记录';
+            
+            $title = '审核'.$tx.'了    '. $count . '行活动申请记录';
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
@@ -181,7 +184,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
             throw new LogicException('审核失败');
         }
 
-        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => $title];
+        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => $title];
 
         (new LogModel($log_data))->createLog();
 
@@ -241,7 +244,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
     {
         return [
             '编号',
-            '会员名称',
+            '会员账号',
             '申请时间',
             '内容',
             '状态',

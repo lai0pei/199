@@ -115,12 +115,12 @@ class UploadLogoController extends Controller
     {
         [$width, $height] = getimagesize($file);
 
-        if ($width !== (int) $config['width']) {
-            throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
-        }
-        if ($height !== (int) $config['height']) {
-            throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
-        }
+        // if ($width !== (int) $config['width']) {
+        //     throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
+        // }
+        // if ($height !== (int) $config['height']) {
+        //     throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
+        // }
     }
 
     private function storePic($file, $config)

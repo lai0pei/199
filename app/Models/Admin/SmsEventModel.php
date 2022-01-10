@@ -146,7 +146,7 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
             $ids = array_column($data['data'], 'id');
             $count = count($ids);
             $status = self::whereIn('id', $ids)->delete();
-            $title = '删除了' . $count . '行用户短信活动申请记录';
+            $title = '删除了' . $count . '行新人申请记录';
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
@@ -175,13 +175,18 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
 
         try {
             $ids = array_column($data['data'], 'id');
+            if(1 === $status){
+                $tx = '通过';
+            }else{
+                $tx = '拒绝';
+            }
             $count = count($ids);
             $audit = [
                 'state' => $status,
                 'updated_at' => now(),
             ];
             $status = self::whereIn('id', $ids)->update($audit);
-            $title = '审核了    ' . $count . '行用户短信活动申请记录';
+            $title = '审核'.$tx.'了    ' . $count . '行新人申请记录';
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
@@ -193,7 +198,7 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
             throw new LogicException('审核失败');
         }
 
-        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => $title];
+        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => $title];
 
         (new LogModel($log_data))->createLog();
 
@@ -246,7 +251,8 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
 
         return [
             $apply->id,
-            $apply->username,
+            $apply->user_name,
+            $apply->mobile,
             $apply->game,
             $apply->apply_time,
             $apply->send_remark,
@@ -260,7 +266,8 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
     {
         return [
             '编号',
-            '会员名称',
+            '会员账号',
+            '手机号',
             '活动',
             '申请时间',
             '派送备注',

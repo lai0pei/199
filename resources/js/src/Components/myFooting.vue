@@ -1,13 +1,14 @@
 <template>
 <div>
-  <van-tabbar v-model="active" class="bg-black" active-color="#D9C37F" inactive-color="#fff" @change="onChange">
+  <van-tabbar v-model="active" class="bg-black" active-color="#D9C37F" inactive-color="#fff" @change="onChange" border>
     <van-tabbar-item class="bg-black" >
       <span>首页</span>
       <template #icon="props">
+      <a >
         <img
           :src="props.active ? icon[0].active : icon[0].inactive"
           alt="图片"
-        />
+        /></a>
       </template>
     </van-tabbar-item>
     <van-tabbar-item class="bg-black">
@@ -41,7 +42,7 @@
 <script>
 export default {
   name: "myFooding",
-  props: ["footer"],
+  props: ["footer","nActive"],
   data() {
     return {
       active: 0,
@@ -69,6 +70,7 @@ export default {
   },
   mounted() {
     this.list = this.footer;
+    this.active = this.nActive;
   },
   methods : {
     onChange : function(index){
@@ -82,8 +84,9 @@ export default {
         break;
         default : link = this.list.home;
       }
-      window.location.href = link;
-    
+      console.log("current link", link);
+   
+    window.location.replace(link);
     }
   }
 };

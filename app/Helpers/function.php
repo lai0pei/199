@@ -24,6 +24,15 @@ function checkAuth($name = '')
 }
 
 function checkSmsCode($mobile, $code)
-{
-    return (int) session()->get($mobile) === (int) $code;
+{  
+    return (int) Cache::get($mobile) === (int) $code;
 }
+
+function stripUrl($data){
+    if($data === ''){
+        return '';
+    }
+    $url = url("/");  
+    return str_replace($url,'',$data);
+}
+
