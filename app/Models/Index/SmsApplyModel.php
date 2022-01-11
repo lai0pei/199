@@ -3,9 +3,9 @@
 namespace App\Models\Index;
 
 use App\Models\Admin\MobileModel;
-use Composer\EventDispatcher\Event;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use LogicException;
 
 class SmsApplyModel extends Model
@@ -25,11 +25,30 @@ class SmsApplyModel extends Model
     {
         {
             $data = $this->data;
+            $eventId = $data['eventId'];
             $username = $data['username'];
             $pic_url = $data['imageUrl'];
             $game = $data['gameName'];
             $mobile = $data['mobile'];
             $form = [];
+            
+            $event = new EventModel();
+            $isMonthly= $event::where('id',$eventId)->value('is_monthly');
+
+            if((int)$isMonthly === 1){
+                $startOfmonth = Carbon::now()->startOfMonth();
+                $endOfmonth = Carbon::now()->endOfMonth();
+     
+                $isAllow = self::where('event_id',$data['eventId'])
+                ->where('mobile',$mobile)
+                ->whereBetween('apply_time',[$startOfmonth, $endOfmonth])
+                ->count();
+            
+                if((int)$isAllow > 1){
+                    throw new LogicException('本月申请次数 已超过2次');
+                }
+            }
+         
 
             $form = (new ApplyModel())->removeNull($data['form']);
 
@@ -49,6 +68,7 @@ class SmsApplyModel extends Model
 
                 $insert = [
                     'user_name' => $username,
+                    'event_id' =>$data['eventId'],
                     'game' => $game,
                     'value' => serialize($form),
                     'mobile' => $mobile,

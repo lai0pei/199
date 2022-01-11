@@ -32,6 +32,7 @@
                     />
                   </div>
                 </li>
+               
                 <li v-for="(form, index) in formList" :key="index">
                   <div v-if="form.type == 0">
                     <input
@@ -110,6 +111,13 @@
                     </select>
                   </div>
                 </li>
+                 <li>
+                  <div>
+                    <p class="rounded-md mt-1 w-64 description">
+                      {{ description }}
+                    </p>
+                  </div>
+                </li>
                 <div>
                   <div v-if="isSms == 1">
                     <select
@@ -185,11 +193,6 @@
                     </button>
                   </div>
                 </div>
-                 <div>
-                    <p class="rounded-md mt-1 w-64 description">
-                      {{ description }}
-                    </p>
-                  </div>
               </ul>
               <div class="text-center mt-4">
                 <span class="float-left"
@@ -309,7 +312,6 @@ export default {
     this.needSms = localStorage.getItem("needSms");
     this.isSms = localStorage.getItem("isSms");
     this.description = localStorage.getItem("description");
-    this.eventId = 1;
   },
   methods: {
     clearForm: function () {
@@ -506,7 +508,7 @@ export default {
 
 .description {
   color: white;
-  font-size: 0.8rem;
+  font-size: 0.65rem;
   padding: 0 0.7rem;
 }
 

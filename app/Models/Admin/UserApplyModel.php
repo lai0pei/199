@@ -165,6 +165,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
                 $msg = $deny['refuse'] ?? '';
                 $tx = '拒绝';
             }
+     
             $audit = [
                 'status' => $status,
                 'updated_at' => now(),
@@ -254,7 +255,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
 
     private function getEventName($id)
     {
-        return EventTypeModel::where('id', $id)->value('name');
+        return EventModel::where('id', $id)->value('name');
     }
 
     private function statusToText($status)

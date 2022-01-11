@@ -16,7 +16,7 @@ class CreateUserApply extends Migration
     {
         Schema::create('user_apply', function (Blueprint $table) {
             $table->id()->comment('编号')->autoIncrement();
-            $table->unsignedMediumInteger('event_id')->comment('活动类型');
+            $table->unsignedMediumInteger('event_id')->comment('活动')->nullable();
             $table->string('username', 200)->comment('申请用户名称')->nullable();
             $table->timestamp('apply_time')->comment('申请时间')->nullable();
             $table->string('description', 200)->comment('回复内容')->nullable();

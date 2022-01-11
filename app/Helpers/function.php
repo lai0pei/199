@@ -7,6 +7,7 @@ function checkAuth($name = '')
 {
     $key = 'permission_' . session('user_id');
     $permission = Cache::get($key);
+
     if (empty($permission)) {
         $data = session('permission');
         if (empty($data)) {

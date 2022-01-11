@@ -17,6 +17,7 @@ class CreateSmsApply extends Migration
         Schema::create('sms_apply', function (Blueprint $table) {
             $table->id()->autoIncrement()->comment('编号');
             $table->string('user_name',100)->nullable()->comment('申请用户名称');
+            $table->unsignedMediumInteger('event_id')->comment('活动')->nullable();
             $table->string('message',200)->nullable()->comment('派送信息');
             $table->string('mobile',50)->nullable()->comment('用户电话号码');
             $table->string('game',100)->nullable()->comment('游戏类型');

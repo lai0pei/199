@@ -108,6 +108,13 @@ class DefaultPermission extends Seeder
             ['name' => 'accouncement', 'title' => '预览', 'grand_auth_id' => '2', 'parent_auth_id' => '11', 'content'=>'添加此权限, 管理员可 预览 前台公告通知','current_auth_id' => '16', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'accouncement_edit', 'title' => '编辑', 'grand_auth_id' => '2', 'parent_auth_id' => '11','content'=>'添加此权限, 管理员可 预览 和 编辑前台公告通知', 'current_auth_id' => '16', 'created_at' => now(), 'updated_at' => now()],
 
+            //用户申请记录
+            ['name' => 'apply_export', 'title' => '导出', 'grand_auth_id' => '2', 'parent_auth_id' => '7', 'content'=>'添加此权限, 管理员仅可 预览 导出用户申请记录','current_auth_id' => '9', 'created_at' => now(), 'updated_at' => now()],
+
+            //短信申请记录
+            ['name' => 'sms_import', 'title' => '导入', 'grand_auth_id' => '2', 'parent_auth_id' => '7','content'=>'添加此权限, 管理员可 预览 和 导入短信号码申请记录', 'current_auth_id' => '10', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'sms_export', 'title' => '导出', 'grand_auth_id' => '2', 'parent_auth_id' => '7', 'content'=>'添加此权限, 管理员可 预览 和 导出短信号码申请记录','current_auth_id' => '10', 'created_at' => now(), 'updated_at' => now()],
+
         );
 
         //设置 auth_menu 最大之后的 编号 不然 layui tree 插件出现 问题

@@ -85,8 +85,10 @@
                     @if (checkAuth('apply_bulk_refuse'))
                         <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
                     @endif
+                    @if (checkAuth('apply_export'))
                     <a href="{{ route('applyExport') }}" style="float:right;"> <button class="layui-btn layui-btn-sm data-add-btn"
                                     lay-event="batch-export"> 导出数据 </button></a>
+                                    @endif
 
                 </div>
             </script>

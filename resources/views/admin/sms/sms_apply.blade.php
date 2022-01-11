@@ -96,8 +96,12 @@
                     @if (checkAuth('sms_bulk_refuse'))
                         <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
                     @endif
+                    @if (checkAuth('sms_export'))
                     <a href="{{route('sms_export')}}" style="float:right"><button class="layui-btn layui-btn-sm data-add-btn"> 导出数据 </button></a>
+                    @endif
+                    @if (checkAuth('sms_import'))
                     <button class="layui-btn  layui-btn-sm data-add-btn" lay-event="import" style="float:right"> 导入数据 </button>
+                    @endif
 
                 </div>
             </script>
@@ -105,7 +109,7 @@
             <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
 
             <script type="text/html" id="currentTableBar">
-                @if (checkAuth('admin_view'))
+                @if (checkAuth('sms_edit'))
                     <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="audit">审核操作</a>
                 @endif
             </script>
@@ -264,7 +268,7 @@
                             $.ajax({
                                 url: deleteUser,
                                 data: {
-                                    'id': id,
+                                    'data': data,
                                 },
                                 method: 'POST',
                                 success: function(res) {

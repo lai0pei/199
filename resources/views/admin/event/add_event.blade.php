@@ -106,6 +106,16 @@
                                 {{ $type['need_sms_check'] ?? '' }}>
                         </div>
                     </div>
+                    <input type='hidden' value="{{$type['is_sms']}}" name="is_sms"/>
+                    @if ((int)$type['is_sms'] === 1 )
+                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
+                        <label class="layui-form-label">每月限制</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_monthly" lay-skin="switch" id='is_monthly' lay-text="限制|不限"
+                                {{ $type['is_monthly_check'] ?? '' }}>
+                        </div>
+                    </div>
+                    @else
                     <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
                         <label class="layui-form-label">每日限制</label>
                         <div class="layui-input-inline">
@@ -113,7 +123,9 @@
                                 {{ $type['is_daily_check'] ?? '' }}>
                         </div>
                     </div>
+                    @endif
                 </div>
+                @if ((int)$type['is_sms'] !== 1 )
                 <div class="layui-form-item">
                     <label class="layui-form-label required">限制次数</label>
                     <div class="layui-input-inline">
@@ -121,6 +133,7 @@
                             value="{{ $type['daily_limit'] ?? '' }}" class="layui-input ">
                     </div>
                 </div>
+                @endif
                 <div class="layui-form-item">
                     <label class="layui-form-label required">注释</label>
                     <div class="layui-input-inline">

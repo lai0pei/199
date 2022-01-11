@@ -130,6 +130,7 @@ class PermissionMenuModel extends CommonModel
             '预览',
             '表单配置',
             '导入',
+            '导出',
             '一键清除数据',
             '审核操作',
             '批量通过',

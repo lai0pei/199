@@ -47,7 +47,7 @@ class ApplyModel extends Model
         $where['status'] = 1;
         $where['is_delete'] = 0;
         $column = ['id', 'username', 'event_id'];
-        $applyList = self::where($where)->select($column)->limit(20)->get()->toArray();
+        $applyList = self::where($where)->select($column)->limit(20)->orderby('id', 'desc')->get()->toArray();
 
         $eventModel = new EventModel();
         foreach ($applyList as &$v) {
@@ -73,28 +73,29 @@ class ApplyModel extends Model
 
         $eventModel = new EventModel();
 
-        $event = $eventModel::find($eventId)->toArray();
+        $limit = $eventModel::where('id', $eventId)->value('daily_limit');
+        $is_daily = $eventModel::where('id', $eventId)->value('is_daily');
 
         $count = self::where('username', $username)->where('event_id', $eventId)->count();
-
-        if ($event['is_daily'] === 1 && ( $event['daily_limit'] === $count || $event['daily_limit'] === 0)) {
-            throw new LogicException('今日申请次数，已超过' . $count . '次');
-        }
-
-        $form = $this->removeNull($data['form']);
-
-        if (! empty($pic_url)) {
-            foreach ($pic_url as &$v) {
-                $v['name'] = $this->formModel::where('id', $v['id'])->value('name');
-                $v['type'] = 'photo';
-                unset($v['id']);
-            }
-            unset($v);
-            $form = array_merge($form, $pic_url);
+     
+        if ((int) $is_daily === 1 && (((int) $limit < (int)$count) || (int)$limit === 0)) {
+            throw new LogicException('今日申请次数，已超过' . $limit . '次');
         }
 
         try {
             DB::beginTransaction();
+
+            $form = $this->removeNull($data['form']);
+
+            if (!empty($pic_url)) {
+                foreach ($pic_url as &$v) {
+                    $v['name'] = $this->formModel::where('id', $v['id'])->value('name');
+                    $v['type'] = 'photo';
+                    unset($v['id']);
+                }
+                unset($v);
+                $form = array_merge($form, $pic_url);
+            }
 
             $insert = [
                 'event_id' => $eventId,
@@ -110,9 +111,10 @@ class ApplyModel extends Model
 
             $status = self::insert($insert);
         } catch (LogicException $e) {
+            dd($e->getMessage());
             throw new LogicException('申请失败');
         }
-        if (! $status) {
+        if (!$status) {
             DB::rollBack();
             throw new LogicException('申请失败，请联系客服');
         }
@@ -134,7 +136,7 @@ class ApplyModel extends Model
         $i = 0;
         foreach ($form as &$subForm) {
             foreach ($subForm as $k => $v) {
-                if (! empty($v)) {
+                if (!empty($v)) {
                     $data[$i]['name'] = $this->formModel::where('id', $k)->value('name');
                     $data[$i]['value'] = $v;
                 }
