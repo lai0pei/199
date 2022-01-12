@@ -52,7 +52,6 @@
 @endsection
 @section('footer')
     <script>
-        var get_role = "{{ route('admin_get_role') }}";
         var save_person = "{{ route('admin_form_add') }}";
         layui.use(['form'], function() {
             var form = layui.form,

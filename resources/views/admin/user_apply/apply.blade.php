@@ -1,106 +1,123 @@
 @extends('common.template')
 @section('style')
-
+<style>
+.hideStatus{
+    display : none;
+}
+</style>
 @endsection
 
 @section('content')
     <div class="layuimini-container">
         <div class="layuimini-main">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">全部</li>
+                    <li >未审核</li>
+                    <li>已通过</li>
+                    <li>已拒绝</li>
+                </ul>
+                <div class="layui-tab-content" style="height: auto;">
+                        <div class="layui-tab-item layui-show" >
+                        <fieldset class="table-search-fieldset">
+                            <legend>搜索信息</legend>
+                            <div style="margin: 10px 10px 10px 10px">
+                                <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action=""
+                                    onsubmit="return false">
+                                    <div class="layui-form-item">
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">所有活动</label>
+                                            <div class="layui-input-inline">
+                                                <select name="event_id">
+                                                    <option value="">请选择</option>
+                                                    @foreach ($eventList as $ind => $item)
+                                                        <option value="{{ $item['id'] ?? '' }}">
+                                                            {{ $item['name'] ?? '' }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline hideStatus"  >
+                                            <label class="layui-form-label">显示</label>
+                                            <div class="layui-input-inline">
+                                                <select name="status"  id="status">
+                                                    <option value="-1">请选择</option>
+                                                    @foreach ($status as $ind => $item)
+                                                        <option value="{{ $ind }}">{{ $item }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">用户名称</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="username" autocomplete="off" placeholder="请输入用户名称"
+                                                    class="layui-input">
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">定时刷新</label>
+                                            <div class="layui-input-inline">
+                                                <select id="refresh" lay-filter="refresh">
+                                                    <option value="0">不刷新</option>
+                                                    <option value="5">5秒</option>
+                                                    <option value="10">10秒</option>
+                                                    <option value="15">15秒</option>
+                                                    <option value="20">20秒</option>
+                                                    <option value="30">30秒</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">用户Ip</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="ip" autocomplete="off" placeholder="请输入用户Ip"
+                                                    class="layui-input">
+                                            </div>
+                                        </div>
 
-            <fieldset class="table-search-fieldset">
-                <legend>搜索信息</legend>
-                <div style="margin: 10px 10px 10px 10px">
-                    <form class="layui-form layui-form-pane" lay-filter="data-search-filter" action=""
-                        onsubmit="return false">
-                        <div class="layui-form-item">
-                            <div class="layui-inline">
-                                <label class="layui-form-label">所有活动</label>
-                                <div class="layui-input-inline">
-                                    <select name="event_id">
-                                        <option value="">请选择</option>
-                                        @foreach ($eventList as $ind => $item)
-                                            <option value="{{ $item['id'] ?? '' }}">{{ $item['name'] ?? '' }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">显示</label>
-                                <div class="layui-input-inline">
-                                    <select name="status">
-                                        <option value="">请选择</option>
-                                        @foreach ($status as $ind => $item)
-                                            <option value="{{ $ind }}">{{ $item }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">用户名称</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="username" autocomplete="off" placeholder="请输入用户名称"
-                                        class="layui-input">
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">定时刷新</label>
-                                <div class="layui-input-inline">
-                                    <select id="refresh" lay-filter="refresh">
-                                        <option value="0">不刷新</option>
-                                        <option value="5">5秒</option>
-                                        <option value="10">10秒</option>
-                                        <option value="15">15秒</option>
-                                        <option value="20">20秒</option>
-                                        <option value="30">30秒</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="layui-inline">
-                                <label class="layui-form-label">用户Ip</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="ip" autocomplete="off" placeholder="请输入用户Ip"
-                                        class="layui-input">
-                                </div>
-                            </div>
 
-
-                            <div class="layui-inline">
-                                <button type="submit" class="layui-btn layui-btn-primary" lay-submit
-                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜索 或 快速刷新
-                                </button>
+                                        <div class="layui-inline">
+                                            <button type="submit" class="layui-btn layui-btn-primary" lay-submit
+                                                lay-filter="data-search-btn"><i class="layui-icon"></i> 搜索 或 快速刷新
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
-                    </form>
+                        </fieldset>
+
+                        <script type="text/html" id="toolbarFilter">
+                            <div class="layui-btn-container">
+                                @if (checkAuth('apply_bulk_delete'))
+                                    <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="batch-delete"> 批量删除 </button>
+                                @endif
+                                @if (checkAuth('apply_bulk_pass'))
+                                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="batch-pass"> 批量通过 </button>
+                                @endif
+                                @if (checkAuth('apply_bulk_refuse'))
+                                    <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
+                                @endif
+                                @if (checkAuth('apply_export'))
+                                    <a href="{{ route('applyExport') }}" style="float:right;"> <button class="layui-btn layui-btn-sm data-add-btn"
+                                            lay-event="batch-export"> 导出数据 </button></a>
+                                @endif
+
+                            </div>
+                        </script>
+
+                        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+
+                        <script type="text/html" id="currentTableBar">
+                            @if (checkAuth('apply_edit'))
+                                <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="audit">审核操作</a>
+                            @endif
+                        </script>
                 </div>
-            </fieldset>
-
-            <script type="text/html" id="toolbarFilter">
-                <div class="layui-btn-container">
-                    @if (checkAuth('apply_bulk_delete'))
-                        <button class="layui-btn layui-btn-danger layui-btn-sm data-add-btn" lay-event="batch-delete"> 批量删除 </button>
-                    @endif
-                    @if (checkAuth('apply_bulk_pass'))
-                        <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="batch-pass"> 批量通过 </button>
-                    @endif
-                    @if (checkAuth('apply_bulk_refuse'))
-                        <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
-                    @endif
-                    @if (checkAuth('apply_export'))
-                    <a href="{{ route('applyExport') }}" style="float:right;"> <button class="layui-btn layui-btn-sm data-add-btn"
-                                    lay-event="batch-export"> 导出数据 </button></a>
-                                    @endif
-
-                </div>
-            </script>
-
-            <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
-
-            <script type="text/html" id="currentTableBar">
-                @if (checkAuth('apply_edit'))
-                    <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="audit">审核操作</a>
-                @endif
-            </script>
+            </div>
         </div>
+
+    </div>
     </div>
 @endsection
 
@@ -116,7 +133,8 @@
             var $ = layui.jquery,
                 form = layui.form,
                 table = layui.table,
-                layuimini = layui.layuimini;
+                layuimini = layui.layuimini,
+                element = layui.element,
             laydate = layui.laydate;
             form.render();
 
@@ -137,6 +155,26 @@
                 }
             });
 
+            element.on('tab(docDemoTabBrief)', function(data){
+               switch(true){
+                   case data.index == 0 :
+                   $("#status").val(-1);
+                   $('button[lay-filter="data-search-btn"]').click();
+                    break;
+                    case data.index == 1 :
+                    $("#status").val(0);
+                   $('button[lay-filter="data-search-btn"]').click();
+                    break;
+                    case data.index == 2 :
+                    $("#status").val(1);
+                   $('button[lay-filter="data-search-btn"]').click();
+                    break;
+                    case data.index == 3 :
+                    $("#status").val(2);
+                   $('button[lay-filter="data-search-btn"]').click();
+                    break;
+               }
+            })
 
             table.render({
                 elem: '#currentTableId',

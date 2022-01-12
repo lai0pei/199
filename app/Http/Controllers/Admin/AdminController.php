@@ -22,9 +22,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\AdminModel;
 use App\Models\Admin\RoleModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
+
+    const MSG = '请求数据有误';
     /**
      * __construct
      *
@@ -62,8 +66,20 @@ class AdminController extends Controller
 
     public function addNewAdmin()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'account' => 'required',
+            'password' => 'required',
+            'username' => 'required',
+            'role' => 'required',
+            'status' => ['required', Rule::in(0, 1, 2)],
+        ], );
         try {
-            if ((new AdminModel($this->request->all()))->addAdmin()) {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+
+            if ((new AdminModel($input))->addAdmin()) {
                 return self::json_return([], '添加成功');
             }
         } catch (LogicException $e) {
@@ -73,22 +89,57 @@ class AdminController extends Controller
 
     public function editPerson()
     {
-        $data = (new AdminModel($this->request->route()->parameters()))->editAdmin();
-        return view('admin.person.editperson', ['edit_admin' => $data[0]]);
+        $input = $this->request->route()->parameters();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException('ID必须');
+            }
+            $data = (new AdminModel($input))->editAdmin();
+            return view('admin.person.editperson', ['edit_admin' => $data]);
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 
     public function viewPerson()
     {
-        $data = (new AdminModel($this->request->route()->parameters()))->editAdmin();
-        return view('admin.person.viewperson', ['edit_admin' => $data[0]]);
+        $input = $this->request->route()->parameters();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException('ID必须');
+            }
+            $data = (new AdminModel($input))->editAdmin();
+            return view('admin.person.viewperson', ['edit_admin' => $data]);
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 
     public function saveAdmin()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+            'account' => 'required',
+            'username' => 'required',
+            'role' => 'required',
+            'status' => ['required', Rule::in(0, 1, 2)],
+        ], );
         try {
-            if ((new AdminModel($this->request->all()))->saveAdmin()) {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+
+            if ((new AdminModel($input))->saveAdmin()) {
                 return self::json_return([], '编辑成功');
             }
+
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }
@@ -96,7 +147,16 @@ class AdminController extends Controller
 
     public function deleteAdmin()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+        ], );
         try {
+
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+
             if ((new AdminModel($this->request->all()))->deleteAdmin()) {
                 return self::json_return([], '删除成功');
             }

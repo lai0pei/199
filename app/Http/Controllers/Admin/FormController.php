@@ -21,6 +21,7 @@ use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\FormModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FormController extends Controller
 {
@@ -37,14 +38,25 @@ class FormController extends Controller
 
     public function getFormList()
     {
-        $data = (new FormModel($this->request->all()))->getFormList();
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException('编号必须');
+            }
+            $data = (new FormModel($this->request->all()))->getFormList();
 
-        $result['code'] = self::FAIL;
-        $result['msg'] = '操作成功';
-        $result['data'] = $data['data'];
-        $result['count'] = $data['count'];
+            $result['code'] = self::FAIL;
+            $result['msg'] = '操作成功';
+            $result['data'] = $data['data'];
+            $result['count'] = $data['count'];
 
-        return response()->json($result);
+            return response()->json($result);
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 
     public function formDelete()
@@ -70,8 +82,17 @@ class FormController extends Controller
 
     public function formAdd()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+            'type' => 'required',
+            'event_id' => 'required',
+        ], );
         try {
-            if ((new FormModel($this->request->all()))->formAdd()) {
+            if ($validator->fails()) {
+                throw new LogicException('请填写全部数据');
+            }
+            if ((new FormModel($input))->formAdd()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {

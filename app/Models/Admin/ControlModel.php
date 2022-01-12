@@ -59,12 +59,15 @@ class ControlModel extends Model
     public function getSeriesData($type, $day)
     {
         $series = [];
+        $length = count($type);
         foreach ($type as $k => $v) {
             $series[$k]['name'] = $v['name'];
             $series[$k]['type'] = 'line';
             $series[$k]['stack'] = '总量';
             $series[$k]['areaStyle'] = '{}';
-            $series[$k]['label'] = '{ normal : { show: true, position : top}}';
+            if($k === $length ){
+                $series[$k]['label'] = '{ normal : { show: true, position : top}}';
+            }  
             $series[$k]['data'] = $this->calDay($day, $v);
         }
 

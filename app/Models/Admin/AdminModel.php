@@ -227,7 +227,7 @@ class AdminModel extends CommonModel
             'reg_ip' => request()->ip(),
             'status' => $data['status'],
             'is_delete' => 0,
-            'number' => $data['number'],
+            'number' => ($data['number'] ?? ''),
             'login_count' => 0,
             'created_at' => now(),
             'updated_at' => now(),
@@ -254,8 +254,7 @@ class AdminModel extends CommonModel
     public function editAdmin()
     {
         $data = $this->adminData;
-        $column = ['id', 'account', 'user_name', 'last_ip', 'status', 'login_count', 'last_date', 'role_id', 'number'];
-        return self::where('id', $data['id'])->get($column);
+        return self::find($data['id']);
     }
 
     /**
@@ -272,7 +271,7 @@ class AdminModel extends CommonModel
         $save['role_id'] = $data['role'];
         $save['updated_at'] = now();
         $save['status'] = $data['status'];
-        $save['number'] = $data['number'];
+        $save['number'] = $data['number'] ?? '';
 
         if (! empty($data['password'])) {
             $save['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -280,6 +279,11 @@ class AdminModel extends CommonModel
 
         $accountId = self::where('account', $data['account'])->where('is_delete', 0)->value('id');
         $userId = self::where('user_name', $data['username'])->where('is_delete', 0)->value('id');
+        $id = self::where('id',$data['id'])->value('id');
+
+        if (!isset($id)) {
+            throw new LogicException('账号不存在');
+        }
 
         if (isset($accountId) && (int) $data['id'] !== $accountId) {
             throw new LogicException('登录账号已存在');

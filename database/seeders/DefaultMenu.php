@@ -15,7 +15,6 @@ class DefaultMenu extends Seeder
     public function run()
     {
         $config = [
-            // 0 => ['id' => 1, 'p_id' => 0, 'title' => '控制台', 'auth_name' => 'control', 'icon' => '', 'href' => '6ucwfN@Bt/control', 'sort' => 0, 'created_at' => now(), 'updated_at' => now()],
             1 => ['id' => 2, 'p_id' => 0, 'title' => '活动管理', 'auth_name' => 'event_management', 'icon' => '', 'href' => '6ucwfN@Bt/event_management', 'sort' => 1, 'created_at' => now(), 'updated_at' => now()],
             2 => ['id' => 3, 'p_id' => 0, 'title' => '系统管理', 'auth_name' => 'system_management', 'icon' => '', 'href' => '6ucwfN@Bt/system_management', 'sort' => 2, 'created_at' => now(), 'updated_at' => now()],
 

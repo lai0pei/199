@@ -3,12 +3,12 @@
     <div class="layui-container">
         <div class="layui-row">
             <form class="layui-form" action="" lay-filter="example" onsubmit="return false;">
-                <input type="hidden" name="id" value="{{ $role['id'] ?? '-1' }}">
+                <input type="hidden" name="id" value="{{ $role->id ?? '-1' }}">
                 <div class="layui-form-item">
                     <label class="layui-form-label">角色名称 <span class="color-red">*</span></label>
                     <div class="layui-input-block ">
                         <input type="text" class="layui-input " name="role_name" maxlength="50" autocomplete="off"
-                            value="{{ $role['role_name'] ?? '' }}">
+                            value="{{ $role->role_name ?? '' }}">
                     </div>
                 </div>
                 <div class="layui-form-item" pane="">
@@ -33,7 +33,7 @@
         var maniPage = "{{ route('group_add') }}";
 
         //check status
-        var status = "{{ $role['status'] ?? 1 }}";
+        var status = "{{ $role->status ?? 1 }}";
         if (status == 1) {
             $('#radioOpen').attr('checked', true);
         } else {
@@ -49,7 +49,7 @@
             //监听提交
             form.on('submit(create)', function(data) {
                 var id = data.field.id;
-                _url = maniPage + '/id=' + id;
+                _url = maniPage;
 
                 $.ajax({
                     type: 'POST',

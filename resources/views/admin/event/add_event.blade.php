@@ -106,8 +106,8 @@
                                 {{ $type['need_sms_check'] ?? '' }}>
                         </div>
                     </div>
-                    <input type='hidden' value="{{$type['is_sms']}}" name="is_sms"/>
-                    @if ((int)$type['is_sms'] === 1 )
+                    <input type='hidden' value="{{($type['is_sms'] ?? 0)}}" name="is_sms"/>
+                    @if ((int)($type['is_sms'] ?? 0) === 1 )
                     <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
                         <label class="layui-form-label">每月限制</label>
                         <div class="layui-input-inline">
@@ -125,7 +125,7 @@
                     </div>
                     @endif
                 </div>
-                @if ((int)$type['is_sms'] !== 1 )
+                @if ((int)($type['is_sms'] ?? 0) !== 1 )
                 <div class="layui-form-item">
                     <label class="layui-form-label required">限制次数</label>
                     <div class="layui-input-inline">

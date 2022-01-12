@@ -160,7 +160,7 @@
                             maxmin: true,
                             shadeClose: true,
                             area: ['60%', '40%'],
-                            content: addPage,
+                            content: addPage+ '/' + -1,
                         });
                         break;
                     case 'batch-delete':

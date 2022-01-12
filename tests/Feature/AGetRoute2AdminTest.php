@@ -1,4 +1,19 @@
 <?php
+/*
+ * |-----------------------------------------------------------------------------------------------------------
+ * | Laravel 8 + PHP 8.0 + LayUI + 基于CMS 开发
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 开发者: 云飞
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 文件: GetRoute2AdminTest.php
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 项目: VIP活动申请
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 创建时间: Tuesday, 11th January 2022 6:07:46 pm
+ * |-----------------------------------------------------------------------------------------------------------
+ * | Copyright 2022 - 2025
+ * |-----------------------------------------------------------------------------------------------------------
+ */
 
 namespace Tests\Feature;
 
@@ -6,19 +21,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class RouteTwoTest extends TestCase
+class AGetRoute2AdminTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
 
     public function test_admin_sms_config(){
         $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/sms_config');
@@ -104,23 +108,5 @@ class RouteTwoTest extends TestCase
     }
 
     
-    
-    /**
-     * test_mobile_index
-     *
-     * @return void
-     */
-    public function test_mobile_index(){
-       
-        $routes = [
-            '/',
-            '/detail/event_id=1',
-            '/getCaptcha',
-        ];
-  
-        foreach($routes as $v){
-            $response = $this->get($v);
-            $response->assertSuccessful();
-        }
-    }
+   
 }

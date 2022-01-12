@@ -17,11 +17,10 @@
 
 namespace Tests\Feature;
 
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AllRouteTest extends TestCase
+class AGetRoute1AdminTest extends TestCase
 {    
     use RefreshDatabase;
 
@@ -77,7 +76,7 @@ class AllRouteTest extends TestCase
     }
 
     public function test_admin_edit_admin(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/edit_admin');
+        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/edit_person/1');
         $response->assertSuccessful();
     }
 
@@ -102,7 +101,7 @@ class AllRouteTest extends TestCase
     }
 
     public function test_admin_get_role(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/get_role/1');
+        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/get_role');
         $response->assertSuccessful();
     }
 

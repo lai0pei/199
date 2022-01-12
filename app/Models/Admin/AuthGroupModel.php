@@ -56,7 +56,7 @@ class AuthGroupModel extends CommonModel
 
             $status = self::where('role_id', $data['id'])->update($update);
             if (! $status) {
-                return false;
+                throw new LogicException('添加失败');
             }
         } catch (LogicException $e) {
             DB::rollBack();

@@ -49,17 +49,11 @@ class RoleModel extends CommonModel
      */
     public function getAllRole()
     {
-        $data = $this->data;
 
         $column = ['id', 'role_name'];
 
-        if (! empty($data['id'])) {
-            $result = self::where('status', 1)->where('id', $data['id'])->get($column)->toArray();
-        } else {
-            $result = self::where('status', 1)->get($column)->toArray();
-        }
+       return self::where('status', 1)->get($column)->toArray();
 
-        return $result;
     }
 
     /**
@@ -74,9 +68,9 @@ class RoleModel extends CommonModel
         $page = $data['page'] ?? 1;
 
         $where = [];
-        if (! empty($data['searchParams'])) {
+        if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            if (! empty($param['title'])) {
+            if (!empty($param['title'])) {
                 $where['role_name'] = $param['title'];
             }
         }
@@ -113,10 +107,11 @@ class RoleModel extends CommonModel
     {
         $data = $this->data;
 
-        if (isset($data['id'])) {
-            return self::find($data['id'])->toArray();
+        if (-1 === (int) $data['id']) {
+            return [];
         }
-        return [];
+        return self::find($data['id']);
+
     }
 
     /**
@@ -128,7 +123,13 @@ class RoleModel extends CommonModel
     {
         $data = $this->data;
 
+        $id = (int) $data['id'];
+
         $role = self::where('role_name', $data['role_name'])->value('id');
+
+        if ($id < -1) {
+            throw new LogicException('组合不存在');
+        }
 
         $insert = [
             'role_name' => $data['role_name'],
@@ -138,7 +139,7 @@ class RoleModel extends CommonModel
 
         DB::beginTransaction();
         //添加
-        if ((int) $data['id'] === -1) {
+        if ($id === -1) {
             if (isset($role)) {
                 throw new LogicException('同名称已存在');
             }
@@ -147,7 +148,7 @@ class RoleModel extends CommonModel
 
             $status = self::insertGetId($insert);
 
-            if (! $status) {
+            if (!$status) {
                 DB::rollBack();
                 throw new LogicException('添加失败');
             }
@@ -167,13 +168,13 @@ class RoleModel extends CommonModel
 
             $edit = self::where('role_name', $data['role_name'])->value('id');
 
-            if (isset($edit) && (int) $data['id'] !== $edit) {
+            if (isset($edit) && $id !== $edit) {
                 throw new LogicException('同名称已存在');
             }
 
-            $status = self::where('id', $data['id'])->update($insert);
+            $status = self::where('id', $id)->update($insert);
 
-            if (! $status) {
+            if (!$status) {
                 DB::rollBack();
                 throw new LogicException('保存失败');
             }
@@ -211,7 +212,7 @@ class RoleModel extends CommonModel
 
         $status = self::where('id', $data['id'])->delete();
 
-        if (! $status) {
+        if (!$status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
@@ -230,23 +231,15 @@ class RoleModel extends CommonModel
 
     /**
      * getRoleNameById
-     *
-     * @return array
      */
-    public function getRoleNameById(): array
+    public function getRoleNameById()
     {
         $data = $this->data;
 
         $role_id = $data['role_id'];
 
-        $role = self::where('id', $role_id)->select('id', 'role_name')->get()->toArray();
+        return self::where('id', $role_id)->select('id', 'role_name')->first();
 
-        if (empty($role)) {
-            $res = [];
-        } else {
-            $res = $role[0];
-        }
-        return $res;
     }
 
     /**

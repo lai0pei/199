@@ -1,18 +1,26 @@
 <?php
+/*
+ * |-----------------------------------------------------------------------------------------------------------
+ * | Laravel 8 + PHP 8.0 + LayUI + 基于CMS 开发
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 开发者: 云飞
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 文件: GetRoute3AdminTest.php
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 项目: VIP活动申请
+ * |-----------------------------------------------------------------------------------------------------------
+ * | 创建时间: Tuesday, 11th January 2022 6:16:32 pm
+ * |-----------------------------------------------------------------------------------------------------------
+ * | Copyright 2022 - 2025
+ * |-----------------------------------------------------------------------------------------------------------
+ */
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class RouteThreeTest extends TestCase
+class AGetRoute3AdminTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function test_admin_exportList(){
         $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/exportList');
         $response->assertSuccessful();
@@ -47,4 +55,13 @@ class RouteThreeTest extends TestCase
         $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/add_event');
         $response->assertSuccessful();
     }
+
+    public function test_edit_type(){
+        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/add_type/1');
+        $response->assertSuccessful();
+    }
+
+  
+
+    
 }

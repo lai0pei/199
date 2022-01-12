@@ -21,39 +21,96 @@ use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\RoleModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AdminGroupController extends Controller
-{
+{   
+    const MSG = '请求数据有误';
+    
+    /**
+     * __construct
+     *
+     * @param  mixed $request
+     * @return void
+     */
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
-
+    
+    /**
+     * group
+     *
+     * @return void
+     */
     public function group()
     {
         return view('admin.group.admin_group');
     }
-
+    
+    /**
+     * groupAdd
+     *
+     * @return void
+     */
     public function groupAdd()
-    {
-        $res = (new RoleModel($this->request->route()->parameters()))->maniRole();
-        return view('admin.group.group_add', ['role' => $res]);
-    }
-
-    public function newGroup()
-    {
+    {   
+        $input = $this->request->route()->parameters();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+        ], );
         try {
-            if ((new RoleModel($this->request->all()))->newGroup()) {
+            if ($validator->fails()) {
+                throw new LogicException('ID必须');
+            }
+        $res = (new RoleModel($input))->maniRole();
+        return view('admin.group.group_add', ['role' => $res]);
+        }catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
+    }
+    
+    /**
+     * newGroup
+     *
+     * @return void
+     */
+    public function newGroup()
+    {   
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+            'role_name' => 'required',
+            'status' => ['required', Rule::in(0, 1, 2)],
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            if ((new RoleModel($input))->newGroup()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }
     }
-
+    
+    /**
+     * deleteGroup
+     *
+     * @return void
+     */
     public function deleteGroup()
-    {
+    {   
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+        ], );
         try {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
             if ((new RoleModel($this->request->all()))->deleteGroup()) {
                 return self::json_return([], '删除成功');
             }

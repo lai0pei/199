@@ -21,6 +21,7 @@ use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\EventModel;
 use App\Models\Admin\EventTypeModel;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -45,9 +46,21 @@ class EventController extends Controller
      * 活动操作
      */
     public function maniEvent()
-    {
+    {   
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required',
+            'name' => 'required',
+            'type_id' => 'required',
+            'type_pic' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+        ], );
         try {
-            $data = (new EventModel($this->request->all()))->maniEvent();
+            if ($validator->fails()) {
+                throw new LogicException('请填写全部数据');
+            }
+            $data = (new EventModel($input))->maniEvent();
             return self::json_success($data);
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());

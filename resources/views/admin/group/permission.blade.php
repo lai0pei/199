@@ -9,7 +9,7 @@
         <label class="layui-form-label">组名称 <span class="color-red">*</span></label>
         <div class="layui-input-block ">
             <input type="text" class="layui-input " name="role_name" maxlength="50" autocomplete="off"
-                value="{{ $role['role_name'] ?? '' }}">
+                value="{{ $role->role_name ?? '' }}">
         </div>
     </div>
     <div class="layui-form-item">
@@ -29,7 +29,7 @@
     <script>
         var getPermission = "{{ route('admin_permission_list') }}";
         var submitPermission = "{{ route('admin_submit_list') }}";
-        var id = "{{ $role['id'] }}";
+        var id = "{{ $role->id ?? '' }}";
 
         layui.use(['tree', 'util'], function() {
             var tree = layui.tree,

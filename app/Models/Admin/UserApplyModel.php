@@ -53,7 +53,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
             if ($param['event_id'] !== '') {
                 $where['event_id'] = $param['event_id'];
             }
-            if ($param['status'] !== '') {
+            if ($param['status'] !== '' && (int)$param['status'] !== -1) {
                 $where['status'] = $param['status'];
             }
             if ($param['username'] !== '') {

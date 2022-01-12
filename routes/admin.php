@@ -78,19 +78,18 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/save_admin', [AdminController::class, 'saveAdmin'])->name('admin_save_admin');
     Route::post('/delete_admin', [AdminController::class, 'deleteAdmin'])->name('admin_person_delete');
     Route::get('/list_admin', [AdminController::class, 'listAdmin'])->name('admin.admin_list');
-    Route::get('/edit_admin', [AdminController::class, 'addNewAdmin']);
+ 
 
     //管理组
     Route::get('/admin_group', [AdminGroupController::class, 'group']);
     Route::get('/group_add_index/{id?}', [AdminGroupController::class, 'groupAdd'])->name('group_add_index');
-    Route::post('/group_add/{id?}', [AdminGroupController::class, 'newGroup'])->name('group_add');
-    Route::post('/group_delete/{id?}', [AdminGroupController::class, 'deleteGroup'])->name('group_delete');
+    Route::post('/group_add', [AdminGroupController::class, 'newGroup'])->name('group_add');
+    Route::post('/group_delete', [AdminGroupController::class, 'deleteGroup'])->name('group_delete');
     Route::get('/permission/{role_id?}', [PermissionMenuController::class, 'getPermission'])->name('admin_permission');
     Route::post('/permissionList', [PermissionMenuController::class, 'permissionList'])->name('admin_permission_list');
     Route::post('/submitList', [PermissionMenuController::class, 'submitList'])->name('admin_submit_list');
-
     Route::get('/get_role_permission', [RoleController::class, 'getRoleByPermission'])->name('admin_get_role_permission');
-    Route::get('/get_role/{id?}', [RoleController::class, 'getRole'])->name('admin_get_role');
+    Route::get('/get_role', [RoleController::class, 'getRole'])->name('admin_get_role');
 
     //修改密码
     Route::get('/change_password', [ChangePasswordController::class, 'password']);

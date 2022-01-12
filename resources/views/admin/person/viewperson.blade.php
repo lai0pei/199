@@ -46,7 +46,7 @@
     </div>
     <div class="layui-form-item " style="display:none">
         <div class="layui-input-block">
-            <input type="text" name="id" lay-verify="required"  disabled value="{{$edit_admin->id}}" class="layui-input">
+            <input type="text" name="id" lay-verify="required"  disabled value="{{$edit_admin->id ?? ''}}" class="layui-input">
         </div>
     </div>
 </div>
@@ -74,7 +74,7 @@
  	$('#selectId').append(new Option(item.role_name,item.id));//往下拉菜单里添加元素
  	//设置value（这个值就可以是在更新的时候后台传递到前台的值）为2的值为默认选中
   
- 	$('#selectId').val('{{$edit_admin->role_id}}');
+ 	$('#selectId').val('{{$edit_admin->role_id ?? ''}}');
  });
  form.render();
                 }
@@ -83,7 +83,7 @@
     });
 
     //check status
-    var status = "{{$edit_admin->status}}";
+    var status = "{{$edit_admin->status ?? ''}}";
     if(status == 1){
         $('#radioOpen').attr('checked',true);
     }else{
