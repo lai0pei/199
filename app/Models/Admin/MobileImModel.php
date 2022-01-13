@@ -27,6 +27,7 @@ use Maatwebsite\Excel\Concerns\WithChunkReading;
 class MobileImModel extends CommonModel implements ToCollection, WithChunkReading
 {
     use Importable;
+
     /**
      * The table associated with the model.
      *
@@ -36,7 +37,7 @@ class MobileImModel extends CommonModel implements ToCollection, WithChunkReadin
 
     public function __construct()
     {
-        ini_set('max_execution_time', 1000);
+        ini_set('max_execution_time', 10000);
         ini_set('memory_limit', -1);
     }
     /**
@@ -52,28 +53,40 @@ class MobileImModel extends CommonModel implements ToCollection, WithChunkReadin
         try {
             $count = 0;
             $error = 0;
+            $time = now();
             foreach ($collection as $v) {
+
                 if ($v[0] === null) {
                     continue;
                 }
-                if (! preg_match('/^[0-9_]+$/i', $v[0])) {
+                if (!preg_match('/^[0-9_]+$/i', $v[0])) {
                     $error++;
                     continue;
                 }
-                self::insert(['mobile' => $v[0],
-                   'created_at' => now(),
-                   'updated_at' => now(),
-               ]);
+                $data[$count] = [
+                    'mobile' => $v[0],
+                    'created_at' => $time,
+                    'updated_at' => $time,
+                ];
                 $count++;
+                if ($count > 10000) {
+                    self::insert($data);
+                    DB::commit();
+                    $data = [];
+                    $count = 0;
+                }
+              
+
+            }
+
+            if ($data !== []) {
+                self::insert($data);
                 DB::commit();
             }
+
         } catch (LogicException $e) {
             throw new LogicException($e->getMessage());
         }
-
-        $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '导入了' . $count . '行vip电话号码 '.$error.'错误'];
-
-        (new LogModel($log_data))->createLog();
 
         return true;
     }

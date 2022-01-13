@@ -49,7 +49,7 @@ class EventController extends Controller
     {   
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
             'name' => 'required',
             'type_id' => 'required',
             'type_pic' => 'required',

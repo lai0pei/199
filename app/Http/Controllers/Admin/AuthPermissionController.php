@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\PermissionMenuModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use LogicException;
 
 class AuthPermissionController extends Controller
 {
@@ -33,7 +35,18 @@ class AuthPermissionController extends Controller
 
     public function viewPermission()
     {
-        $data = (new PermissionMenuModel($this->request->route()->parameters()))->viewPermission();
-        return view('admin.auth_permission.view_permission', ['data' => $data]);
+        $input = $this->request->route()->parameters();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:-1',
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            $data = (new PermissionMenuModel($input))->viewPermission();
+            return view('admin.auth_permission.view_permission', ['data' => $data]);
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 }

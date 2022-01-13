@@ -53,9 +53,9 @@ class LogController extends Controller
 
     public function detailLog()
     {
-        $input = $this->request->all();
+        $input = $this->request->route()->parameters();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
         ], );
         try {
             if ($validator->fails()) {

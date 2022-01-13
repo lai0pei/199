@@ -21,6 +21,7 @@ use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\IpModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class IpController extends Controller
 {
@@ -36,8 +37,19 @@ class IpController extends Controller
 
     public function addIp()
     {
-        $ip = (new IpModel($this->request->route()->parameters()))->getIp();
-        return view('admin.allow_ip.add', ['ip' => $ip]);
+        $input = $this->request->route()->parameters();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:-1',
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            $ip = (new IpModel($input))->getIp();
+            return view('admin.allow_ip.add', ['ip' => $ip]);
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 
     public function maniIp()

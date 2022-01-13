@@ -30,6 +30,8 @@ class Controller extends BaseController
 
     public const FAIL = 0;
 
+    public const MSG = '请求数据有误';
+
     /**
      * ajax_return
      *

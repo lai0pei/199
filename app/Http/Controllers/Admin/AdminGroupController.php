@@ -58,7 +58,7 @@ class AdminGroupController extends Controller
     {   
         $input = $this->request->route()->parameters();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
         ], );
         try {
             if ($validator->fails()) {
@@ -80,7 +80,7 @@ class AdminGroupController extends Controller
     {   
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
             'role_name' => 'required',
             'status' => ['required', Rule::in(0, 1, 2)],
         ], );
@@ -105,7 +105,7 @@ class AdminGroupController extends Controller
     {   
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
         ], );
         try {
             if ($validator->fails()) {

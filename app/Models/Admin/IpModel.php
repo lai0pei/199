@@ -21,19 +21,12 @@ class IpModel extends CommonModel
 
     /**
      * 获取允许登录IP
-     *
-     * @return array
      */
-    public function getIp(): array
+    public function getIp()
     {
         $data = $this->data;
 
-        if (! empty($data['id'])) {
-            $res = self::find($data['id'])->toArray();
-        } else {
-            $res = [];
-        }
-        return $res;
+        return self::find($data['id']);
     }
 
     /**

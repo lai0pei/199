@@ -28,7 +28,6 @@ use Illuminate\Validation\Rule;
 class AdminController extends Controller
 {
 
-    const MSG = '请求数据有误';
     /**
      * __construct
      *
@@ -91,7 +90,7 @@ class AdminController extends Controller
     {
         $input = $this->request->route()->parameters();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
         ], );
         try {
             if ($validator->fails()) {
@@ -108,7 +107,7 @@ class AdminController extends Controller
     {
         $input = $this->request->route()->parameters();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
         ], );
         try {
             if ($validator->fails()) {
@@ -125,7 +124,7 @@ class AdminController extends Controller
     {
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
             'account' => 'required',
             'username' => 'required',
             'role' => 'required',
@@ -149,7 +148,7 @@ class AdminController extends Controller
     {
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
         ], );
         try {
 

@@ -65,7 +65,7 @@ class PermissionMenuController extends Controller
     {
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
         ], );
         try {
             if ($validator->fails()) {
@@ -86,7 +86,7 @@ class PermissionMenuController extends Controller
     {
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required',
+            'id' => 'required|numeric|min:-1',
             'checked' => 'required',
         ], );
         try {

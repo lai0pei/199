@@ -170,7 +170,7 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
 
     //手机管理
     Route::get('/mobile_management', [MobileController::class, 'mobile']);
-    Route::post('/importExcel', [UploadControfller::class, 'importExcel'])->name('admin_import_excel');
+    Route::post('/importExcel', [UploadController::class, 'importExcel'])->name('admin_import_excel');
     Route::post('/exportExcel', [UploadController::class, 'exportExcel'])->name('admin_export_excel');
     Route::get('/getMobile', [MobileController::class, 'getMobile'])->name('admin_get_mobile');
     Route::post('/deleteMobile', [MobileController::class, 'deleteMobile'])->name('admin_delete_mobile');

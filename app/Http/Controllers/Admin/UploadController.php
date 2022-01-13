@@ -40,7 +40,6 @@ class UploadController extends Controller
     {
         try {
             Excel::import(new MobileImModel(), $this->request->file('file'));
-
             return self::json_success([], '导入成功');
         } catch (LogicException $e) {
             return self::json_fail([], $e);

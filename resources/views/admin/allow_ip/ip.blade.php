@@ -151,7 +151,7 @@
                         maxmin: true,
                         shadeClose: true,
                         area: ['100%', '100%'],
-                        content: add_page,
+                        content: add_page+ '/-1',
                     });
                     $(window).on("resize", function() {
                         layer.full(index);
