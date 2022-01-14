@@ -54,8 +54,16 @@ class IpController extends Controller
 
     public function maniIp()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:-1',
+            'ip' => 'required',
+        ], );
         try {
-            if ((new IpModel($this->request->all()))->maniIp()) {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            if ((new IpModel($input))->maniIp()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
@@ -76,9 +84,16 @@ class IpController extends Controller
 
     public function ipDelete()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:-1',
+        ], );
         try {
-            if ((new IpModel($this->request->all()))->ipDelete()) {
-                return self::json_success([], '操作成功');
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            if ((new IpModel($input))->ipDelete()) {
+                return self::json_success([], '删除成功');
             }
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());

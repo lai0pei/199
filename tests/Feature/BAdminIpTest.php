@@ -7,6 +7,8 @@ use Tests\TestCase;
 class BAdminIpTest extends TestCase
 {
     const ADD = '/6ucwfN@Bt/add_ip';
+    const MANI = '/6ucwfN@Bt/mani_ip';
+    const DELETE = '/6ucwfN@Bt/delete_ip';
 
     public function test_admin_ip_add_index()
     {
@@ -18,14 +20,152 @@ class BAdminIpTest extends TestCase
         $data = [
             'code' => 0,
             'msg' => '请求数据有误',
-            'data' => []
+            'data' => [],
         ];
 
         $this->jsonGet(self::ADD . '/-100', 1, $data);
     }
 
-    public function test_admin_ip_edit_index_with_()
+    public function test_admin_ip_edit_index_with_no_data()
     {
-        $this->jsonGet(self::ADD . '/-1', 0);
+        $this->jsonGet(self::ADD . '/100', 0);
     }
+
+    public function test_admin_ip_add_data()
+    {
+        $data = [
+            'id' => '-1',
+            'ip' => '127.0.0.1',
+            'description' => '允许',
+        ];
+
+        $res = [
+            'code' => 1,
+            'msg' => '操作成功',
+            'data' => [],
+        ];
+        $this->jsonPost(self::MANI, $data, $res);
+    }
+
+    public function test_admin_ip_add_data_with_invalidInput()
+    {
+        $data = [
+            'ip' => '127.0.0.1',
+            'description' => '允许',
+        ];
+
+        $res = [
+            'code' => 0,
+            'msg' => '请求数据有误',
+            'data' => [],
+        ];
+
+        $this->jsonPost(self::MANI, $data, $res);
+    }
+
+    public function test_admin_ip_add_data_with_overflow_id()
+    {
+        $data = [
+            'id' => '-1111',
+            'ip' => '127.0.0.1',
+            'description' => '允许',
+        ];
+
+        $res = [
+            'code' => 0,
+            'msg' => '请求数据有误',
+            'data' => [],
+        ];
+
+        $this->jsonPost(self::MANI, $data, $res);
+    }
+
+    
+    public function test_admin_ip_edit_data()
+    {
+        $data = [
+            'id' => '1',
+            'ip' => '127.0.0.2',
+            'description' => '允许',
+        ];
+
+        $res = [
+            'code' => 1,
+            'msg' => '操作成功',
+            'data' => [],
+        ];
+
+        $this->jsonPost(self::MANI, $data, $res);
+    }
+
+    public function test_admin_ip_edit_data_with_invalidId()
+    {
+        $data = [
+            'id' => '200',
+            'ip' => '127.0.0.2',
+            'description' => '允许',
+        ];
+
+        $res = [
+            'code' => 0,
+            'msg' => '编辑失败',
+            'data' => [],
+        ];
+
+        $this->jsonPost(self::MANI, $data, $res);
+    }
+
+    public function test_admin_delete_with_invalidInput(){
+
+        $data = [
+            'ip' => '127.0.0.2',
+            'description' => '允许',
+        ];
+
+        $res = [
+            'code' => 0,
+            'msg' => self::MSG,
+            'data' => [],
+        ];
+
+        $this->jsonPost(self::DELETE, $data, $res);
+
+    }
+
+    public function test_admin_delete_with_invalidId(){
+
+        $data = [
+            'id' => '10000',
+            'ip' => '127.0.0.2',
+            'description' => '允许',
+        ];
+
+        $res = [
+            'code' => 0,
+            'msg' => '删除失败',
+            'data' => [],
+        ];
+
+        $this->jsonPost(self::DELETE, $data, $res);
+
+    }
+
+    
+    public function test_admin_delete(){
+
+        $data = [
+            'id' => '1',
+        ];
+
+        $res = [
+            'code' => 1,
+            'msg' => '删除成功',
+            'data' => [],
+        ];
+
+        $this->jsonPost(self::DELETE, $data, $res);
+
+    }
+
+
 }

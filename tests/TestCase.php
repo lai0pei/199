@@ -18,10 +18,14 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
+    
+    public const MSG = '请求数据有误';
 
     public function jsonGet($url, $isJson = 1, $data = [])
     {
@@ -45,4 +49,14 @@ abstract class TestCase extends BaseTestCase
             ->assertJson($res);
 
     }
+
+    public function uploadPost($url, $data = [])
+    {
+        $response = $this->withSession(['user_id' => 1])->postJson($url, $data);
+        $response->assertStatus(200);
+        $content = json_decode($response->getContent(),true);
+        $this->assertTrue('' !== $content['data']['src']);    
+    }
+
+   
 }

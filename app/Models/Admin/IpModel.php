@@ -52,7 +52,7 @@ class IpModel extends CommonModel
 
             $status = self::insert($add);
 
-            if ($status === false) {
+            if (!$status) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
@@ -61,27 +61,23 @@ class IpModel extends CommonModel
             $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '添加允许登录ip地址'];
 
             (new LogModel($log_data))->createLog();
+        } else {
+            $save = [
+                'id' => $data['id'],
+                'ip' => $data['ip'],
+                'admin_id' => $admin_id,
+                'description' => $data['description'],
+                'updated_at' => now(),
+            ];
 
-            DB::commit();
+            $status = self::where('id', $data['id'])->update($save);
 
-            return true;
+            if (!$status) {
+                DB::rollBack();
+                throw new LogicException('编辑失败');
+            }
+
         }
-        $save = [
-            'id' => $data['id'],
-            'ip' => $data['ip'],
-            'admin_id' => $admin_id,
-            'description' => $data['description'],
-            'updated_at' => now(),
-        ];
-
-        $status = self::where('id', $data['id'])->update($save);
-
-        if (! $status) {
-            DB::rollBack();
-
-            throw new LogicException('添加失败');
-        }
-
         $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑允许登录ip地址'];
 
         (new LogModel($log_data))->createLog();
@@ -104,7 +100,7 @@ class IpModel extends CommonModel
 
         $where = [];
 
-        if (! empty($data['searchParams'])) {
+        if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['ip'] !== '') {
                 $where['ip'] = $param['ip'];
@@ -146,7 +142,7 @@ class IpModel extends CommonModel
 
         $status = self::where('id', $data['id'])->delete();
 
-        if ($status === false) {
+        if (!$status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');

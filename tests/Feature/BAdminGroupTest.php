@@ -74,7 +74,7 @@ class BAdminGroupTest extends TestCase
             'status' => '0',
         ];
 
-        $res = ['code' => 0, 'msg' => '组合不存在', 'data' => []];
+        $res = ['code' => 0, 'msg' => '请求数据有误', 'data' => []];
         $this->jsonPost(self::ADD, $data, $res);
     }
 

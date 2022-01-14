@@ -74,8 +74,7 @@ class MobileImModel extends CommonModel implements ToCollection, WithChunkReadin
                     DB::commit();
                     $data = [];
                     $count = 0;
-                }
-              
+                }   
 
             }
 

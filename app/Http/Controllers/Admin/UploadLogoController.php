@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use LogicException;
 
 class UploadLogoController extends Controller
@@ -20,15 +21,24 @@ class UploadLogoController extends Controller
         $request = $this->request;
         $logo = config('filesystems.logo');
         $size = config('admin.logo_size');
-        $file = $request->file('file');
+
+        $validator = Validator::make($request->all(), [
+            'file' => 'required',
+        ], );
         try {
+
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            $file = $request->file('file');
+
             $this->checkSize($file, $size);
 
             $time = Carbon::now()->format('Y-m-d');
 
             $path = $logo . '/' . $time;
 
-            if (! Storage::exists($path)) {
+            if (!Storage::exists($path)) {
                 Storage::makeDirectory($path, 7777, true, true);
             }
 
@@ -115,12 +125,9 @@ class UploadLogoController extends Controller
     {
         [$width, $height] = getimagesize($file);
 
-        // if ($width !== (int) $config['width']) {
-        //     throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
-        // }
-        // if ($height !== (int) $config['height']) {
-        //     throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
-        // }
+        if ($width !== (int) $config['width'] || $height !== (int) $config['height']) {
+            throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
+        }
     }
 
     private function storePic($file, $config)
@@ -129,7 +136,7 @@ class UploadLogoController extends Controller
 
         $path = $config . '/' . $time;
 
-        if (! Storage::exists($path)) {
+        if (!Storage::exists($path)) {
             Storage::makeDirectory($path, 7777, true, true);
         }
 
