@@ -2,6 +2,7 @@
 
 use App\Models\Admin\AuthMenuModel;
 use Illuminate\Support\Facades\Cache;
+use Spatie\ImageOptimizer\OptimizerChain as ImageOptimizer;
 
 function checkAuth($name = '')
 {
@@ -25,15 +26,20 @@ function checkAuth($name = '')
 }
 
 function checkSmsCode($mobile, $code)
-{  
+{
     return (int) Cache::get($mobile) === (int) $code;
 }
 
-function stripUrl($data){
-    if($data === ''){
+function stripUrl($data)
+{
+    if ($data === '') {
         return '';
     }
-    $url = url("/");  
-    return str_replace($url,'',$data);
+    $url = url('/');
+    return str_replace($url, '', $data);
 }
 
+function optimizeImg($path){
+    $optimize = new ImageOptimizer();
+    $optimize->optimize(public_path('storage/' . $path));
+}

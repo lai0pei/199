@@ -21,6 +21,8 @@ use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\EventTypeModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class EventTypeController extends Controller
 {
@@ -46,8 +48,17 @@ class EventTypeController extends Controller
      */
     public function maniType()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:-1',
+            'name' => 'required',
+            'status' => ['required', Rule::in(0, 1)],
+        ], );
         try {
-            if ((new EventTypeModel($this->request->all()))->maniType()) {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            if ((new EventTypeModel($input))->maniType()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {

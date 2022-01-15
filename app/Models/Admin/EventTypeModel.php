@@ -53,7 +53,7 @@ class EventTypeModel extends CommonModel
             $add = [
                 'name' => $data['name'],
                 'status' => $data['status'],
-                'sort' => $data['sort'],
+                'sort' => $data['sort'] ?? 0,
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -69,6 +69,7 @@ class EventTypeModel extends CommonModel
             $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '添加新活动类型'];
 
             (new LogModel($log_data))->createLog();
+
         } else {
             $id = self::where('name', $data['name'])->value('id');
 
@@ -79,16 +80,16 @@ class EventTypeModel extends CommonModel
             $save = [
                 'name' => $data['name'],
                 'status' => $data['status'],
-                'sort' => $data['sort'],
+                'sort' => $data['sort'] ?? 0,
                 'updated_at' => now(),
             ];
 
             $status = self::where('id', $data['id'])->update($save);
-
+           
             if (! $status) {
                 DB::rollBack();
 
-                throw new LogicException('添加失败');
+                throw new LogicException('编辑失败');
             }
 
             $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑允许登录ip地址'];

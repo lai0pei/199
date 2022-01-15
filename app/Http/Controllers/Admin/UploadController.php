@@ -20,8 +20,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\MobileImModel;
 use App\Models\Admin\SmsEventModel;
-use App\Models\Admin\UserApplyModel;
 use App\Models\Admin\SmsImportModel;
+use App\Models\Admin\UserApplyModel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -64,7 +64,8 @@ class UploadController extends Controller
         }
     }
 
-    public function smsImportMani(){
+    public function smsImportMani()
+    {
         try {
             Excel::import(new SmsImportModel($this->request->all()), $this->request->file('file'));
             return self::json_success([], '导入成功');

@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\Index\IndexController;
 use App\Http\Controllers\Index\MessageController;
-use App\Http\Controllers\Index\UploadController;
 use App\Http\Controllers\Index\TestController;
+use App\Http\Controllers\Index\UploadController;
 use Illuminate\Support\Facades\Route;
 
 /*

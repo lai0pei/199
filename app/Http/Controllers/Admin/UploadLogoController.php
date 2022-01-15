@@ -26,7 +26,6 @@ class UploadLogoController extends Controller
             'file' => 'required',
         ], );
         try {
-
             if ($validator->fails()) {
                 throw new LogicException(self::MSG);
             }
@@ -38,11 +37,11 @@ class UploadLogoController extends Controller
 
             $path = $logo . '/' . $time;
 
-            if (!Storage::exists($path)) {
+            if (! Storage::exists($path)) {
                 Storage::makeDirectory($path, 7777, true, true);
             }
-
             $url = Storage::disk('public')->put($path, $this->request->file('file'));
+            optimizeImg($url);
             $result['code'] = self::FAIL;
             $result['msg'] = '上传成功';
             $result['data'] = ['src' => asset('storage/' . $url)];
@@ -136,11 +135,12 @@ class UploadLogoController extends Controller
 
         $path = $config . '/' . $time;
 
-        if (!Storage::exists($path)) {
+        if (! Storage::exists($path)) {
             Storage::makeDirectory($path, 7777, true, true);
         }
 
         $url = Storage::disk('public')->put($path, $file);
+        optimizeImg($url);
         $result['code'] = self::FAIL;
         $result['msg'] = '上传成功';
         $result['data'] = ['src' => asset('storage/' . $url)];

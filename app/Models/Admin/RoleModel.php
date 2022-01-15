@@ -49,11 +49,9 @@ class RoleModel extends CommonModel
      */
     public function getAllRole()
     {
-
         $column = ['id', 'role_name'];
 
-       return self::where('status', 1)->get($column)->toArray();
-
+        return self::where('status', 1)->get($column)->toArray();
     }
 
     /**
@@ -68,9 +66,9 @@ class RoleModel extends CommonModel
         $page = $data['page'] ?? 1;
 
         $where = [];
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
-            if (!empty($param['title'])) {
+            if (! empty($param['title'])) {
                 $where['role_name'] = $param['title'];
             }
         }
@@ -107,11 +105,10 @@ class RoleModel extends CommonModel
     {
         $data = $this->data;
 
-        if (-1 === (int) $data['id']) {
+        if ((int) $data['id'] === -1) {
             return [];
         }
         return self::find($data['id']);
-
     }
 
     /**
@@ -148,7 +145,7 @@ class RoleModel extends CommonModel
 
             $status = self::insertGetId($insert);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
                 throw new LogicException('添加失败');
             }
@@ -174,7 +171,7 @@ class RoleModel extends CommonModel
 
             $status = self::where('id', $id)->update($insert);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
                 throw new LogicException('保存失败');
             }
@@ -212,7 +209,7 @@ class RoleModel extends CommonModel
 
         $status = self::where('id', $data['id'])->delete();
 
-        if (!$status) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
@@ -239,7 +236,6 @@ class RoleModel extends CommonModel
         $role_id = $data['role_id'];
 
         return self::where('id', $role_id)->select('id', 'role_name')->first();
-
     }
 
     /**

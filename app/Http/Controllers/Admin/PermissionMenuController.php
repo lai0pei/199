@@ -27,7 +27,7 @@ use LogicException;
 
 class PermissionMenuController extends Controller
 {
-    const MSG = '请求数据有误';
+    public const MSG = '请求数据有误';
 
     public function __construct(Request $request)
     {
@@ -97,7 +97,6 @@ class PermissionMenuController extends Controller
             if ((new AuthGroupModel($input))->submitList()) {
                 return self::json_success();
             }
-
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }

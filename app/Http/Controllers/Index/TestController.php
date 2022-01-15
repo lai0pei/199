@@ -7,9 +7,9 @@ use App\Http\Controllers\Index\util\generateCode;
 use App\Http\Controllers\Index\util\juhe;
 use App\Http\Controllers\Index\util\yunpian;
 use App\Models\Admin\ConfigModel;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use LogicException;
-use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
@@ -36,7 +36,7 @@ class TestController extends Controller
             // }
             $mobile = '18679928029';
             // $captch = $all['captcha'];
-     
+
             // if (! captcha_check($captch)) {
             //     throw new LogicException('验证码不正确');
             // }

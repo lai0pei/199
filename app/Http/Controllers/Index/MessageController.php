@@ -51,7 +51,7 @@ class MessageController extends Controller
             }
             $mobile = $all['mobile'];
             $captch = $all['captcha'];
-          
+
             if (! captcha_check($captch)) {
                 throw new LogicException('验证码不正确');
             }
@@ -61,7 +61,7 @@ class MessageController extends Controller
             }
 
             $code = $this->getCode($mobile);
-         
+
             if ((int) $smsConfig['status'] === 1) {
                 $params = [
                     // 模板id

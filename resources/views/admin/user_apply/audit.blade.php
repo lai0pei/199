@@ -50,7 +50,7 @@
                                 <th>名称</th>
                                 <th>内容</th>
                             </tr>
-                            @foreach ($data['value'] as $v)
+                            @foreach ((($data['value'] === false)? [] : $data['value']) as $v)
                                 <tr>
                                     <td>{{ $v['name'] }}</td>
                                     @if ($v['type'] ?? '' == 'photo')

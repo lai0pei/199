@@ -65,9 +65,9 @@ class ControlModel extends Model
             $series[$k]['type'] = 'line';
             $series[$k]['stack'] = '总量';
             $series[$k]['areaStyle'] = '{}';
-            if($k === $length ){
+            if ($k === $length) {
                 $series[$k]['label'] = '{ normal : { show: true, position : top}}';
-            }  
+            }
             $series[$k]['data'] = $this->calDay($day, $v);
         }
 

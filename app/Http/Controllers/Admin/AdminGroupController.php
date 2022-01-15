@@ -25,20 +25,21 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class AdminGroupController extends Controller
-{   
-    const MSG = '请求数据有误';
-    
+{
+    public const MSG = '请求数据有误';
+
     /**
      * __construct
      *
      * @param  mixed $request
+     *
      * @return void
      */
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
-    
+
     /**
      * group
      *
@@ -48,14 +49,14 @@ class AdminGroupController extends Controller
     {
         return view('admin.group.admin_group');
     }
-    
+
     /**
      * groupAdd
      *
      * @return void
      */
     public function groupAdd()
-    {   
+    {
         $input = $this->request->route()->parameters();
         $validator = Validator::make($input, [
             'id' => 'required|numeric|min:-1',
@@ -64,20 +65,20 @@ class AdminGroupController extends Controller
             if ($validator->fails()) {
                 throw new LogicException('ID必须');
             }
-        $res = (new RoleModel($input))->maniRole();
-        return view('admin.group.group_add', ['role' => $res]);
-        }catch (LogicException $e) {
+            $res = (new RoleModel($input))->maniRole();
+            return view('admin.group.group_add', ['role' => $res]);
+        } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }
     }
-    
+
     /**
      * newGroup
      *
      * @return void
      */
     public function newGroup()
-    {   
+    {
         $input = $this->request->all();
         $validator = Validator::make($input, [
             'id' => 'required|numeric|min:-1',
@@ -95,14 +96,14 @@ class AdminGroupController extends Controller
             return self::json_fail([], $e->getMessage());
         }
     }
-    
+
     /**
      * deleteGroup
      *
      * @return void
      */
     public function deleteGroup()
-    {   
+    {
         $input = $this->request->all();
         $validator = Validator::make($input, [
             'id' => 'required|numeric|min:-1',

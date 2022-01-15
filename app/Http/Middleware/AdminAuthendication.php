@@ -32,7 +32,8 @@ class AdminAuthendication extends Middleware
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        if (session('user_id') === null) {
+
+        if (session('admin_id') !== session()->getId()) {
             return redirect(route('admin.login.index'));
         }
 

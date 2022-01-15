@@ -143,7 +143,7 @@ class AuthMenuModel extends CommonModel
         $list = explode(',', $permission);
 
         $permission_menu = PermissionMenuModel::whereIn('id', $list)->get()->toArray();
-   
+
         session(['permission' => $permission_menu]);
 
         $res['top_permission'] = array_unique(array_column($permission_menu, 'grand_auth_id'));

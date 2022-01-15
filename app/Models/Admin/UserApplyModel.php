@@ -53,7 +53,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
             if ($param['event_id'] !== '') {
                 $where['event_id'] = $param['event_id'];
             }
-            if ($param['status'] !== '' && (int)$param['status'] !== -1) {
+            if ($param['status'] !== '' && (int) $param['status'] !== -1) {
                 $where['status'] = $param['status'];
             }
             if ($param['username'] !== '') {
@@ -165,14 +165,14 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
                 $msg = $deny['refuse'] ?? '';
                 $tx = '拒绝';
             }
-     
+
             $audit = [
                 'status' => $status,
                 'updated_at' => now(),
                 'description' => $msg,
             ];
             $status = self::whereIn('id', $ids)->update($audit);
-            
+
             $title = '审核'.$tx.'了    '. $count . '行活动申请记录';
         } catch (LogicException $e) {
             DB::rollBack();

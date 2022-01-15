@@ -95,8 +95,8 @@ class IndexController extends Controller
             if (! captcha_check($input['captcha'])) {
                 throw new LogicException('验证码不正确');
             }
-         
-            if ((int)$input['needSms'] === 1 && ! checkSmsCode($input['mobile'], $input['smsNumber'])) {
+
+            if ((int) $input['needSms'] === 1 && ! checkSmsCode($input['mobile'], $input['smsNumber'])) {
                 throw new LogicException('短信验证码不正确');
             }
 

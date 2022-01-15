@@ -27,7 +27,6 @@ use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
-
     /**
      * __construct
      *
@@ -138,7 +137,6 @@ class AdminController extends Controller
             if ((new AdminModel($input))->saveAdmin()) {
                 return self::json_return([], '编辑成功');
             }
-
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }
@@ -151,7 +149,6 @@ class AdminController extends Controller
             'id' => 'required|numeric|min:-1',
         ], );
         try {
-
             if ($validator->fails()) {
                 throw new LogicException(self::MSG);
             }

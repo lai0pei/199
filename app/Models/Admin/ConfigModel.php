@@ -17,6 +17,8 @@
 
 namespace App\Models\Admin;
 
+use LogicException;
+
 class ConfigModel extends CommonModel
 {
     /**
@@ -39,25 +41,28 @@ class ConfigModel extends CommonModel
     public function saveConfig($name, $title)
     {
         $data = $this->data;
+        try {
+            $smsConfig = json_decode($data['data'], true);
 
-        $smsConfig = json_decode($data['data'], true);
+            $update = [
+                'json_data' => serialize($smsConfig),
+                'updated_at' => now(),
+            ];
 
-        $update = [
-            'json_data' => serialize($smsConfig),
-            'updated_at' => now(),
-        ];
+            $status = self::where('name', $name)->update($update);
 
-        $status = self::where('name', $name)->update($update);
+            if (! $status) {
+                throw new LogicException('保存失败');
+            }
 
-        if ($status) {
             $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => $title];
 
             (new LogModel($log_data))->createLog();
 
             return true;
+        } catch (LogicException $e) {
+            throw new LogicException('保存失败');
         }
-
-        return false;
     }
 
     public function getConfig($name)

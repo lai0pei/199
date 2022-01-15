@@ -78,7 +78,6 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::post('/save_admin', [AdminController::class, 'saveAdmin'])->name('admin_save_admin');
     Route::post('/delete_admin', [AdminController::class, 'deleteAdmin'])->name('admin_person_delete');
     Route::get('/list_admin', [AdminController::class, 'listAdmin'])->name('admin.admin_list');
- 
 
     //管理组
     Route::get('/admin_group', [AdminGroupController::class, 'group']);
@@ -207,5 +206,4 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     Route::get('/init', [AuthMenuController::class, 'init'])->name('admin.init');
     //post 接口
     Route::post('/logout', [LoginController::class, 'logout'])->name('admin_logout');
-
 });

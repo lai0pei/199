@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Cache;
 trait GenerateCode
 {
     public function getCode($mobile)
-    {   
+    {
         $key = $mobile;
         Cache::forget($key);
         $length = 5;

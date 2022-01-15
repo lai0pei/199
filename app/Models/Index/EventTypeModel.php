@@ -17,8 +17,8 @@
 
 namespace App\Models\Index;
 
-use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 
 class EventTypeModel extends Model
 {
@@ -54,14 +54,14 @@ class EventTypeModel extends Model
             $where['status'] = 1;
             $where['display'] = 1;
             $type_id['event'] = $eventModel::select('id', 'name', 'type_pic', 'type_id', 'external_url')
-            ->where($where)
-            ->where('start_time','<=',$time)
-            ->where('end_time','>=',$time)
-            ->whereNotNull('type_pic')
-            ->orderBy('sort', 'asc')
-            ->get()->toArray();
+                ->where($where)
+                ->where('start_time', '<=', $time)
+                ->where('end_time', '>=', $time)
+                ->whereNotNull('type_pic')
+                ->orderBy('sort', 'asc')
+                ->get()->toArray();
         }
-        
+
         unset($type_id);
         return $type;
     }

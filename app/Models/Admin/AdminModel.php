@@ -279,9 +279,9 @@ class AdminModel extends CommonModel
 
         $accountId = self::where('account', $data['account'])->where('is_delete', 0)->value('id');
         $userId = self::where('user_name', $data['username'])->where('is_delete', 0)->value('id');
-        $id = self::where('id',$data['id'])->value('id');
+        $id = self::where('id', $data['id'])->value('id');
 
-        if (!isset($id)) {
+        if (! isset($id)) {
             throw new LogicException('账号不存在');
         }
 
@@ -368,7 +368,8 @@ class AdminModel extends CommonModel
      * @return void
      */
     private function setAdminSession()
-    {
+    {   
+        session()->put('admin_id', session()->getId());
         return session()->put('user_id', $this->adminId);
     }
 }

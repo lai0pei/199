@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Validator;
 
 class ChangePasswordController extends Controller
 {
-    const MSG = '请求数据有误';
+    public const MSG = '请求数据有误';
 
     public function __construct(Request $request)
     {
@@ -47,7 +47,6 @@ class ChangePasswordController extends Controller
             're-new' => 'required',
         ], );
         try {
-
             if ($validator->fails()) {
                 throw new LogicException(self::MSG);
             }

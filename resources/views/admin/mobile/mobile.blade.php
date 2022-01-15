@@ -305,6 +305,7 @@
                 accept: "file",
                 //  exts: 'xls|xlsx|xlsm|xlt|xltx|xltm',
                 exts: 'xls|xlsx|csv',
+                size : 10 * 1024,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },

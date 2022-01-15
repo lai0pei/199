@@ -200,7 +200,7 @@
         //对编辑器的操作最好在编辑器ready之后再做
         ue.ready(function() {
             //设置编辑器的内容
-            ue.setContent();
+            ue.setContent('');
 
         });
 
@@ -221,7 +221,7 @@
             //编辑 赋值
             var content = "{{ $type['content'] ?? '' }}";
             var isEventPic = "{{ $type['type_pic'] ?? '' }}";
-            console.log(isEventPic);
+          
             if ('' !== isEventPic) {
                 layui.$('#uploadView').removeClass('layui-hide');
             }

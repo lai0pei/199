@@ -225,69 +225,6 @@
             echartsRecords.setOption(optionRecords);
 
 
-            /**
-             * 玫瑰图表
-             */
-            var echartsPies = echarts.init(document.getElementById('echarts-pies'), 'walden');
-            var optionPies = {
-                title: {
-                    text: '指标名称-玫瑰图',
-                    left: 'center'
-                },
-                tooltip: {
-                    trigger: 'item',
-                    formatter: '{a} <br/>{b} : {c} ({d}%)'
-                },
-                legend: {
-                    orient: 'vertical',
-                    left: 'left',
-                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
-                },
-                series: [{
-                    name: '访问来源',
-                    type: 'pie',
-                    radius: '55%',
-                    center: ['50%', '60%'],
-                    roseType: 'radius',
-                    data: [{
-                            value: 335,
-                            name: '直接访问'
-                        },
-                        {
-                            value: 310,
-                            name: '邮件营销'
-                        },
-                        {
-                            value: 234,
-                            name: '联盟广告'
-                        },
-                        {
-                            value: 135,
-                            name: '视频广告'
-                        },
-                        {
-                            value: 368,
-                            name: '搜索引擎'
-                        }
-                    ],
-                    emphasis: {
-                        itemStyle: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }]
-            };
-            echartsPies.setOption(optionPies);
-
-
-
-            // echarts 窗口缩放自适应
-            // window.onresize = function () {
-            //     echartsRecords.resize();
-            // }
-
         });
     </script>
 @endsection

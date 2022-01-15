@@ -152,9 +152,7 @@
                         area: ['100%', '100%'],
                         content: add_page,
                     });
-                    $(window).on("resize", function() {
-                        layer.full(index);
-                    });
+               
                 } else if (obj.event === 'delete') { // 监听删除操作
                     var checkStatus = table.checkStatus('currentTableId'),
                         data = checkStatus.data;
@@ -175,9 +173,7 @@
                         area: ['100%', '100%'],
                         content: add_page + '/' + data.id,
                     });
-                    $(window).on("resize", function() {
-                        layer.full(index);
-                    });
+                
                     return false;
                 } else if (obj.event === 'delete') {
                     layer.confirm('确认删除?', function(index) {

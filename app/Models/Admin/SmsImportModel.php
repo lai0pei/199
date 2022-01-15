@@ -2,11 +2,11 @@
 
 namespace App\Models\Admin;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use LogicException;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Collection;
-use LogicException;
 
 class SmsImportModel extends CommonModel implements ToCollection, WithChunkReading
 {
@@ -18,7 +18,7 @@ class SmsImportModel extends CommonModel implements ToCollection, WithChunkReadi
     protected $table = 'sms_apply';
 
     public function __construct($data = [])
-    {   
+    {
         $this->data = $data;
         ini_set('max_execution_time', 1000);
         ini_set('memory_limit', -1);
@@ -39,7 +39,6 @@ class SmsImportModel extends CommonModel implements ToCollection, WithChunkReadi
             $count = 0;
             $error = 0;
             foreach ($collection as $v) {
-              
                 if ($v[0] === null) {
                     continue;
                 }
@@ -52,8 +51,8 @@ class SmsImportModel extends CommonModel implements ToCollection, WithChunkReadi
                     'state' => $status,
                     'updated_at' => now(),
                 ];
-         
-                self::where('id',$v[0])->update($update);
+
+                self::where('id', $v[0])->update($update);
                 $count++;
                 DB::commit();
             }

@@ -21,8 +21,8 @@ use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\EventModel;
 use App\Models\Admin\EventTypeModel;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
@@ -46,7 +46,7 @@ class EventController extends Controller
      * 活动操作
      */
     public function maniEvent()
-    {   
+    {
         $input = $this->request->all();
         $validator = Validator::make($input, [
             'id' => 'required|numeric|min:-1',

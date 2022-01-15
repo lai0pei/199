@@ -55,11 +55,10 @@ class MobileImModel extends CommonModel implements ToCollection, WithChunkReadin
             $error = 0;
             $time = now();
             foreach ($collection as $v) {
-
                 if ($v[0] === null) {
                     continue;
                 }
-                if (!preg_match('/^[0-9_]+$/i', $v[0])) {
+                if (! preg_match('/^[0-9_]+$/i', $v[0])) {
                     $error++;
                     continue;
                 }
@@ -74,15 +73,13 @@ class MobileImModel extends CommonModel implements ToCollection, WithChunkReadin
                     DB::commit();
                     $data = [];
                     $count = 0;
-                }   
-
+                }
             }
 
             if ($data !== []) {
                 self::insert($data);
                 DB::commit();
             }
-
         } catch (LogicException $e) {
             throw new LogicException($e->getMessage());
         }

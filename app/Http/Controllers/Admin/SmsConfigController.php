@@ -22,11 +22,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin\ConfigModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 
 class SmsConfigController extends Controller
 {
-    const MSG = '请求数据有误';
+    public const MSG = '请求数据有误';
 
     public function __construct(Request $request)
     {
@@ -43,17 +42,16 @@ class SmsConfigController extends Controller
     {
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'data' => 'required',
+            'data' => 'required|JSON',
         ], );
         try {
             if ($validator->fails()) {
                 throw new LogicException(self::MSG);
             }
 
-            if((new ConfigModel($input))->saveConfig('smsConfig', '更新了后台短信配置')){
-                return self::json_success( );
+            if ((new ConfigModel($input))->saveConfig('smsConfig', '更新了后台短信配置')) {
+                return self::json_success();
             }
-  
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }

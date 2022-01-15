@@ -52,7 +52,7 @@ class IpModel extends CommonModel
 
             $status = self::insert($add);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
@@ -72,11 +72,10 @@ class IpModel extends CommonModel
 
             $status = self::where('id', $data['id'])->update($save);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
                 throw new LogicException('编辑失败');
             }
-
         }
         $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑允许登录ip地址'];
 
@@ -100,7 +99,7 @@ class IpModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['ip'] !== '') {
                 $where['ip'] = $param['ip'];
@@ -142,7 +141,7 @@ class IpModel extends CommonModel
 
         $status = self::where('id', $data['id'])->delete();
 
-        if (!$status) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');

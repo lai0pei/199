@@ -25,8 +25,7 @@ use LogicException;
 
 class LogController extends Controller
 {
-
-    const MSG = '请求数据有误';
+    public const MSG = '请求数据有误';
 
     public function __construct(Request $request)
     {

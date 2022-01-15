@@ -77,8 +77,8 @@ class ApplyModel extends Model
         $is_daily = $eventModel::where('id', $eventId)->value('is_daily');
 
         $count = self::where('username', $username)->where('event_id', $eventId)->count();
-     
-        if ((int) $is_daily === 1 && (((int) $limit < (int)$count) || (int)$limit === 0)) {
+
+        if ((int) $is_daily === 1 && (((int) $limit < (int) $count) || (int) $limit === 0)) {
             throw new LogicException('今日申请次数，已超过' . $limit . '次');
         }
 
@@ -87,7 +87,7 @@ class ApplyModel extends Model
 
             $form = $this->removeNull($data['form']);
 
-            if (!empty($pic_url)) {
+            if (! empty($pic_url)) {
                 foreach ($pic_url as &$v) {
                     $v['name'] = $this->formModel::where('id', $v['id'])->value('name');
                     $v['type'] = 'photo';
@@ -114,7 +114,7 @@ class ApplyModel extends Model
             dd($e->getMessage());
             throw new LogicException('申请失败');
         }
-        if (!$status) {
+        if (! $status) {
             DB::rollBack();
             throw new LogicException('申请失败，请联系客服');
         }
@@ -136,7 +136,7 @@ class ApplyModel extends Model
         $i = 0;
         foreach ($form as &$subForm) {
             foreach ($subForm as $k => $v) {
-                if (!empty($v)) {
+                if (! empty($v)) {
                     $data[$i]['name'] = $this->formModel::where('id', $k)->value('name');
                     $data[$i]['value'] = $v;
                 }

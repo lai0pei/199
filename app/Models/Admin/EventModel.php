@@ -52,7 +52,7 @@ class EventModel extends CommonModel
         $event['status'] === 1 ? $event['status_check'] = 'checked' : 0;
         $event['display'] === 1 ? $event['display_check'] = 'checked' : 0;
 
-        if ((int)$event['is_sms'] === 1) {
+        if ((int) $event['is_sms'] === 1) {
             $event['is_monthly'] === 1 ? $event['is_monthly_check'] = 'checked' : 0;
         } else {
             $event['is_daily'] === 1 ? $event['is_daily_check'] = 'checked' : 0;
@@ -98,7 +98,7 @@ class EventModel extends CommonModel
 
             $status = self::insert($add);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
                 throw new LogicException('添加失败');
             }
@@ -131,16 +131,16 @@ class EventModel extends CommonModel
             ];
 
             //短信活动 没有限制 每日
-            if((int)$data['is_sms']  === 1 ){
-                $save['is_monthly'] =  ($data['is_monthly'] ?? '') === 'on' ? 1 : 0;
-            }else{
-               $save['is_daily'] =  ($data['is_daily'] ?? '') === 'on' ? 1 : 0;
-               $save['daily_limit'] = $data['daily_limit'];
+            if ((int) $data['is_sms'] === 1) {
+                $save['is_monthly'] = ($data['is_monthly'] ?? '') === 'on' ? 1 : 0;
+            } else {
+                $save['is_daily'] = ($data['is_daily'] ?? '') === 'on' ? 1 : 0;
+                $save['daily_limit'] = $data['daily_limit'];
             }
-      
+
             $status = self::where('id', $data['id'])->update($save);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
@@ -163,7 +163,7 @@ class EventModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['name'] !== '') {
                 $where['name'] = $where['name'] = $param['name'];
@@ -193,7 +193,7 @@ class EventModel extends CommonModel
             $result[$k]['display'] = $v['display'] === 1 ? '显示' : '隐藏';
             $result[$k]['status'] = $v['status'] === 1 ? '开启' : '关闭';
             $result[$k]['is_daily'] = $v['is_daily'] === 1 ? '限制' : '不限制';
-            if((int)$v['is_sms'] === 1){
+            if ((int) $v['is_sms'] === 1) {
                 $result[$k]['is_daily'] = '无效';
             }
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
@@ -241,13 +241,13 @@ class EventModel extends CommonModel
 
         $name = self::find($data['id'])->value('name');
 
-        if ($data['id'] === 1 || self::find($data['id'])->value('is_sm,s') === 1) {
+        if ($data['id'] === 1 || self::find($data['id'])->value('is_sms') === 1) {
             throw new LogicException('固定活动不能删除!');
         }
 
         $status = self::where('id', $data['id'])->delete();
 
-        if ($status === false) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');

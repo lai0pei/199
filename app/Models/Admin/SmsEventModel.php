@@ -68,7 +68,7 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
         }
 
         $item = self::where($where)->orderBy('id', 'desc')->paginate($limit, '*', 'page', $page);
-   
+
         $result = [];
 
         foreach ($item->items() as $k => $v) {
@@ -175,9 +175,9 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
 
         try {
             $ids = array_column($data['data'], 'id');
-            if(1 === $status){
+            if ($status === 1) {
                 $tx = '通过';
-            }else{
+            } else {
                 $tx = '拒绝';
             }
             $count = count($ids);
