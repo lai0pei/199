@@ -2,18 +2,18 @@
 @section('content')
     <div class="layui-form layuimini-form">
         <div class="layui-form-item">
-            <input type="hidden" name="id" value="{{ $type['id'] ?? -1 }}" class="layui-input">
+            <input type="hidden" name="id" value="{{ $type->id ?? -1 }}" class="layui-input">
             <label class="layui-form-label required">活动名称</label>
             <div class="layui-input-block">
                 <input type="text" name="name" lay-verify="required" lay-reqtext="活动名不能为空" placeholder="新年优惠"
-                    value="{{ $type['name'] ?? '' }}" class="layui-input">
+                    value="{{ $type->name ?? '' }}" class="layui-input">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label required">排序</label>
             <div class="layui-input-block">
                 <input type="number" name="sort" lay-verify="required|ip" lay-reqtext="排序不能为空" placeholder="例如: 0"
-                    value="{{ $type['sort'] ?? '' }}" class="layui-input">
+                    value="{{ $type->sort ?? '' }}" class="layui-input">
             </div>
         </div>
 
@@ -34,7 +34,7 @@
 @section('footer')
     <script>
         var mani_type = "{{ route('admin_mani_type') }}";
-        var status = "{{ $type['status'] ?? 1 }}";
+        var status = "{{ $type->status ?? 1 }}";
         if (status == 1) {
             $('#open').attr('checked', true);
         } else {
@@ -44,7 +44,6 @@
         layui.use(['form'], function() {
             var form = layui.form,
                 layer = layui.layer;
-
 
 
 
@@ -63,9 +62,9 @@
                             });
                             setTimeout(function() {
                                 var index = parent.layer.getFrameIndex(window
-                                .name); //先得到当前iframe层的索引
+                                    .name); //先得到当前iframe层的索引
                                 parent.$('button[lay-filter="data-search-btn"]')
-                            .click(); //刷新列表
+                                    .click(); //刷新列表
                                 parent.layer.close(index); //再执行关闭
 
                             }, SUCCESS_TIME);

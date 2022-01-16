@@ -72,9 +72,20 @@ class EventTypeController extends Controller
      * @return void
      */
     public function addType()
-    {
-        $type = (new EventTypeModel($this->request->route()->parameters()))->getType();
+    {   
+        $input = $this->request->route()->parameters();
+        $validator = Validator::make($input, [
+            'id' => 'numeric|min:0',
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+        $type = (new EventTypeModel($input))->getType();
         return view('admin.event_type.add', ['type' => $type]);
+    } catch (LogicException $e) {
+        return self::json_fail([], $e->getMessage());
+    }
     }
 
     /**
@@ -100,8 +111,15 @@ class EventTypeController extends Controller
      */
     public function typeDelete()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required|min:1|numeric',
+        ], );
         try {
-            if ((new EventTypeModel($this->request->all()))->typeDelete()) {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            if ((new EventTypeModel($input))->typeDelete()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {

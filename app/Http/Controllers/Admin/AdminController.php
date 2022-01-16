@@ -37,6 +37,7 @@ class AdminController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
+        $this->validate =  'required|numeric|min:-1';
     }
 
     public function person()
@@ -89,7 +90,7 @@ class AdminController extends Controller
     {
         $input = $this->request->route()->parameters();
         $validator = Validator::make($input, [
-            'id' => 'required|numeric|min:-1',
+            'id' => $this->validate,
         ], );
         try {
             if ($validator->fails()) {
@@ -106,7 +107,7 @@ class AdminController extends Controller
     {
         $input = $this->request->route()->parameters();
         $validator = Validator::make($input, [
-            'id' => 'required|numeric|min:-1',
+            'id' => $this->validate,
         ], );
         try {
             if ($validator->fails()) {
@@ -123,7 +124,7 @@ class AdminController extends Controller
     {
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required|numeric|min:-1',
+            'id' => $this->validate,
             'account' => 'required',
             'username' => 'required',
             'role' => 'required',
@@ -146,7 +147,7 @@ class AdminController extends Controller
     {
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required|numeric|min:-1',
+            'id' => $this->validate,
         ], );
         try {
             if ($validator->fails()) {

@@ -36,10 +36,21 @@ class EventController extends Controller
      */
     public function event()
     {
-        $model = new EventModel($this->request->route()->parameters());
-        $data = $model->getEventBy();
-        $types = (new EventTypeModel())->getAllType();
-        return view('admin.event.add_event', ['type' => $data, 'event' => $types]);
+        $input = $this->request->route()->parameters();
+        $validator = Validator::make($input, [
+            'id' => 'numeric|min:1',
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            $model = new EventModel($input);
+            $data = $model->getEventBy();
+            $types = (new EventTypeModel())->getAllType();
+            return view('admin.event.add_event', ['type' => $data, 'event' => $types]);
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 
     /**
@@ -58,10 +69,12 @@ class EventController extends Controller
         ], );
         try {
             if ($validator->fails()) {
-                throw new LogicException('请填写全部数据');
+                throw new LogicException(self::MSG);
             }
-            $data = (new EventModel($input))->maniEvent();
-            return self::json_success($data);
+            if ((new EventModel($input))->maniEvent()) {
+                return self::json_success([]);
+            }
+
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }
@@ -70,8 +83,7 @@ class EventController extends Controller
     /**
      * 活动列表 页面
      */
-    public function list()
-    {
+    function list() {
         $model = new EventModel($this->request->all());
         $types = (new EventTypeModel())->getAllType();
         $status = $model->getStatus();

@@ -31,6 +31,7 @@ class AGetRoute1AdminTest extends TestCase
      */
     protected $seed = true;
 
+
     public function test_seed(){
         $this->seed();
     }
