@@ -76,7 +76,7 @@
                                 <td>更新时间</td>
                                 <td>{{ $data['updated_at'] ?? '' }}</td>
                             </tr>
-                            @foreach($data['value'] as $v)
+                            @foreach(($data['value'] ?? []) as $v)
                             <tr>
                                 <td>{{$v['name']}}</td>
                                 <td>{{ $v['value'] }}</td>

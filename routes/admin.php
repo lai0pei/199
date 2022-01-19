@@ -158,19 +158,18 @@ Route::middleware(['admin'])->prefix('6ucwfN@Bt')->group(function () {
     //活动列表
     Route::get('/event_lists', [EventController::class, 'list']);
     Route::get('/get_list', [EventController::class, 'getEventList'])->name('admin_get_event');
-    Route::post('/delete_event/{id?}', [EventController::class, 'deleteEvent'])->name('admin_delete_event');
+    Route::post('/delete_event', [EventController::class, 'deleteEvent'])->name('admin_delete_event');
 
     //活动表单
     Route::get('/form/{id?}', [FormController::class, 'form'])->name('admin_form');
     Route::get('/form_list', [FormController::class, 'getFormList'])->name('admin_form_list');
-    Route::post('/delete_form/{id?}', [FormController::class, 'formDelete'])->name('admin_form_delete');
+    Route::post('/delete_form', [FormController::class, 'formDelete'])->name('admin_form_delete');
     Route::get('/form_detail/{event_id?}/{id?}', [FormController::class, 'formDetail'])->name('admin_form_detail');
     Route::post('/form_add', [FormController::class, 'formAdd'])->name('admin_form_add');
 
     //手机管理
     Route::get('/mobile_management', [MobileController::class, 'mobile']);
     Route::post('/importExcel', [UploadController::class, 'importExcel'])->name('admin_import_excel');
-    Route::post('/exportExcel', [UploadController::class, 'exportExcel'])->name('admin_export_excel');
     Route::get('/getMobile', [MobileController::class, 'getMobile'])->name('admin_get_mobile');
     Route::post('/deleteMobile', [MobileController::class, 'deleteMobile'])->name('admin_delete_mobile');
     Route::get('/Mobile', [MobileController::class, 'addMobile'])->name('mobile_add');

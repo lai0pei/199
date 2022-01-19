@@ -60,6 +60,10 @@ class FormModel extends CommonModel
             }
         }
 
+        if (! isset($data['id'])) {
+            throw new LogicException('编号必须');
+        }
+
         $item = self::where('event_id', $data['id'])->paginate($limit, '*', 'page', $page);
 
         $result = [];
@@ -114,11 +118,13 @@ class FormModel extends CommonModel
     public function getFormById(): array
     {
         $data = $this->data;
-
-        if (empty($data['id'])) {
-            $res = [];
-        } else {
-            $res = self::find($data['id'])->toArray();
+        $res = [];
+        if (isset($data['id'])) {
+            $form = self::find($data['id']);
+            if ($form === null) {
+                return [];
+            }
+            $res = $form->toArray();
             $res['type_name'] = $this->getOptionName($res['type']);
         }
 
@@ -151,28 +157,30 @@ class FormModel extends CommonModel
     {
         $data = $this->data;
 
+        $time = now();
+
         DB::beginTransaction();
 
         if ((int) $data['type'] === 4) {
             $id = self::where('event_id', $data['event_id'])->where('type', 4)->value('id');
 
-            if ($id !== null) {
+            if ($id !== null && $id !== (int) $data['id']) {
                 throw new LogicException('最多一个图片框');
             }
         }
 
-        if ((int) $data['id'] === -1) {
-            $add = [
-                'name' => $data['name'],
-                'type' => $data['type'],
-                'option' => $data['option'],
-                'event_id' => $data['event_id'],
-                'sort' => $data['sort'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+        $formData = [
+            'name' => $data['name'],
+            'type' => $data['type'],
+            'option' => $data['option'] ?? '',
+            'event_id' => $data['event_id'],
+            'sort' => $data['sort'],
+            'updated_at' => $time,
+        ];
 
-            $status = self::insert($add);
+        if ((int) $data['id'] === -1) {
+            $formData['created_at'] = $time;
+            $status = self::insert($formData);
 
             if (! $status) {
                 DB::rollBack();
@@ -183,31 +191,19 @@ class FormModel extends CommonModel
             $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '添加了新活动表单 [' . $data['name'] . ']'];
 
             (new LogModel($log_data))->createLog();
+        } else {
+            $status = self::where('id', $data['id'])->update($formData);
 
-            DB::commit();
+            if (! $status) {
+                DB::rollBack();
 
-            return true;
+                throw new LogicException('保存失败');
+            }
+
+            $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑了活动[' . $data['name'] . ']'];
+
+            (new LogModel($log_data))->createLog();
         }
-        $save = [
-            'name' => $data['name'],
-            'type' => $data['type'],
-            'option' => $data['option'],
-            'sort' => $data['sort'],
-            'event_id' => $data['event_id'],
-            'updated_at' => now(),
-        ];
-
-        $status = self::where('id', $data['id'])->update($save);
-
-        if (! $status) {
-            DB::rollBack();
-
-            throw new LogicException('添加失败');
-        }
-
-        $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => '编辑了活动[' . $data['name'] . ']'];
-
-        (new LogModel($log_data))->createLog();
 
         DB::commit();
 

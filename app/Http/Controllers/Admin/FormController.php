@@ -33,21 +33,15 @@ class FormController extends Controller
     public function form()
     {
         $id = $this->request->route()->parameters();
-        return view('admin.event.form_event', ['id' => $id['id']]);
+        return view('admin.event.form_event', ['id' => $id['id'] ?? -1]);
     }
 
     public function getFormList()
     {
         $input = $this->request->all();
-        $validator = Validator::make($input, [
-            'id' => 'required|numeric|min:-1',
-        ], );
-        try {
-            if ($validator->fails()) {
-                throw new LogicException('编号必须');
-            }
-            $data = (new FormModel($this->request->all()))->getFormList();
 
+        try {
+            $data = (new FormModel($input))->getFormList();
             $result['code'] = self::FAIL;
             $result['msg'] = '操作成功';
             $result['data'] = $data['data'];
@@ -61,8 +55,15 @@ class FormController extends Controller
 
     public function formDelete()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:-1',
+        ], );
         try {
-            if ((new FormModel($this->request->all()))->formDelete()) {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            if ((new FormModel($input))->formDelete()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
@@ -76,7 +77,7 @@ class FormController extends Controller
         $formModel = new FormModel($route);
         $data = $formModel->getFormById();
         $formType = $formModel->getFormType();
-        $event_id = $route['event_id'];
+        $event_id = $route['event_id'] ?? -1;
         return view('admin.event.add_form', ['form' => $data, 'type' => $formType, 'event_id' => $event_id]);
     }
 
@@ -85,12 +86,14 @@ class FormController extends Controller
         $input = $this->request->all();
         $validator = Validator::make($input, [
             'id' => 'required|numeric|min:-1',
-            'type' => 'required',
-            'event_id' => 'required',
+            'type' => 'required|min:0|max:5',
+            'event_id' => 'required|min:1',
+            'name' => 'required',
+            'sort' => 'required|numeric|min:0',
         ], );
         try {
             if ($validator->fails()) {
-                throw new LogicException('请填写全部数据');
+                throw new LogicException(self::MSG);
             }
             if ((new FormModel($input))->formAdd()) {
                 return self::json_success([], '操作成功');

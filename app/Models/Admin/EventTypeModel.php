@@ -60,7 +60,7 @@ class EventTypeModel extends CommonModel
 
             $status = self::insert($add);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
 
                 throw new LogicException('添加失败');
@@ -69,7 +69,6 @@ class EventTypeModel extends CommonModel
             $log_data = ['type' => LogModel::ADD_TYPE, 'title' => '添加新活动类型'];
 
             (new LogModel($log_data))->createLog();
-
         } else {
             $id = self::where('name', $data['name'])->value('id');
 
@@ -86,7 +85,7 @@ class EventTypeModel extends CommonModel
 
             $status = self::where('id', $data['id'])->update($save);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
 
                 throw new LogicException('编辑失败');
@@ -130,7 +129,7 @@ class EventTypeModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['name'] !== '') {
                 $where['name'] = $param['name'];
@@ -171,13 +170,13 @@ class EventTypeModel extends CommonModel
 
         $eventModel = new EventModel();
 
-        if (!empty($eventModel::where('type_id', $data['id'])->value('id'))) {
+        if (! empty($eventModel::where('type_id', $data['id'])->value('id'))) {
             throw new LogicException('此类型活动下还有其他活动,不可删除');
         }
 
         $status = self::where('id', $data['id'])->delete();
 
-        if (!$status) {
+        if (! $status) {
             DB::rollBack();
             throw new LogicException('删除失败');
         }

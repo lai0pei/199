@@ -7,7 +7,7 @@
             <label class="layui-form-label required">表单名称</label>
             <div class="layui-input-block">
                 <input type="hidden" name="id" value="{{ $form['id'] ?? -1 }}">
-                <input type="hidden" name="event_id" value="{{ $event_id ?? -1 }}">
+                <input type="hidden" name="event_id" value="{{ $event_id }}">
                 <input type="text" name="name" lay-verify="required" lay-reqtext="请输入表单名称" placeholder="请输入表单名称"
                     value="{{ $form['name'] ?? '' }}" class="layui-input">
             </div>

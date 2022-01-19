@@ -17,8 +17,8 @@
 
 namespace App\Models\Admin;
 
+use App\Exceptions\LogicException;
 use Illuminate\Support\Facades\Cache;
-use LogicException;
 
 class AuthMenuModel extends CommonModel
 {

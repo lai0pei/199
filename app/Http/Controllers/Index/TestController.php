@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Index\util\generateCode;
 use App\Http\Controllers\Index\util\juhe;
@@ -9,7 +10,6 @@ use App\Http\Controllers\Index\util\yunpian;
 use App\Models\Admin\ConfigModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use LogicException;
 
 class TestController extends Controller
 {

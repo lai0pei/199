@@ -17,13 +17,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\AuthGroupModel;
 use App\Models\Admin\PermissionMenuModel;
 use App\Models\Admin\RoleModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use LogicException;
 
 class PermissionMenuController extends Controller
 {

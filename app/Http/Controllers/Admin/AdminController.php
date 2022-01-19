@@ -37,7 +37,7 @@ class AdminController extends Controller
     public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->validate =  'required|numeric|min:-1';
+        $this->validate = 'required|numeric|min:-1';
     }
 
     public function person()

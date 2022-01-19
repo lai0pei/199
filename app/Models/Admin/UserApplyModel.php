@@ -51,10 +51,10 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
         if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['event_id'] !== '') {
-                $where['event_id'] = $param['event_id'];
+                $where['event_id'] = (int) $param['event_id'];
             }
             if ($param['status'] !== '' && (int) $param['status'] !== -1) {
-                $where['status'] = $param['status'];
+                $where['status'] = (int) $param['status'];
             }
             if ($param['username'] !== '') {
                 $where['username'] = $param['username'];
@@ -97,9 +97,18 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
     public function toAudit()
     {
         $data = $this->data;
+        $apply = self::find($data['id']);
+        $res = [];
+        $res['value'] = [];
+        try {
+            if ($apply !== null) {
+                $res = $apply->toArray();
+                $res['value'] = @unserialize($res['value']) ? unserialize($res['value']) : [];
+            }
+        } catch (LogicException $e) {
+            throw new LogicException($e->getMessage());
+        }
 
-        $res = self::find($data['id'])->toArray();
-        $res['value'] = unserialize($res['value']);
         return $res;
     }
 
@@ -109,7 +118,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
 
         $save = [
             'status' => $data['status'],
-            'description' => $data['description'],
+            'description' => $data['description'] ?? '',
             'updated_at' => now(),
         ];
 
@@ -126,16 +135,13 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
             $ids = array_column($data['data'], 'id');
             $count = count($ids);
             $status = self::whereIn('id', $ids)->delete();
+            if (! $status) {
+                throw new LogicException('删除失败');
+            }
             $title = '删除了' . $count . '行活动申请记录';
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
-        }
-
-        if (! $status) {
-            DB::rollBack();
-
-            throw new LogicException('删除失败');
         }
 
         $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => $title];
@@ -155,7 +161,10 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
 
         try {
             $ids = array_column($data['data'], 'id');
-            $count = count($ids);
+            if (empty($ids)) {
+                throw new LogicException('审核失败');
+            }
+
             if ($status === self::PASS) {
                 $pass = (new ConfigModel())->getConfig('bulkPass');
                 $msg = $pass['pass'] ?? '';
@@ -171,25 +180,25 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
                 'updated_at' => now(),
                 'description' => $msg,
             ];
-            $status = self::whereIn('id', $ids)->update($audit);
 
-            $title = '审核'.$tx.'了    '. $count . '行活动申请记录';
+            $res = self::whereIn('id', $ids)->update($audit);
+
+            if (! $res) {
+                throw new LogicException('审核失败');
+            }
+
+            $count = count($ids);
+            $title = '审核' . $tx . '了    ' . $count . '行活动申请记录';
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
         }
 
-        if (! $status) {
-            DB::rollBack();
-
-            throw new LogicException('审核失败');
-        }
+        DB::commit();
 
         $log_data = ['type' => LogModel::SAVE_TYPE, 'title' => $title];
 
         (new LogModel($log_data))->createLog();
-
-        DB::commit();
 
         return true;
     }

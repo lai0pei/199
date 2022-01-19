@@ -102,12 +102,12 @@ class EventModel extends CommonModel
                 throw new LogicException('相同活动名称, 已存在');
             }
 
-            $mani['crated_at'] = $time;
+            $mani['created_at'] = $time;
             $mani['updated_at'] = $time;
 
             $status = self::insert($mani);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
                 throw new LogicException('添加失败');
             }
@@ -125,7 +125,7 @@ class EventModel extends CommonModel
             $mani['updated_at'] = $time;
 
             //短信活动 没有限制 每日
-            if (((int) $data['is_sms'] ?? 0) === 1) {
+            if ((int) ($data['is_sms'] ?? 0) === 1) {
                 $mani['is_monthly'] = ($data['is_monthly'] ?? '') === 'on' ? 1 : 0;
             } else {
                 $mani['is_daily'] = ($data['is_daily'] ?? '') === 'on' ? 1 : 0;
@@ -134,7 +134,7 @@ class EventModel extends CommonModel
 
             $status = self::where('id', $data['id'])->update($mani);
 
-            if (!$status) {
+            if (! $status) {
                 DB::rollBack();
 
                 throw new LogicException('保存失败');
@@ -157,7 +157,7 @@ class EventModel extends CommonModel
 
         $where = [];
 
-        if (!empty($data['searchParams'])) {
+        if (! empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['name'] !== '') {
                 $where['name'] = $where['name'] = $param['name'];
@@ -233,21 +233,25 @@ class EventModel extends CommonModel
 
         DB::beginTransaction();
 
-        $name = self::find($data['id'])->value('name');
+        $event = self::find($data['id']);
 
-        if ($data['id'] === 1 || self::find($data['id'])->value('is_sms') === 1) {
+        if ($event === null) {
+            throw new LogicException('删除失败');
+        }
+
+        if ($data['id'] === 1 || $event->is_sms === 1) {
             throw new LogicException('固定活动不能删除!');
         }
 
         $status = self::where('id', $data['id'])->delete();
 
-        if (!$status) {
+        if (! $status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
         }
 
-        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除了活动[' . $name . ']'];
+        $log_data = ['type' => LogModel::DELETE_TYPE, 'title' => '删除了活动[' . $event->name . ']'];
 
         (new LogModel($log_data))->createLog();
 

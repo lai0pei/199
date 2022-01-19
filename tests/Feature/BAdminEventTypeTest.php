@@ -147,6 +147,7 @@ class BAdminEventTypeTest extends TestCase
             'id' => 7,
             'name' => '棋牌',
             'status' => 0,
+            'sort' => 1,
         ];
 
         $res = [

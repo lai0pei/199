@@ -17,6 +17,7 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Index\ApplyModel;
 use App\Models\Index\ConfigModel;
@@ -27,7 +28,6 @@ use App\Models\Index\SmsApplyModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
-use LogicException;
 use Mews\Captcha\Facades\Captcha;
 
 class IndexController extends Controller
@@ -89,7 +89,7 @@ class IndexController extends Controller
         ], );
         try {
             if ($validator->fails()) {
-                throw new LogicException('请求数据不正确');
+                throw new LogicException(self::MSG);
             }
 
             if (! captcha_check($input['captcha'])) {

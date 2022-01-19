@@ -18,7 +18,7 @@
                                 <div class="layui-input-inline">
                                     <select name="is_match">
                                         <option value="">请选择</option>
-                                        @foreach ($is_match as $ind => $item)
+                                        @foreach (($is_match ?? []) as $ind => $item)
                                             <option value="{{ $ind ?? '' }}">{{ $item ?? '' }}</option>
                                         @endforeach
                                     </select>
@@ -29,7 +29,7 @@
                                 <div class="layui-input-inline">
                                     <select name="state">
                                         <option value="">请选择</option>
-                                        @foreach ($state as $ind => $item)
+                                        @foreach (($state ?? []) as $ind => $item)
                                             <option value="{{ $ind }}">{{ $item }}</option>
                                         @endforeach
                                     </select>
@@ -40,7 +40,7 @@
                                 <div class="layui-input-inline">
                                     <select name="is_send">
                                         <option value="">请选择</option>
-                                        @foreach ($is_send as $ind => $item)
+                                        @foreach (($is_send ?? []) as $ind => $item)
                                             <option value="{{ $ind }}">{{ $item }}</option>
                                         @endforeach
                                     </select>

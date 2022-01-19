@@ -59,22 +59,20 @@ class EventController extends Controller
     public function maniEvent()
     {
         $input = $this->request->all();
-        $validator = Validator::make($input, [
+        $validator = Validator::make($input['data'], [
             'id' => 'required|numeric|min:-1',
             'name' => 'required',
             'type_id' => 'required',
             'type_pic' => 'required',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'start' => 'required',
+            'end' => 'required',
         ], );
         try {
             if ($validator->fails()) {
                 throw new LogicException(self::MSG);
             }
-            if ((new EventModel($input))->maniEvent()) {
-                return self::json_success([]);
-            }
-
+            (new EventModel($input))->maniEvent();
+            return self::json_success([]);
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }
@@ -83,7 +81,8 @@ class EventController extends Controller
     /**
      * 活动列表 页面
      */
-    function list() {
+    public function list()
+    {
         $model = new EventModel($this->request->all());
         $types = (new EventTypeModel())->getAllType();
         $status = $model->getStatus();
@@ -112,8 +111,16 @@ class EventController extends Controller
      */
     public function deleteEvent()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:0',
+        ], );
         try {
-            if ((new EventModel($this->request->all()))->deleteEvent()) {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+
+            if ((new EventModel($input))->deleteEvent()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {

@@ -11,7 +11,7 @@
                             <div class="layui-inline">
                                 <label class="layui-form-label">表单名称</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="id" value="{{ $id ?? -1 }}" class="layui-input">
+                                    <input type="text" name="id" value="{{ $id }}" class="layui-input">
                                     <input type="text" name="name" autocomplete="off" placeholder="请输入活动名称"
                                         class="layui-input">
                                 </div>

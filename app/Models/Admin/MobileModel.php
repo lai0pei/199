@@ -85,6 +85,9 @@ class MobileModel extends CommonModel
         DB::beginTransaction();
 
         try {
+            if (! is_array($data['id'])) {
+                throw new LogicException('删除失败');
+            }
             $ids = array_column($data['id'], 'id');
             $count = count($ids);
             $status = self::whereIn('id', $ids)->delete();
@@ -119,11 +122,19 @@ class MobileModel extends CommonModel
 
         DB::beginTransaction();
         try {
-            self::insert([
+            if ((int) strlen($data['mobile']) !== 11) {
+                throw new LogicException('手机格式不对');
+            }
+
+            $data = self::insert([
                 'mobile' => $data['mobile'],
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            if (! $data) {
+                throw new LogicException('添加失败');
+            }
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());

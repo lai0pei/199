@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\EventModel;
 use App\Models\Admin\UserApplyModel;
 use Illuminate\Http\Request;
-use LogicException;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -36,45 +38,88 @@ class UserController extends Controller
 
     public function userAuditIndex()
     {
-        $data = (new UserApplyModel($this->request->route()->parameters()))->toAudit();
-        return view('admin.user_apply.audit', ['data' => $data]);
+        $input = $this->request->route()->parameters();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:1',
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            $data = (new UserApplyModel($input))->toAudit();
+            return view('admin.user_apply.audit', ['data' => $data]);
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 
     public function saveAudit()
     {
-        return self::json_success((new UserApplyModel($this->request->all()))->saveAudit());
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:1',
+            'status' => ['required', Rule::in(0, 1, 2)],
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            (new UserApplyModel($input))->saveAudit();
+            return self::json_success();
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 
     public function delete()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'data' => 'required',
+        ], );
         try {
-            if ((new UserApplyModel($this->request->all()))->delete()) {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            if ((new UserApplyModel($input))->delete()) {
                 return self::json_success();
             }
         } catch (LogicException $e) {
-            return self::json_fail($e->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
     }
 
     public function refuse()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'data' => 'required',
+        ], );
         try {
-            if ((new UserApplyModel($this->request->all()))->audit(UserApplyModel::REFUSE)) {
-                return self::json_success();
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
             }
+            (new UserApplyModel($input))->audit(UserApplyModel::REFUSE);
+            return self::json_success();
         } catch (LogicException $e) {
-            return self::json_fail($e->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
     }
 
     public function pass()
     {
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'data' => 'required',
+        ], );
         try {
-            if ((new UserApplyModel($this->request->all()))->audit(UserApplyModel::PASS)) {
-                return self::json_success();
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
             }
+            (new UserApplyModel($this->request->all()))->audit(UserApplyModel::PASS);
+            return self::json_success();
         } catch (LogicException $e) {
-            return self::json_fail($e->getMessage());
+            return self::json_fail([], $e->getMessage());
         }
     }
 }

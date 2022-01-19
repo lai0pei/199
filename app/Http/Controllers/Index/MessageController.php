@@ -17,6 +17,7 @@
 
 namespace App\Http\Controllers\Index;
 
+use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Index\util\GenerateCode;
 use App\Http\Controllers\Index\util\JuHe;
@@ -24,7 +25,6 @@ use App\Http\Controllers\Index\util\YunPian;
 use App\Models\Admin\ConfigModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use LogicException;
 
 class MessageController extends Controller
 {

@@ -74,12 +74,12 @@
                     <label class="layui-form-label">活动时间</label>
                     <div class="layui-inline" id="eventTime">
                         <div class="layui-input-inline">
-                            <input type="text" autocomplete="off" name="start" id="start" class="layui-input"
+                            <input type="text" autocomplete="off" name="start" id="start" class="layui-input" lay-verify="required" lay-reqtext="活动开始时间不能为空"
                                 placeholder="开始日期" value="{{ $type['start_time'] ?? '' }}">
                         </div>
                       
                         <div class="layui-input-inline">
-                            <input type="text" autocomplete="off" id="end" name="end" class="layui-input"
+                            <input type="text" autocomplete="off" id="end" name="end" class="layui-input" lay-verify="required" lay-reqtext="活动结束时间不能为空"
                                 placeholder="结束日期" value="{{ $type['end_time'] ?? '' }}">
                         </div>
                     </div>

@@ -368,7 +368,7 @@ class AdminModel extends CommonModel
      * @return void
      */
     private function setAdminSession()
-    {   
+    {
         session()->put('admin_id', session()->getId());
         return session()->put('user_id', $this->adminId);
     }

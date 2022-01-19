@@ -17,9 +17,9 @@
 
 namespace App\Models\Admin;
 
+use App\Exceptions\LogicException;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use LogicException;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -114,11 +114,15 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
     public function smsAudit()
     {
         $data = $this->data;
+        $res = [];
 
-        $res = self::find($data['id'])->toArray();
-        $res['is_send'] = $this->sendName($res['is_send']);
-        $res['is_match'] = $this->matchName($res['is_match']);
-        $res['value'] = array_values(unserialize($res['value']));
+        $sms = self::find($data['id']);
+        if ($sms !== null) {
+            $res = $sms->toArray();
+            $res['is_send'] = $this->sendName($res['is_send']);
+            $res['is_match'] = $this->matchName($res['is_match']);
+            $res['value'] = @unserialize($res['value']) ? unserialize($res['value']) : [];
+        }
 
         return $res;
     }
@@ -127,11 +131,23 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
     {
         $data = $this->data;
 
+        if ($data['state'] === (0 || 2)) {
+            $save['is_send'] = 0;
+        } else {
+            $save['is_send'] = 1;
+        }
+
         $save = [
             'state' => $data['state'],
             'send_remark' => $data['send_remark'],
             'updated_at' => now(),
         ];
+
+        if ($data['state'] === (0 || 2)) {
+            $save['is_send'] = 0;
+        } else {
+            $save['is_send'] = 1;
+        }
 
         return self::where('id', $data['id'])->update($save);
     }
@@ -145,6 +161,9 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
         try {
             $ids = array_column($data['data'], 'id');
             $count = count($ids);
+            if ($count === 0) {
+                throw new LogicException('删除失败');
+            }
             $status = self::whereIn('id', $ids)->delete();
             $title = '删除了' . $count . '行新人申请记录';
         } catch (LogicException $e) {
@@ -175,26 +194,34 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
 
         try {
             $ids = array_column($data['data'], 'id');
-            if ($status === 1) {
-                $tx = '通过';
-            } else {
-                $tx = '拒绝';
-            }
-            $count = count($ids);
+
             $audit = [
                 'state' => $status,
                 'updated_at' => now(),
             ];
+            if ($status === self::PASS) {
+                $tx = '通过';
+                $audit['is_send'] = 1;
+            } elseif ($status === self::REFUSE) {
+                $tx = '拒绝';
+                $audit['is_send'] = 0;
+            } else {
+                $tx = '未审核';
+                $audit['is_send'] = 0;
+            }
+            $count = count($ids);
+            if ($count === 0) {
+                throw new LogicException('审核失败');
+            }
+
             $status = self::whereIn('id', $ids)->update($audit);
-            $title = '审核'.$tx.'了    ' . $count . '行新人申请记录';
+            $title = '审核' . $tx . '了    ' . $count . '行新人申请记录';
         } catch (LogicException $e) {
             DB::rollBack();
             throw new LogicException($e->getMessage());
         }
 
         if (! $status) {
-            DB::rollBack();
-
             throw new LogicException('审核失败');
         }
 

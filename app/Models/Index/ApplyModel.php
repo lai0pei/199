@@ -17,10 +17,10 @@
 
 namespace App\Models\Index;
 
+use App\Exceptions\LogicException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use LogicException;
 
 class ApplyModel extends Model
 {
@@ -60,15 +60,14 @@ class ApplyModel extends Model
 
     /**
      * applyForm
-     *
-     * @return void
      */
     public function applyForm()
     {
         $data = $this->data;
         $eventId = $data['eventId'];
         $username = $data['username'];
-        $pic_url = $data['imageUrl'];
+        $pic_url = $data['imageUrl'] ?? '';
+
         $form = [];
 
         $eventModel = new EventModel();
@@ -78,16 +77,16 @@ class ApplyModel extends Model
 
         $count = self::where('username', $username)->where('event_id', $eventId)->count();
 
-        if ((int) $is_daily === 1 && (((int) $limit < (int) $count) || (int) $limit === 0)) {
+        if ((int) $is_daily === 1 && (((int) $limit <= (int) $count) || (int) $limit === 0)) {
             throw new LogicException('今日申请次数，已超过' . $limit . '次');
         }
 
         try {
             DB::beginTransaction();
 
-            $form = $this->removeNull($data['form']);
+            $form = $this->removeNull($data['form'] ?? '');
 
-            if (! empty($pic_url)) {
+            if ($pic_url !== '') {
                 foreach ($pic_url as &$v) {
                     $v['name'] = $this->formModel::where('id', $v['id'])->value('name');
                     $v['type'] = 'photo';
@@ -110,9 +109,11 @@ class ApplyModel extends Model
             ];
 
             $status = self::insert($insert);
+            if (! $status) {
+                throw new LogicException('申请失败');
+            }
         } catch (LogicException $e) {
-            dd($e->getMessage());
-            throw new LogicException('申请失败');
+            throw new LogicException($e->getMessage());
         }
         if (! $status) {
             DB::rollBack();
@@ -133,6 +134,9 @@ class ApplyModel extends Model
     {
         $data = [];
 
+        if (empty($form) || ! is_array($form)) {
+            return [];
+        }
         $i = 0;
         foreach ($form as &$subForm) {
             foreach ($subForm as $k => $v) {

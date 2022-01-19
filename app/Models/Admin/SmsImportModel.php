@@ -2,9 +2,9 @@
 
 namespace App\Models\Admin;
 
+use App\Exceptions\LogicException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use LogicException;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
@@ -35,9 +35,10 @@ class SmsImportModel extends CommonModel implements ToCollection, WithChunkReadi
     {
         DB::beginTransaction();
         try {
-            $status = $this->data['status'];
+            $status = $this->data['status'] ?? 0;
             $count = 0;
             $error = 0;
+            $time = now();
             foreach ($collection as $v) {
                 if ($v[0] === null) {
                     continue;
@@ -47,13 +48,21 @@ class SmsImportModel extends CommonModel implements ToCollection, WithChunkReadi
                     continue;
                 }
 
-                $update = [
+                $update[$count] = [
                     'state' => $status,
-                    'updated_at' => now(),
+                    'updated_at' => $time,
                 ];
+
+                if ((int) $status === 1) {
+                    $update[$count]['is_send'] = 1;
+                    $update[$count]['send_time'] = $time;
+                } elseif ((int) $status === 2) {
+                    $update[$count]['is_send'] = 0;
+                }
 
                 self::where('id', $v[0])->update($update);
                 $count++;
+
                 DB::commit();
             }
         } catch (LogicException $e) {

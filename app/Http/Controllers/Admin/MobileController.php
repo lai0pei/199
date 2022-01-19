@@ -21,6 +21,7 @@ use App\Exceptions\LogicException;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\MobileModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class MobileController extends Controller
 {
@@ -63,8 +64,9 @@ class MobileController extends Controller
      */
     public function deleteMobile()
     {
+        $input = $this->request->all();
         try {
-            if ((new MobileModel($this->request->all()))->deleteMobile()) {
+            if ((new MobileModel($input))->deleteMobile()) {
                 return self::json_success([], '操作成功');
             }
         } catch (LogicException $e) {
@@ -89,7 +91,20 @@ class MobileController extends Controller
      */
     public function maniMobile()
     {
-        return self::json_success((new MobileModel($this->request->all()))->maniMobile(), '添加、成功');
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'mobile' => 'required|numeric',
+        ], );
+        try {
+            if ($validator->fails()) {
+                throw new LogicException(self::MSG);
+            }
+            if ((new MobileModel($input))->maniMobile()) {
+                return self::json_success([], '添加、成功');
+            }
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 
     /**

@@ -17,9 +17,9 @@
 
 namespace App\Models\Admin;
 
+use App\Exceptions\LogicException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use LogicException;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;

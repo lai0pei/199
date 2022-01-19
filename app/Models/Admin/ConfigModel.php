@@ -17,7 +17,7 @@
 
 namespace App\Models\Admin;
 
-use LogicException;
+use App\Exceptions\LogicException;
 
 class ConfigModel extends CommonModel
 {

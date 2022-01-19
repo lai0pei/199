@@ -24,7 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class ConfigsController extends Controller
-{   
+{
     public function __construct(Request $request)
     {
         $this->request = $request;

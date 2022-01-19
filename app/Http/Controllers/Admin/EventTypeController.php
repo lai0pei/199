@@ -72,7 +72,7 @@ class EventTypeController extends Controller
      * @return void
      */
     public function addType()
-    {   
+    {
         $input = $this->request->route()->parameters();
         $validator = Validator::make($input, [
             'id' => 'numeric|min:0',
@@ -81,11 +81,11 @@ class EventTypeController extends Controller
             if ($validator->fails()) {
                 throw new LogicException(self::MSG);
             }
-        $type = (new EventTypeModel($input))->getType();
-        return view('admin.event_type.add', ['type' => $type]);
-    } catch (LogicException $e) {
-        return self::json_fail([], $e->getMessage());
-    }
+            $type = (new EventTypeModel($input))->getType();
+            return view('admin.event_type.add', ['type' => $type]);
+        } catch (LogicException $e) {
+            return self::json_fail([], $e->getMessage());
+        }
     }
 
     /**

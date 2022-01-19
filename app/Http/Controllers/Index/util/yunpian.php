@@ -17,8 +17,8 @@
 
 namespace App\Http\Controllers\Index\util;
 
+use App\Exceptions\LogicException;
 use Illuminate\Support\Facades\Log;
-use LogicException;
 
 trait YunPian
 {
