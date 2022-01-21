@@ -72,7 +72,7 @@ class SmsApplyModel extends Model
             $insert = [
                 'user_name' => $username,
                 'event_id' => $data['eventId'],
-                'game' => $game,
+                'game' => (new EventTypeModel())::where('id',$game)->value('name'),
                 'value' => serialize($form),
                 'mobile' => $mobile,
                 'apply_time' => now(),

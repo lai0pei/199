@@ -39,13 +39,13 @@ trait JuHe
             throw new LogicException($e);
         }
 
-        if (!$response) {
+        if (! $response) {
             Log::channel('sms')->debug($response);
             throw new LogicException($message);
         }
         $result = json_decode($response, true);
 
-        if (!$result) {
+        if (! $result) {
             Log::channel('sms')->debug($result);
             throw new LogicException($message);
         }

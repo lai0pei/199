@@ -38,7 +38,7 @@ class UploadLogoController extends Controller
 
             $path = $logo . '/' . $time;
 
-            if (!Storage::exists($path)) {
+            if (! Storage::exists($path)) {
                 Storage::makeDirectory($path, 7777, true, true);
             }
             $url = Storage::disk('public')->put($path, $this->request->file('file'));
@@ -135,7 +135,7 @@ class UploadLogoController extends Controller
         $time = Carbon::now()->format('Y-m-d');
         try {
             $path = $config . '/' . $time;
-            if (!Storage::exists($path)) {
+            if (! Storage::exists($path)) {
                 Storage::makeDirectory($path, 7777, true, true);
             }
             $url = Storage::disk('public')->put($path, $file);

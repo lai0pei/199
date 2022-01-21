@@ -32,7 +32,7 @@
                     />
                   </div>
                 </li>
-               
+
                 <li v-for="(form, index) in formList" :key="index">
                   <div v-if="form.type == 0">
                     <input
@@ -99,19 +99,19 @@
                       class="allForms mt-1 rounded-md"
                       v-model="formName.selectForm[form.id]"
                     >
-                      <option disabled value="" selected>
+                      <option disabled>
                         {{ form.name }}
                       </option>
                       <option
                         v-for="(data, index2) in form.option"
-                        :key="index2"
+                        :key="index2"  :value="data"
                       >
                         {{ data }}
                       </option>
                     </select>
                   </div>
                 </li>
-                 <li>
+                <li>
                   <div>
                     <p class="rounded-md mt-1 w-64 description">
                       {{ description }}
@@ -130,7 +130,7 @@
                       <option
                         v-for="(game, index) in gameList"
                         :key="index"
-                        :value="game.name"
+                        :value="game.id"
                       >
                         {{ game.name }}
                       </option>
@@ -227,11 +227,11 @@
 </template>
 
 <script>
-import axios from "axios";
-import VueCoreImageUpload from "vue-core-image-upload";
+import axios from 'axios';
+import VueCoreImageUpload from 'vue-core-image-upload';
 
 export default {
-  props: { childProp: Object },
+  props: {childProp: Object},
   components: {
     VueCoreImageUpload,
   },
@@ -245,7 +245,7 @@ export default {
         timeForm: [],
         selectForm: [],
       },
-      username: "",
+      username: '',
       showLoading: true,
       limit: 2,
       isPreview: false,
@@ -253,180 +253,229 @@ export default {
       imageReady: false,
       imagePreview: [],
       imageUrl: [],
-      uploadId: "",
+      uploadId: '',
       formId: [],
-      isPhone: "",
-      eventId: "",
-      captcha: "",
-      userCaptcha: "",
-      mobileNumber: "",
+      isPhone: '',
+      eventId: '',
+      captcha: '',
+      userCaptcha: '',
+      mobileNumber: '',
       timeOut: 15 * 1000,
       counting: false,
       timeWrap: null,
-      messageText: "获取验证码",
+      messageText: '获取验证码',
       disable: false,
-      smsNumber: "",
+      smsNumber: '',
       needSms: false,
       gameList: [],
-      selectGame: "请选择游戏",
+      selectGame: '请选择游戏',
       myGameList: 1,
       isSms: false,
-      description: "",
+      description: '',
+      formCount: 0,
+      numberCount: 0,
+      phoneCount: 0,
+      timeCount: 0,
     };
   },
   watch: {
-    deep: true,
-    "childProp.event_id": function (event_id) {
-      localStorage.setItem("event_id", event_id);
-      this.eventId = event_id;
+    'deep': true,
+    'childProp.event_id': function(eventId) {
+      localStorage.setItem('event_id', eventId);
+      this.eventId = eventId;
     },
-    "childProp.formData": function (formData) {
-      if (formData.length != 0) {
-        localStorage.setItem("formData", formData);
-        this.formList = formData;
-      }
+    'childProp.formData': function(formData) {
+      localStorage.setItem('formData', JSON.stringify(formData));
+      this.formList = formData;
+      this.getFormCount(formData);
       this.getCaptcha();
     },
-    "childProp.game_list": function (list) {
-      localStorage.setItem("gameList", list);
+    'childProp.game_list': function(list) {
+      localStorage.setItem('gameList', JSON.stringify(list));
       this.gameList = list;
     },
-    "childProp.need_sms": function (sms) {
-      localStorage.setItem("needSms", sms);
+    'childProp.need_sms': function(sms) {
+      localStorage.setItem('needSms', sms);
       this.needSms = sms;
     },
-    "childProp.is_sms": function (sms) {
-      localStorage.setItem("isSms", sms);
+    'childProp.is_sms': function(sms) {
+      localStorage.setItem('isSms', sms);
       this.isSms = sms;
     },
-    "childProp.description": function (description) {
-      localStorage.setItem("description", description);
+    'childProp.description': function(description) {
+      localStorage.setItem('description', description);
       this.description = description;
     },
 
-    immediate: true,
+    'immediate': true,
   },
   mounted() {
     this.clearForm();
-    this.eventId = localStorage.getItem("event_id");
-    this.needSms = localStorage.getItem("needSms");
-    this.isSms = localStorage.getItem("isSms");
-    this.description = localStorage.getItem("description");
+
+    this.eventId = localStorage.getItem('event_id');
+    this.needSms = localStorage.getItem('needSms');
+    this.isSms = localStorage.getItem('isSms');
+    this.description = localStorage.getItem('description');
   },
   methods: {
-    clearForm: function () {
+    clearForm: function() {
       this.formList = [];
       this.imagePreview = [];
       this.isSms = false;
       this.needSms = false;
       this.gameList = [];
-      this.imageReady = "";
+      this.imageReady = '';
       this.imageUrl = [];
-      this.username = "";
+      this.username = '';
       this.formName.inputForm = [];
       this.formName.numberForm = [];
       this.formName.phoneForm = [];
       this.formName.timeForm = [];
       this.formName.selectForm = [];
     },
-    submit: async function () {
-      if (this.validateUser() || this.validateForm()) {
+    getFormCount: function(form) {
+      form.forEach((element) => {
+        if (element.type === 0) {
+          this.formCount ++;
+        }
+        if (element.type === 1) {
+          this.numberCount ++;
+        }
+        if (element.type === 2) {
+          this.phoneCount ++;
+        }
+        if (element.type === 3) {
+          this.timeCount ++;
+        }
+        if (element.type === 5) {
+          this.formName.selectForm[element.id] = element['option'][0];
+        }
+      });
+
+      const game = JSON.parse(localStorage.getItem('gameList'));
+      this.myGameList = game[0]['id'];
+    },
+    submit: async function() {
+      if (this.username == '') {
+        this.$toast('请填写会员账号');
+        return true;
+      }
+
+      if (this.validateForm() || this.validateUser()) {
         return true;
       }
 
       const that = this;
       await axios
-        .post(route("apply_form"), {
-          eventId: this.eventId,
-          username: this.username,
-          form: this.formName,
-          imageUrl: this.imageUrl,
-          captcha: this.userCaptcha,
-          mobile: this.mobileNumber,
-          smsNumber: this.smsNumber,
-          needSms: this.needSms,
-          gameName: this.myGameList,
-          isSms: this.isSms,
-        })
-        .then(function (response) {
-          that.$toast(response.data.msg);
-          if (response.data.code == 1) {
-            that.clearForm();
-            that.closeDialog();
-          }
-          that.getCaptcha();
-        })
-        .catch(function (error) {
-          that.$toast("申请有误,请刷新页面");
-        });
+          .post(route('apply_form'), {
+            eventId: this.eventId,
+            username: this.username,
+            form: this.formName,
+            imageUrl: this.imageUrl,
+            captcha: this.userCaptcha,
+            mobile: this.mobileNumber,
+            smsNumber: this.smsNumber,
+            needSms: this.needSms,
+            gameName: this.myGameList,
+            isSms: this.isSms,
+          })
+          .then(function(response) {
+            that.$toast(response.data.msg);
+            if (response.data.code == 1) {
+              that.clearForm();
+              that.closeDialog();
+            }
+            that.getCaptcha();
+          })
+          .catch(function(error) {
+            that.$toast('申请有误,请刷新页面');
+          });
     },
-    validateForm: function () {
-      let form = this.formName;
-      let list = this.formList;
+    getFormNameById: function(list, type, input) {
+      let name = '';
+      let res = false;
+      const key = Object.keys(input);
+      list.forEach((element) => {
+        if (res) {
+          return true;
+        }
+
+        if (element.type == type && ! key.includes(element.id.toString())) {
+          name = element.name;
+          res = true;
+        }
+      });
+
+      return name;
+    },
+    removeNull: function(form) {
+      return form.filter((element) => {
+        return element !== null;
+      }).length;
+    },
+    validateForm: function() {
+      const form = this.formName;
+      const list = this.formList;
       let res = false;
 
       list.forEach((element) => {
+        if (res) {
+          return true;
+        }
         switch (true) {
           case element.type == 0:
-            if (form["inputForm"].length == 0) {
-              this.$toast("请填写" + element.name);
+            if (this.removeNull(form['inputForm']) !== this.formCount) {
+              this.$toast('请填写' + this.getFormNameById(list, element.type, form['inputForm']));
               res = true;
             }
+
             break;
           case element.type == 1:
-            if (form["numberForm"].length == 0) {
-              this.$toast("请填写" + element.name);
+
+            if (this.removeNull(form['numberForm']) === this.numberCount) {
+              this.$toast('请填写' + this.getFormNameById(list, element.type, form['numberForm']));
               res = true;
             }
             break;
           case element.type == 2:
-            if (form["phoneForm"].length == 0) {
-              this.$toast("请填写" + element.name);
+
+            if (this.removeNull(form['phoneForm']) === this.phoneCount) {
+              this.$toast('请填写' + this.getFormNameById(list, element.type, form['phoneForm']));
               res = true;
             }
 
             break;
           case element.type == 3:
-            if (form["timeForm"].length == 0) {
-              this.$toast("请填写" + element.name);
+
+            if (this.removeNull(form['timeForm']) === this.timeCount) {
+              this.$toast('请填写' + this.getFormNameById(list, element.type, form['timeForm']));
               res = true;
             }
             break;
           case element.type == 4:
-            if (this.imageUrl == "") {
-              this.$toast("请选择" + element.name);
-              res = true;
-            }
-            break;
-          case element.type == 5:
-            if (form["selectForm"].length == 0) {
-              this.$toast("请填写" + element.name);
+            if (this.imageUrl == '') {
+              this.$toast('请上传' + element.name);
               res = true;
             }
             break;
         }
       });
-      // 0 输入框, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框
+      // 0 文本框, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框
 
       return res;
     },
-    validateUser: function () {
-      if (this.username == "") {
-        this.$toast("请填写会员账号");
+    validateUser: function() {
+      if ('' == this.userCaptcha) {
+        this.$toast('请填写验证码');
         return true;
       }
 
-      if ("" == this.userCaptcha) {
-        this.$toast("请填写验证码");
-        return true;
-      }
-
-      if (1 == this.needSms && "" == this.mobileNumber) {
-        this.$toast("请填写手机号码");
+      if (1 == this.needSms && '' == this.mobileNumber) {
+        this.$toast('请填写手机号码');
         return true;
       }
     },
-    imageuploaded: function (response) {
+    imageuploaded: function(response) {
       if (response.code == 1) {
         this.imageReady = true;
         this.imagePreview = response.data.src;
@@ -434,49 +483,49 @@ export default {
           id: response.data.form_id,
           value: this.imagePreview,
         });
-        this.$toast("上传成功");
+        this.$toast('上传成功');
       } else {
-        this.$toast("上传失败");
+        this.$toast('上传失败');
       }
     },
-    closeDialog: function () {
-      this.$emit("fromApplyDialog");
+    closeDialog: function() {
+      this.$emit('fromApplyDialog');
     },
-    getCaptcha: async function () {
+    getCaptcha: async function() {
       const that = this;
-      await axios.get(route("index_captcha")).then(function (response) {
+      await axios.get(route('index_captcha')).then(function(response) {
         that.captcha = response.data;
         that.showLoading = false;
       });
     },
-    getMessage: async function () {
-      if ("" == this.userCaptcha) {
-        this.$toast("请填写验证码");
+    getMessage: async function() {
+      if ('' == this.userCaptcha) {
+        this.$toast('请填写验证码');
         return true;
       }
 
-      if ("" == this.mobileNumber) {
-        this.$toast("请填写手机号码");
+      if ('' == this.mobileNumber) {
+        this.$toast('请填写手机号码');
         return true;
       }
 
       const that = this;
       await axios
-        .post(route("sms_message"), {
-          mobile: this.mobileNumber,
-          captcha: this.userCaptcha,
-        })
-        .then(function (response) {
-          const res = response.data;
-          if (res.code == 1) {
-            that.counting = true;
-            that.getCaptcha();
-          }
-          that.$toast(res.msg);
-        });
+          .post(route('sms_message'), {
+            mobile: this.mobileNumber,
+            captcha: this.userCaptcha,
+          })
+          .then(function(response) {
+            const res = response.data;
+            if (res.code == 1) {
+              that.counting = true;
+              that.getCaptcha();
+            }
+            that.$toast(res.msg);
+          });
     },
-    countFinish: function () {
-      this.messageText = "再次获取";
+    countFinish: function() {
+      this.messageText = '再次获取';
       this.counting = false;
     },
   },

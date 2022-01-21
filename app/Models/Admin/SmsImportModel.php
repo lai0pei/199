@@ -44,7 +44,7 @@ class SmsImportModel extends CommonModel implements ToCollection, WithChunkReadi
                 if ($v[0] === null) {
                     continue;
                 }
-                if (!preg_match('/^[0-9_]+$/i', $v[0])) {
+                if (! preg_match('/^[0-9_]+$/i', $v[0])) {
                     $error++;
                     continue;
                 }

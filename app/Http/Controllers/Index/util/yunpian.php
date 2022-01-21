@@ -37,7 +37,6 @@ trait YunPian
                 Log::channel('sms')->debug($response);
                 throw new LogicException('发送失败');
             }
-            
         } catch (LogicException $e) {
             throw new LogicException($e->getMessage());
         }

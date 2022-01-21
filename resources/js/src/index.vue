@@ -10,16 +10,16 @@
 </template>
 
 <style>
-.whole{
+.whole {
   background: rgba(0, 0, 0, 0.3);
 }
 </style>
 <script>
 import myHeading from "./Components/myHeading";
 import myFoot from "./Components/myFooting";
-import myWallpaper from "./Components/wallpaper";
-import applyList from "./Components/applylist";
-import announcement from "./Components/announcement";
+import myWallpaper from "./Components/eventWallpaper";
+import applyList from "./Components/applyList";
+import announcement from "./Components/eventAnnouncement";
 import eventList from "./Components/eventList";
 
 export default {
@@ -33,6 +33,5 @@ export default {
     eventList,
   },
   props: ["event", "footer", "announcement", "applyList", "logo"],
-
 };
 </script>

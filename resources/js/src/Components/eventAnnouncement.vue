@@ -17,7 +17,13 @@
         alt="公告"
       />
     </span>
-  <van-notice-bar :text="listData" background="black" color="#e7ce83" scrollable :autoplay="3000" />
+    <van-notice-bar
+      :text="listData"
+      background="black"
+      color="#e7ce83"
+      scrollable
+      :autoplay="3000"
+    />
   </div>
 </template>
 
@@ -29,15 +35,15 @@ export default {
   },
   data() {
     return {
-      listData: "",
+      listData: '',
     };
   },
 };
 </script>
 
 <style scoped>
-.van-notice-bar{
-  height : 1.8rem;
-  padding : 0;
+.van-notice-bar {
+  height: 1.8rem;
+  padding: 0;
 }
 </style>

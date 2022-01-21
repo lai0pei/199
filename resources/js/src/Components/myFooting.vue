@@ -1,6 +1,7 @@
 <template>
 <div>
-  <van-tabbar v-model="active" class="bg-black" active-color="#D9C37F" inactive-color="#fff" @change="onChange" border>
+  <van-tabbar v-model="active" class="bg-black" active-color="#D9C37F"
+  inactive-color="#fff" @change="onChange" border>
     <van-tabbar-item class="bg-black" >
       <span>首页</span>
       <template #icon="props">
@@ -27,7 +28,7 @@
           alt="图片"
         /> </template
     ></van-tabbar-item>
-    <van-tabbar-item class="bg-black">  
+    <van-tabbar-item class="bg-black">
       <span>在线客服</span>
       <template #icon="props">
         <img
@@ -41,30 +42,30 @@
 
 <script>
 export default {
-  name: "myFooding",
-  props: ["footer","nActive"],
+  name: 'myFooding',
+  props: ['footer', 'nActive'],
   data() {
     return {
       active: 0,
       icon: [
         {
-          inactive: "199/images/f_img01.png",
-          active: "199/images/f_img01_on.png",
+          inactive: '199/images/f_img01.png',
+          active: '199/images/f_img01_on.png',
         },
         {
-          inactive: "199/images/f_img02.png",
-          active: "199/images/f_img02_on.png",
+          inactive: '199/images/f_img02.png',
+          active: '199/images/f_img02_on.png',
         },
         {
-          inactive: "199/images/f_img03.png",
-          active: "199/images/f_img03_on.png",
+          inactive: '199/images/f_img03.png',
+          active: '199/images/f_img03_on.png',
         },
         {
-          inactive: "199/images/f_img04.png",
-          active: "199/images/f_img04_on.png",
+          inactive: '199/images/f_img04.png',
+          active: '199/images/f_img04_on.png',
         },
       ],
-      list : [],
+      list: [],
 
     };
   },
@@ -72,23 +73,23 @@ export default {
     this.list = this.footer;
     this.active = this.nActive;
   },
-  methods : {
-    onChange : function(index){
-      let link = "";
-      switch (true){
-        case index === 1 : link = this.list.app;
-        break;
+  methods: {
+    onChange: function(index) {
+      let link = '';
+      switch (true) {
+        case index === 1: link = this.list.app;
+          break;
         case index === 2: link = this.list.speed;
-        break;
+          break;
         case index === 3: link = this.list.chat;
-        break;
-        default : link = this.list.home;
+          break;
+        default: link = this.list.home;
       }
-      console.log("current link", link);
-   
-    window.location.replace(link);
-    }
-  }
+      console.log('current link', link);
+
+      window.location.replace(link);
+    },
+  },
 };
 </script>
 

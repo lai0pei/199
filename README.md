@@ -50,6 +50,8 @@ sudo npm install -g svgo@1.3.2  ->  这个不需要，npm 是nodejs 指令 所�
 <li>进入 项目 目录， 打开terminal.</li>
 <li>composer install - 安装 包, 必须先安装 composer</li>
 <li>cp .env.example .env - 拷贝一个 配置文件. 数据库 配置在这里</li>
+</ol>
+
 ```bash
 php artisan key:generate
 php artisan migrate --seed
@@ -57,8 +59,8 @@ php artisan serve -> 本地后台运行
 npm install
 npm run hot -> 本地前台运行
 ```
-<li>运行 需要两个 terminal </li>
-</ol>
+4.运行 需要两个 terminal
+
 
 ## 服务器安装
 <ul>
@@ -68,6 +70,7 @@ npm run hot -> 本地前台运行
 </ul>
 
 1.进入 项目 目录， 打开terminal, 然后 登录 www 账号
+
 ```bash
 su www
 composer install - 安装 包, 必须先安装 composer
@@ -75,10 +78,12 @@ cp .env.example .env - 拷贝一个 配置文件. 数据库 配置在这里
 php artisan key:generate
 php artisan migrate --seed. (没在运行这个指令之前 需要先安装 数据库. 账号密码端口 在.env 里配置好.
 ```
-<ul>
-<li>2.服务器 一般 用 nginx 或 apache . nginx 服务器 配置 laravel 官网提供 文档 (https://laravel.com/docs/8.x/deployment)</li>
-<li>3.缓存 配置, 路由, 前台blade文件, 一下 指令 ，复制粘贴 在项目目录的 terminal 里</li>
-</ul>
+
+<ol>
+<li>服务器 一般 用 nginx 或 apache . nginx 服务器 配置 laravel 官网提供 文档 (https://laravel.com/docs/8.x/deployment)</li>
+<li>缓存 配置, 路由, 前台blade文件, 一下 指令 ，复制粘贴 在项目目录的 terminal 里</li>
+</ol>
+
 ```bash
 composer install --optimize-autoloader --no-dev ( 优化 composer 包。减少找包的时间)
 php artisan config:cache
@@ -86,12 +91,14 @@ php artisan route:cache
 php artisan view:cache
 ```
 4.更新 config 目录下的文件, route 目录下文件, resource目录 view 下的文件 后 都需要 清除缓存。 根据更新的 文件 选择指令
+
 ```bash
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 ```
 5.或者 全部清除
+
 ```bash
 php artisan cache:clear
 ```
@@ -101,13 +108,13 @@ npm install  - 安装 npm 包
 npm run production - 打包
 ```
 
-## 后台登录
+## 后台
 <ul>
 <li>链接 - localhost:8080/6ucwfN@Bt</li>
 <li>账号 - admin 密码 123456</li>
 </ul>
 
-## 前台登录
+## 前台
 localhost:8080
 
 

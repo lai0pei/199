@@ -26,6 +26,7 @@ class UploadController extends Controller
             Storage::makeDirectory($path, 7777, true, true);
         }
         $url = Storage::disk('public')->put($path, $this->request->file('applyUser'));
+        optimizeImg($url);
         $result['code'] = self::SUCCESS;
         $result['msg'] = '上传成功';
         $result['data'] = ['src' => asset('storage/' . $url),'form_id' => $this->request->input('form_id')];

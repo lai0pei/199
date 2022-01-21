@@ -169,6 +169,10 @@ class FormModel extends CommonModel
             }
         }
 
+        if ((int) $data['type'] === 5) {        
+            $data['option'] = trim($data['option']);
+        }
+
         $formData = [
             'name' => $data['name'],
             'type' => $data['type'],
@@ -177,7 +181,7 @@ class FormModel extends CommonModel
             'sort' => $data['sort'],
             'updated_at' => $time,
         ];
-
+    
         if ((int) $data['id'] === -1) {
             $formData['created_at'] = $time;
             $status = self::insert($formData);

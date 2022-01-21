@@ -158,6 +158,6 @@ class IndexController extends Controller
         $configModel = new ConfigModel();
         $footer = $configModel->getConfig('linkConfig');
         $logo = $configModel->getConfig('logo');
-        return Inertia::render('Components/detail', ['footer' => $footer,'content' => $content['content'],'name' => $content['name'],'logo' => $logo]);
+        return Inertia::render('Components/eventDetail', ['footer' => $footer,'content' => $content['content'],'name' => $content['name'],'logo' => $logo]);
     }
 }

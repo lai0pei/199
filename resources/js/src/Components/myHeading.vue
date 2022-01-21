@@ -29,41 +29,41 @@ img {
 }
 </style>
 <script>
-import search from "./searchDialog";
-import axios from "axios";
+import search from './searchDialog';
+import axios from 'axios';
 
 export default {
-  props: ["headData"],
+  props: ['headData'],
   components: {
     search,
   },
-  name: "myHeading",
+  name: 'myHeading',
   data() {
     return {
       showModal: false,
       eventList: {
         game_list: [],
       },
-      logo: "199/images/logo.png",
-      btn: "199/images/search.png",
+      logo: '199/images/logo.png',
+      btn: '199/images/search.png',
     };
   },
 
   methods: {
-    getDialog: async function (data) {
+    getDialog: async function(data) {
       this.showModal = true;
       const that = this;
       await axios
-        .post(route("event_list"), {})
-        .then(function (response) {
-          const list = response.data.data;
-          that.eventList.game_list = list;
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
+          .post(route('event_list'), {})
+          .then(function(response) {
+            const list = response.data.data;
+            that.eventList.game_list = list;
+          })
+          .catch(function(error) {
+            console.error(error);
+          });
     },
-    fromApplyDialog: function () {
+    fromApplyDialog: function() {
       this.showModal = false;
     },
   },

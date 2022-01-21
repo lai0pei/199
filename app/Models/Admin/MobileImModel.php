@@ -20,10 +20,10 @@ namespace App\Models\Admin;
 use App\Exceptions\LogicException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
-use Illuminate\Support\Facades\Log;
 
 class MobileImModel extends CommonModel implements ToCollection, WithChunkReading
 {

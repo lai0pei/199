@@ -20,10 +20,10 @@ namespace App\Models\Admin;
 use App\Exceptions\LogicException;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
-use Illuminate\Support\Facades\Log;
 
 class SmsEventModel extends CommonModel implements WithMapping, FromCollection, WithHeadings
 {
@@ -251,10 +251,10 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
     }
 
     public function collection()
-    {   
-        try{
-        return self::all();
-        } catch (LogicException $e){
+    {
+        try {
+            return self::all();
+        } catch (LogicException $e) {
             Log::channel('sms_export')->error($e->getMessage());
         }
     }

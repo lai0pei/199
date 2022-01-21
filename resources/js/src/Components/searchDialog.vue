@@ -36,7 +36,7 @@
                 </li>
                 <div>
                   <select class="allForms mt-1 rounded-md" v-model="eventId">
-                    <option selected disabled>
+                    <option disabled>
                       {{ selectGame }}
                     </option>
                     <option
@@ -131,7 +131,6 @@ export default {
     this.clearForm();
     this.eventList = localStorage.getItem('eventList');
     this.eventId = 1;
-
   },
   methods: {
     clearForm: function() {

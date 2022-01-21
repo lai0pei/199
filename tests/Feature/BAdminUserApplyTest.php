@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Index\ApplyModel;
 use App\Exceptions\LogicException;
+use App\Models\Index\ApplyModel;
 use Tests\TestCase;
 
 class BAdminUserApplyTest extends TestCase
@@ -15,7 +15,6 @@ class BAdminUserApplyTest extends TestCase
     const PASS = '/6ucwfN@Bt/bulk_pass';
     const DELETE = '/6ucwfN@Bt/bulk_delete';
     const EXPORT = '/6ucwfN@Bt/exportList';
-  
 
     public function test_admin_audit_index()
     {
@@ -126,7 +125,7 @@ class BAdminUserApplyTest extends TestCase
     public function test_user_audit_refuse_with_invalid_id()
     {
         $data['data'] = [
-        
+
         ];
         $res = [
             'code' => 0,
@@ -137,7 +136,7 @@ class BAdminUserApplyTest extends TestCase
     }
 
     public function test_user_audit_refuse_with_emtpy_data()
-    {   
+    {
         $data['data'] = [
             ['id' => 1],
             ['id' => 2],
@@ -166,7 +165,7 @@ class BAdminUserApplyTest extends TestCase
     public function test_user_audit_pass_with_invalid_id()
     {
         $data['data'] = [
-        
+
         ];
         $res = [
             'code' => 0,
@@ -177,7 +176,7 @@ class BAdminUserApplyTest extends TestCase
     }
 
     public function test_user_audit_pass_with_emtpy_data()
-    {   
+    {
         $data['data'] = [
             ['id' => 1],
             ['id' => 2],
@@ -206,7 +205,7 @@ class BAdminUserApplyTest extends TestCase
     public function test_user_audit_delete_with_invalid_id()
     {
         $data['data'] = [
-        
+
         ];
         $res = [
             'code' => 0,
@@ -217,7 +216,7 @@ class BAdminUserApplyTest extends TestCase
     }
 
     public function test_user_audit_delete_with_emtpy_data()
-    {   
+    {
         $data['data'] = [
             ['id' => 1],
             ['id' => 2],
@@ -231,7 +230,7 @@ class BAdminUserApplyTest extends TestCase
     }
 
     public function test_user_audit_export()
-    {   
+    {
 
         $response = $this->withSession(['user_id' => 1])->get(self::EXPORT);
         $response->assertDownload();
