@@ -7,50 +7,56 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-# 服务配置
-1.laravel - 8
-2.php - 8.0
-3. mysql - 5.7 or mariadb - 10.7
-4.集合开发 - wamp-server -最新版本
-5.数据库 建议用 utf-8 或者 utf-16 charset 和 collation
+# 基于 laravel + Vue + Layui 开发的活动大厅
+
+## 服务配置
+<ol>
+<li>laravel - 8</li>
+<li>php - 8.0</li>
+<li>mysql - 5.7 or mariadb - 10.7</li>
+<li>集合开发 - wamp-server - 最新版本</li>
+<li>数据库 建议用 utf-8 或者 utf-16 charset 和 collation</li>
+</ol>
 
 ## 所需安装
 php - 扩展
-用wamp-server 基本都已有安装
-PHP >= 7.3
-BCMath PHP Extension
-Ctype PHP Extension
-Fileinfo PHP Extension
-JSON PHP Extension
-Mbstring PHP Extension
-OpenSSL PHP Extension 
-PDO PHP Extension
-Tokenizer PHP Extension
-XML PHP Extension
+<ol>
+<li>用wamp-server 基本都已有安装</li>
+<li>PHP >= 7.3</li>
+<li>BCMath PHP Extension</li>
+<li>Ctype PHP Extension</li>
+<li>Fileinfo PHP Extension</li>
+<li>JSON PHP Extension</li>
+<li>Mbstring PHP Extension</li>
+<li>OpenSSL PHP Extension </li>
+<li>PDO PHP Extension</li>
+<li>Tokenizer PHP Extension</li>
+<li>XML PHP Extension</li>
+</ol>
 
 ## 安装 图片压缩 系统包
 暂时 只有linux 包。根据自己的 系统类型 更换指令. 不安装 也不影响 项目运行.
 ```bash
-sudo apt-get install jpegoptim
-sudo apt-get install optipng
-sudo apt-get install pngquant
-sudo npm install -g svgo@1.3.2 -> 这个不需要，npm 是nodejs 指令 所有系统 都一致。
-sudo apt-get install gifsicle
-sudo apt-get install webp
+sudo yum install jpegoptim
+sudo yum install optipng
+sudo yum install pngquant
+sudo yum install gifsicle
+sudo yum install webp
+sudo npm install -g svgo@1.3.2  ->  这个不需要，npm 是nodejs 指令 所有系统 都一致。
 ```
 
 ## 本地测试安装 
 1.进入 项目 目录， 打开terminal.
 2.composer install - 安装 包, 必须先安装 composer
-3. cp .env.example .env - 拷贝一个 配置文件. 数据库 配置在这里.
+3.cp .env.example .env - 拷贝一个 配置文件. 数据库 配置在这里.
 ```bash
-4.php artisan key:generate
-5.php artisan migrate --seed
-6.php artisan serve - 本地后台运行 
-7.npm install
-8.npm run hot -> 本地前台运行
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve -> 本地后台运行 
+npm install
+npm run hot -> 本地前台运行
 ```
-9.运行 需要两个 terminal 
+4.运行 需要两个 terminal 
 
 ## 服务器安装
 服务器 默认是 root . 用root 账号 安装 会有权限 问题.
@@ -58,30 +64,30 @@ sudo apt-get install webp
 1.进入 项目 目录， 打开terminal, 然后 登录 www 账号. 
 ```bash
 su www
-2.composer install - 安装 包, 必须先安装 composer
-3. cp .env.example .env - 拷贝一个 配置文件. 数据库 配置在这里.
-4.php artisan key:generate
-5.php artisan migrate --seed. (没在运行这个指令之前 需要先安装 数据库. 账号密码端口 在.env 里配置好.
+composer install - 安装 包, 必须先安装 composer
+cp .env.example .env - 拷贝一个 配置文件. 数据库 配置在这里.
+php artisan key:generate
+php artisan migrate --seed. (没在运行这个指令之前 需要先安装 数据库. 账号密码端口 在.env 里配置好.
 ```
-6.服务器 一般 用 nginx 或 apache . nginx 服务器 配置 laravel 官网提供 文档 (https://laravel.com/docs/8.x/deployment).
-7.缓存 配置, 路由, 前台blade文件, 一下 指令 ，复制粘贴 在项目目录的 terminal 里 .
+2.服务器 一般 用 nginx 或 apache . nginx 服务器 配置 laravel 官网提供 文档 (https://laravel.com/docs/8.x/deployment).
+3.缓存 配置, 路由, 前台blade文件, 一下 指令 ，复制粘贴 在项目目录的 terminal 里 .
 ```bash
 composer install --optimize-autoloader --no-dev ( 优化 composer 包。减少找包的时间)
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 ```
-8.更新 config 目录下的文件, route 目录下文件, resource目录 view 下的文件 后 都需要 清除缓存。 根据更新的 文件 选择指令.
+4.更新 config 目录下的文件, route 目录下文件, resource目录 view 下的文件 后 都需要 清除缓存。 根据更新的 文件 选择指令.
 ```bash
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 ```
-9.或者 全部清除 
+5.或者 全部清除 
 ```bash
 php artisan cache:clear
 ```
-10.前台必须 打包 ，在本地或者 在服务器里 打包都行.
+6.前台必须 打包 ，在本地或者 在服务器里 打包都行.
 ```bash
 npm install  - 安装 npm 包
 npm run production - 打包
