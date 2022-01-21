@@ -34,8 +34,10 @@ trait YunPian
             }
 
             if ($response['code'] !== 0) {
-                Log::channel('index')->info($response);
+                Log::channel('sms')->debug($response);
+                throw new LogicException('发送失败');
             }
+            
         } catch (LogicException $e) {
             throw new LogicException($e->getMessage());
         }
@@ -56,7 +58,7 @@ trait YunPian
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $response = curl_exec($ch);
         if ($response === false) {
-            Log::channel('index')->error(curl_error($ch));
+            Log::channel('sms')->error(curl_error($ch));
             return false;
         }
         curl_close($ch);

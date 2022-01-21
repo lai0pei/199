@@ -7,59 +7,93 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# 服务配置
+1.laravel - 8
+2.php - 8.0
+3. mysql - 5.7 or mariadb - 10.7
+4.集合开发 - wamp-server -最新版本
+5.数据库 建议用 utf-8 或者 utf-16 charset 和 collation
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 所需安装
+php - 扩展
+用wamp-server 基本都已有安装
+PHP >= 7.3
+BCMath PHP Extension
+Ctype PHP Extension
+Fileinfo PHP Extension
+JSON PHP Extension
+Mbstring PHP Extension
+OpenSSL PHP Extension 
+PDO PHP Extension
+Tokenizer PHP Extension
+XML PHP Extension
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 安装 图片压缩 系统包
+暂时 只有linux 包。根据自己的 系统类型 更换指令. 不安装 也不影响 项目运行.
+```bash
+sudo apt-get install jpegoptim
+sudo apt-get install optipng
+sudo apt-get install pngquant
+sudo npm install -g svgo@1.3.2 -> 这个不需要，npm 是nodejs 指令 所有系统 都一致。
+sudo apt-get install gifsicle
+sudo apt-get install webp
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 本地测试安装 
+1.进入 项目 目录， 打开terminal.
+2.composer install - 安装 包, 必须先安装 composer
+3. cp .env.example .env - 拷贝一个 配置文件. 数据库 配置在这里.
+```bash
+4.php artisan key:generate
+5.php artisan migrate --seed
+6.php artisan serve - 本地后台运行 
+7.npm install
+8.npm run hot -> 本地前台运行
+```
+9.运行 需要两个 terminal 
 
-## Learning Laravel
+## 服务器安装
+服务器 默认是 root . 用root 账号 安装 会有权限 问题.
+建议 配置里加入 www 账号登录, 文件位置 - /etc/passwd. 里面 www :/sbin/nologin 换成 => :/bin/bash. 可以参考 文件里其他用户的 Login bash. 如果要限制登录 换回来即可。
+1.进入 项目 目录， 打开terminal, 然后 登录 www 账号. 
+```bash
+su www
+2.composer install - 安装 包, 必须先安装 composer
+3. cp .env.example .env - 拷贝一个 配置文件. 数据库 配置在这里.
+4.php artisan key:generate
+5.php artisan migrate --seed. (没在运行这个指令之前 需要先安装 数据库. 账号密码端口 在.env 里配置好.
+```
+6.服务器 一般 用 nginx 或 apache . nginx 服务器 配置 laravel 官网提供 文档 (https://laravel.com/docs/8.x/deployment).
+7.缓存 配置, 路由, 前台blade文件, 一下 指令 ，复制粘贴 在项目目录的 terminal 里 .
+```bash
+composer install --optimize-autoloader --no-dev ( 优化 composer 包。减少找包的时间)
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+8.更新 config 目录下的文件, route 目录下文件, resource目录 view 下的文件 后 都需要 清除缓存。 根据更新的 文件 选择指令.
+```bash
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+```
+9.或者 全部清除 
+```bash
+php artisan cache:clear
+```
+10.前台必须 打包 ，在本地或者 在服务器里 打包都行.
+```bash
+npm install  - 安装 npm 包
+npm run production - 打包
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 后台登录
+localhost:8080/6ucwfN@Bt
+账号 - admin 密码 123456
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 前台登录
+localhost:8080
 
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-- **[Romega Software](https://romegasoftware.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 

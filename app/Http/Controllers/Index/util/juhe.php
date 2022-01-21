@@ -29,7 +29,7 @@ trait JuHe
         // 请求参数
         $paramsString = http_build_query($params);
 
-        $message = '短信发送失败';
+        $message = '发送失败';
         // 发起接口网络请求
         $response = null;
 
@@ -39,17 +39,19 @@ trait JuHe
             throw new LogicException($e);
         }
 
-        if (! $response) {
+        if (!$response) {
+            Log::channel('sms')->debug($response);
             throw new LogicException($message);
         }
         $result = json_decode($response, true);
 
-        if (! $result) {
+        if (!$result) {
+            Log::channel('sms')->debug($result);
             throw new LogicException($message);
         }
 
         if ($result['error_code'] !== 0) {
-            Log::channel('index')->info($result);
+            Log::channel('sms')->debug($result);
             throw new LogicException('手机号码不支持');
         }
         return true;
@@ -86,7 +88,7 @@ trait JuHe
         }
         $response = curl_exec($ch);
         if ($response === false) {
-            // echo "cURL Error: ".curl_error($ch);
+            Log::channel('sms')->error(curl_error($ch));
             return json_decode(curl_error($ch), true);
         }
         curl_close($ch);

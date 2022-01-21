@@ -5,6 +5,7 @@ namespace App\Models\Admin;
 use App\Exceptions\LogicException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 
@@ -36,37 +37,38 @@ class SmsImportModel extends CommonModel implements ToCollection, WithChunkReadi
         DB::beginTransaction();
         try {
             $status = $this->data['status'] ?? 0;
-            $count = 0;
+
             $error = 0;
             $time = now();
             foreach ($collection as $v) {
                 if ($v[0] === null) {
                     continue;
                 }
-                if (! preg_match('/^[0-9_]+$/i', $v[0])) {
+                if (!preg_match('/^[0-9_]+$/i', $v[0])) {
                     $error++;
                     continue;
                 }
 
-                $update[$count] = [
+                $update = [
                     'state' => $status,
                     'updated_at' => $time,
                 ];
 
                 if ((int) $status === 1) {
-                    $update[$count]['is_send'] = 1;
-                    $update[$count]['send_time'] = $time;
+                    $update['is_send'] = 1;
+                    $update['send_time'] = $time;
                 } elseif ((int) $status === 2) {
-                    $update[$count]['is_send'] = 0;
+                    $update['is_send'] = 0;
                 }
 
                 self::where('id', $v[0])->update($update);
-                $count++;
 
                 DB::commit();
             }
         } catch (LogicException $e) {
-            throw new LogicException($e->getMessage());
+            $errorMsg = $e->getMessage();
+            Log::channel('sms_import')->error($errorMsg);
+            throw new LogicException($errorMsg);
         }
 
         return true;

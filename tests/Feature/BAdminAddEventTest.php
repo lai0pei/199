@@ -3,12 +3,15 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use Illuminate\Http\UploadedFile;
 
 class BAdminAddEventTest extends TestCase
 {
     const ADD = '/6ucwfN@Bt/add_event';
     const MANI = '/6ucwfN@Bt/mani_event';
     const DELETE = '/6ucwfN@Bt/delete_event';
+    const UPLOAD = '/6ucwfN@Bt/uploadPhoto';
+    const EDITOR = '/ueditor';
 
     public function test_admin_add_event_index()
     {
@@ -183,6 +186,63 @@ class BAdminAddEventTest extends TestCase
             'data' => [],
         ];
         $this->jsonPost(self::DELETE, $data, $res);
+    }
+
+    public function test_admin_event_pic_upload_pass()
+    {
+
+        $file = UploadedFile::fake()->image('test.jpg', '1690', '430');
+
+        $data = [
+            'file' => $file,
+        ];
+
+        $res = [
+            'code' => 0,
+            'msg' => '上传成功',
+        ];
+
+        $this->jsonPost(self::UPLOAD, $data, $res);
+
+    }
+
+    public function test_admin_event_pic_upload_fail()
+    {
+
+        $file = UploadedFile::fake()->image('test.jpg', '100', '50');
+
+        $data = [
+            'file' => $file,
+        ];
+
+        $config = config('admin.event_size');
+        $res = [
+            'code' => 0,
+            'msg' => '需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px',
+            'data' => [],
+        ];
+
+        $this->jsonPost(self::UPLOAD, $data, $res);
+
+    }
+
+    public function test_admin_event_ueditor_pic_upload()
+    {
+
+        $file = UploadedFile::fake()->image('test.jpg', '100', '50');
+
+        $data = [
+            'upfile' => $file,
+        ];
+
+        $res = [
+            'state' => 'SUCCESS',
+            'title' => 'test.jpg',
+            'original' => 'test.jpg',
+        ];
+
+        $this->jsonPost(self::EDITOR, $data, $res);
+
     }
 
 }

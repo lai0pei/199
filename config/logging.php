@@ -124,6 +124,42 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'path' => storage_path('logs/admin/admin.log'),
             'days' => 1,
+        ],
+        'apply_export' => [
+            'driver' => 'daily',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/admin/apply_export.log'),
+            'days' => 1,
+        ],
+        'sms_export' => [
+            'driver' => 'daily',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/admin/sms_export.log'),
+            'days' => 1,
+        ],
+        'sms_import' => [
+            'driver' => 'daily',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/admin/sms_import.log'),
+            'days' => 1,
+        ],
+        'upload' => [
+            'driver' => 'daily',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/admin/upload.log'),
+            'days' => 1,
+        ],
+        'sms' => [
+            'driver' => 'daily',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/index/sms_getMessage.log'),
+            'days' => 1,
+        ],
+        'mobile' => [
+            'driver' => 'daily',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/admin/mobile_import.log'),
+            'days' => 1,
         ]
     ],
 

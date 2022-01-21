@@ -32,9 +32,9 @@ class AdminAuthendication extends Middleware
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        if (session('admin_id') !== session()->getId()) {
-            return redirect(route('admin.login.index'));
-        }
+        // if (session('admin_id') !== session()->getId()) {
+        //     return redirect(route('admin.login.index'));
+        // }
 
         return $next($request);
     }

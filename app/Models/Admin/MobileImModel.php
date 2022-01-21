@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Illuminate\Support\Facades\Log;
 
 class MobileImModel extends CommonModel implements ToCollection, WithChunkReading
 {
@@ -81,7 +82,9 @@ class MobileImModel extends CommonModel implements ToCollection, WithChunkReadin
                 DB::commit();
             }
         } catch (LogicException $e) {
-            throw new LogicException($e->getMessage());
+            $errorMsg = $e->getMessage();
+            Log::channel('mobile')->info($errorMsg);
+            throw new LogicException($errorMsg);
         }
 
         return true;

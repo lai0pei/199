@@ -20,6 +20,7 @@ namespace App\Models\Admin;
 use App\Exceptions\LogicException;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -48,7 +49,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
 
         $where = [];
 
-        if (! empty($data['searchParams'])) {
+        if (!empty($data['searchParams'])) {
             $param = json_decode($data['searchParams'], true);
             if ($param['event_id'] !== '') {
                 $where['event_id'] = (int) $param['event_id'];
@@ -135,7 +136,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
             $ids = array_column($data['data'], 'id');
             $count = count($ids);
             $status = self::whereIn('id', $ids)->delete();
-            if (! $status) {
+            if (!$status) {
                 throw new LogicException('删除失败');
             }
             $title = '删除了' . $count . '行活动申请记录';
@@ -183,7 +184,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
 
             $res = self::whereIn('id', $ids)->update($audit);
 
-            if (! $res) {
+            if (!$res) {
                 throw new LogicException('审核失败');
             }
 
@@ -220,7 +221,11 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
 
     public function collection()
     {
-        return self::all();
+        try {
+            return self::all();
+        } catch (LogicException $e) {
+            Log::channel('apply_export')->error($e->getMessage());
+        }
     }
 
     /**

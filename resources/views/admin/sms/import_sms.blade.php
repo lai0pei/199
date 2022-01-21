@@ -36,11 +36,12 @@
                 form = layui.form,
                 layer = layui.layer;
 
-       
-             form.on('radio(ChoiceRadio)', function(data){
-                    console.log(data.value);
-                    stat = data.value;
-             });
+              window.stat = 1;
+                    form.on('radio(ChoiceRadio)', function(data){
+                        window.stat = data.value;
+                  
+                        });
+             
               
             //常规使用 - 普通图片上传
             var uploadInst = upload.render({
@@ -54,8 +55,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 before: function(obj) {
+                   
                     //预读本地文件示例，不支持ie8
-                    this.data.status = stat;
+                    this.data.status = window.stat;
              
                     element.progress('demo', '0%'); //进度条复位
                     layer.msg('文件导入中,请耐心等待。。。', {
@@ -72,7 +74,7 @@
                     });
                     setTimeout(function() {
                         var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                        $('button[lay-filter="data-search-btn"]').click(); //刷新列表
+                        parent.$('button[lay-filter="data-search-btn"]').click(); //刷新列表
                         parent.layer.close(index); //再执行关闭
 
                     }, SUCCESS_TIME)

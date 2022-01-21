@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
 
 class UploadController extends Controller
 {
@@ -83,7 +84,6 @@ class UploadController extends Controller
             $replaced = str_replace('#imgPath#', 'storage', $replaced);
             return self::json(json_decode($replaced, true));
         }
-        return self::json_success([]);
     }
 
     public function ueditorUpload()
@@ -102,11 +102,13 @@ class UploadController extends Controller
                 Storage::makeDirectory($path, 7777, true, true);
             }
             $url = Storage::disk('public')->put($path, $request->file('upfile'));
+            optimizeImg($url);
             $result['state'] = 'SUCCESS';
             $result['url'] = '/storage/' . $url;
             $result['title'] = $name;
             $result['original'] = $name;
         } catch (LogicException $e) {
+            Log::channel('upload')->error($e->getMessage());
             return self::json_fail([]);
         }
 
