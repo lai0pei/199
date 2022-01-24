@@ -21,7 +21,7 @@
             line-height: 30px;
             font-size: 12px
         }
-      
+
     </style>
 @endsection
 @section('content')
@@ -127,7 +127,7 @@
                     <div class="layui-card-body">
                         <div class="layui-row ">
                             <div class="  top-panel-number">
-                                {{ $vip?? 0 }}
+                                {{ $vip ?? 0 }}
                             </div>
 
                         </div>
@@ -158,23 +158,34 @@
         var legend = [];
         var series = [];
         var xaxis = [];
+
+        
         $(document).ready(function(obj) {
 
-            $.ajax({
-                type: "POST",
-                url: api,
-                success: function(data) {
-                    var list = data.data;
-                    legend = list['legend'];
-                    series = list['series'];
-                    xaxis = list['x-axis'];
-                    if (data.code == 1) {
+$.ajax({
+    type: "POST",
+    url: api,
+    success: function(data) {
+        if (data.expire == 1) {
+       
+            setTimeout(function() {
 
-                    }
-                },
-            });
-        });
+                parent.location.reload(1);
 
+
+            }, LOGOUT_TIME)
+
+        }
+        var list = data.data;
+        legend = list['legend'];
+        series = list['series'];
+        xaxis = list['x-axis'];
+        if (data.code == 1) {
+
+        }
+    },
+});
+});
         layui.use(['layer', 'echarts'], function() {
             var $ = layui.jquery,
                 layer = layui.layer,

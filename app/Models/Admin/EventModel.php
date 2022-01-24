@@ -193,7 +193,7 @@ class EventModel extends CommonModel
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
         }
         $res['data'] = $result;
-        $res['count'] = self::count();
+        $res['count'] = self::where($where)->count();
 
         return $res;
     }

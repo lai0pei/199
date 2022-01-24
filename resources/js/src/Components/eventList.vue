@@ -208,6 +208,6 @@ span {
   cursor: pointer;
 }
 .eventList {
-  padding-bottom: 11%;
+  padding-bottom: 16%;
 }
 </style>

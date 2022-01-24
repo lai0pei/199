@@ -194,7 +194,7 @@ class AdminModel extends CommonModel
             }
         }
         $res['data'] = $result;
-        $res['count'] = self::count();
+        $res['count'] = self::where($where)->count();
         return $res;
     }
 

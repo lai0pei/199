@@ -45,6 +45,7 @@ class AuthMenuModel extends CommonModel
     public function __construct($data = [])
     {
         $this->data = $data;
+        $this->prefix = config('admin.url_prefix');
     }
 
     public function __destruct()
@@ -223,7 +224,7 @@ class AuthMenuModel extends CommonModel
             'title' => $data['title'],
             'icon' => $data['icon'],
             'target' => $data['target'],
-            'href' => $data['href'],
+            'href' => ($data['href'] === '')? '':$this->prefix.$data['href'],
             'is_shorcut' => $data['is_shortcut'],
         ];
     }

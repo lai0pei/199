@@ -311,7 +311,6 @@ export default {
   },
   mounted() {
     this.clearForm();
-
     this.eventId = localStorage.getItem('event_id');
     this.needSms = localStorage.getItem('needSms');
     this.isSms = localStorage.getItem('isSms');

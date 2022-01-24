@@ -70,6 +70,20 @@
                     dataType: 'json',
                     method: 'GET',
                     success: function(data) {
+                        if (data.expire == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: LOGOUT_TIME,
+                                shade: 0.2
+                            });
+                            setTimeout(function() {
+
+                                parent.location.reload(1);
+
+
+                            }, LOGOUT_TIME)
+
+                        }
                         var list = data.data;
                         if (data.code == 1) {
                             $.each(list, function(index, item) {
@@ -93,6 +107,20 @@
                     data: data.field,
                     method: 'POST',
                     success: function(data) {
+                        if (data.expire == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: LOGOUT_TIME,
+                                shade: 0.2
+                            });
+                            setTimeout(function() {
+
+                                parent.location.reload(1);
+
+
+                            }, LOGOUT_TIME)
+
+                        }
                         if (data.code == 1) {
                             layer.msg(data.msg, {icon: 6, time: SUCCESS_TIME, shade: 0.2});
                             setTimeout(function () {

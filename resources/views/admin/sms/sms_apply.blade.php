@@ -97,7 +97,7 @@
                         <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
                     @endif
                     @if (checkAuth('sms_export'))
-                    <a href="{{route('sms_export')}}" style="float:right"><button class="layui-btn layui-btn-sm data-add-btn"> 导出数据 </button></a>
+                    <a href="{{route('sms_export')}}" target=_blank style="float:right"><button class="layui-btn layui-btn-sm data-add-btn"> 导出数据 </button></a>
                     @endif
                     @if (checkAuth('sms_import'))
                     <button class="layui-btn  layui-btn-sm data-add-btn" lay-event="import" style="float:right"> 导入数据 </button>
@@ -443,6 +443,20 @@
                                 },
                                 method: 'POST',
                                 success: function(data) {
+                                    if (data.expire == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: LOGOUT_TIME,
+                                shade: 0.2
+                            });
+                            setTimeout(function() {
+
+                                parent.location.reload(1);
+
+
+                            }, LOGOUT_TIME)
+
+                        } 
                                     if (data.code == 1) {
                                         layer.msg(res.msg);
                                         location.reload();

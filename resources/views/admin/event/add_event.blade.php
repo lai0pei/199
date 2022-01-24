@@ -241,6 +241,20 @@
                     },
                     method: 'POST',
                     success: function(data) {
+                        if (data.expire == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: LOGOUT_TIME,
+                                shade: 0.2
+                            });
+                            setTimeout(function() {
+
+                                parent.location.reload(1);
+
+
+                            }, LOGOUT_TIME)
+
+                        }
                         let type_id = "{{ $type['id'] ?? -1 }}";
 
                         if (data.code == 1) {

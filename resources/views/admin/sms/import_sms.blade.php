@@ -66,6 +66,20 @@
                     });
                 },
                 done: function(data) {
+                    if (data.expire == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: LOGOUT_TIME,
+                                shade: 0.2
+                            });
+                            setTimeout(function() {
+
+                                parent.location.reload(1);
+
+
+                            }, LOGOUT_TIME)
+
+                        }
                     //如果上传失败
                     layer.msg(data.msg, {
                         icon: 6,

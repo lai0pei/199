@@ -99,7 +99,7 @@
                                     <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
                                 @endif
                                 @if (checkAuth('apply_export'))
-                                    <a href="{{ route('applyExport') }}" style="float:right;"> <button class="layui-btn layui-btn-sm data-add-btn"
+                                    <a href="{{ route('applyExport') }}"  target=_blank style="float:right;"> <button class="layui-btn layui-btn-sm data-add-btn"
                                             lay-event="batch-export"> 导出数据 </button></a>
                                 @endif
 
@@ -300,6 +300,20 @@
                                 },
                                 method: 'POST',
                                 success: function(res) {
+                                    if (data.expire == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: LOGOUT_TIME,
+                                shade: 0.2
+                            });
+                            setTimeout(function() {
+
+                                parent.location.reload(1);
+
+
+                            }, LOGOUT_TIME)
+
+                        }
                                     layer.msg('删除' + data.length + '条记录', {
                                         icon: 6,
                                         time: SUCCESS_TIME,
@@ -336,6 +350,20 @@
                                 },
                                 method: 'POST',
                                 success: function(res) {
+                                    if (data.expire == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: LOGOUT_TIME,
+                                shade: 0.2
+                            });
+                            setTimeout(function() {
+
+                                parent.location.reload(1);
+
+
+                            }, LOGOUT_TIME)
+
+                        }
 
                                     layer.msg('审核通过' + data.length + '条记录', {
                                         icon: 6,
@@ -375,6 +403,20 @@
                                 },
                                 method: 'POST',
                                 success: function(res) {
+                                    if (data.expire == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: LOGOUT_TIME,
+                                shade: 0.2
+                            });
+                            setTimeout(function() {
+
+                                parent.location.reload(1);
+
+
+                            }, LOGOUT_TIME)
+
+                        }
 
                                     layer.msg('审核拒绝' + data.length + '条记录', {
                                         icon: 6,

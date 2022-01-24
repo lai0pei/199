@@ -30,6 +30,7 @@
         "jquery": "^3.6.0",
         "postcss": "^8.4.5",
         "postcss-import": "^14.0.2",
+        "react-scripts": "^5.0.0",
         "tailwindcss": "^3.0.7",
         "vant": "^2.12.37",
         "vue-core-image-upload": "^2.4.13",

@@ -82,7 +82,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
         }
 
         $res['data'] = $result;
-        $res['count'] = self::count();
+        $res['count'] = self::where($where)->count();
         return $res;
     }
 
