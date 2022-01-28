@@ -31,23 +31,27 @@ class AGetRoute1AdminTest extends TestCase
      */
     protected $seed = true;
 
+    public function __construct()
+    {
+        $this->prefix = config('admin.url_prefix');
+    }
 
     public function test_seed(){
         $this->seed();
     }
 
     public function test_admin_clear(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/clear');
+        $response = $this->withSession(['user_id'=>1])->get($this->prefix.'/clear');
         $response->assertSuccessful();
     }
 
     public function test_admin_login(){
-        $response = $this->get('/6ucwfN@Bt/login');
+        $response = $this->get('/'.$this->prefix.'/login');
         $response->assertSuccessful();
     }
 
     public function test_admin(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix);
         $response->assertSuccessful();
     }
 
@@ -57,70 +61,70 @@ class AGetRoute1AdminTest extends TestCase
     }
 
     public function test_admin_control(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/control');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/control');
         $response->assertSuccessful();
     }
 
     public function test_admin_person(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/person');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/person');
         $response->assertSuccessful();
     }
 
     public function test_admin_add_person(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/add_person');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/add_person');
         $response->assertSuccessful();
     }
 
     public function test_admin_list_admin(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/list_admin');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/list_admin');
         $response->assertSuccessful();
     }
 
     public function test_admin_edit_admin(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/edit_person/1');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/edit_person/1');
         $response->assertSuccessful();
     }
 
     public function test_admin_admin_group(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/admin_group');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/admin_group');
         $response->assertSuccessful();
     }
 
     public function test_admin_group_add_index(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/group_add_index/1');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/group_add_index/1');
         $response->assertSuccessful();
     }
 
     public function test_admin_permission(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/permission/1');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/permission/1');
         $response->assertSuccessful();
     }
 
     public function test_admin_get_role_permission(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/get_role_permission');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/get_role_permission');
         $response->assertSuccessful();
     }
 
     public function test_admin_get_role(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/get_role');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/get_role');
         $response->assertSuccessful();
     }
 
     public function test_admin_auth_permission(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/auth_permission');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/auth_permission');
         $response->assertSuccessful();
     }
 
     public function test_admin_permission_show(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/permission_show');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/permission_show');
         $response->assertSuccessful();
     }
     public function test_admin_log(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/log');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/log');
         $response->assertSuccessful();
     }
     public function test_admin_getLog(){
-        $response = $this->withSession(['user_id'=>1])->get('/6ucwfN@Bt/getLog');
+        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/getLog');
         $response->assertSuccessful();
     }
     

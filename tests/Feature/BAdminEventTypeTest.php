@@ -20,10 +20,16 @@ namespace Tests\Feature;
 use Tests\TestCase;
 
 class BAdminEventTypeTest extends TestCase
-{
-    const MANITYPE = '/6ucwfN@Bt/mani_type';
-    const ADDTYPE = '/6ucwfN@Bt/add_type';
-    const DELETETYPE = '/6ucwfN@Bt/delete_type';
+{   
+
+    public function __construct()
+    {
+        $this->prefix = config('admin.url_prefix');
+        $this->maniType = '/'.$this->prefix.'/mani_type';
+        $this->addType = '/'.$this->prefix.'/add_type';
+        $this->deleteType = '/'.$this->prefix.'/delete_type';   
+    }
+ 
 
     public function test_admin_event_type_add()
     {
@@ -40,7 +46,7 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANITYPE, $data, $res);
+        $this->jsonPost($this->maniType, $data, $res);
     }
 
     public function test_admin_event_type_add_withInvalidInput()
@@ -57,7 +63,7 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANITYPE, $data, $res);
+        $this->jsonPost($this->maniType, $data, $res);
     }
 
     public function test_admin_event_type_add_with_negativeId()
@@ -75,7 +81,7 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANITYPE, $data, $res);
+        $this->jsonPost($this->maniType, $data, $res);
     }
 
     public function test_admin_event_type_save_with_empty_record()
@@ -93,7 +99,7 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANITYPE, $data, $res);
+        $this->jsonPost($this->maniType, $data, $res);
     }
 
     public function test_admin_event_type_save_with_same_name()
@@ -111,17 +117,17 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANITYPE, $data, $res);
+        $this->jsonPost($this->maniType, $data, $res);
     }
 
     public function test_admin_event_type_add_index()
     {
-        $this->jsonGet(self::ADDTYPE, 0);
+        $this->jsonGet($this->addType, 0);
     }
 
     public function test_admin_event_type_edit()
     {
-        $this->jsonGet(self::ADDTYPE . '/2', 0);
+        $this->jsonGet($this->addType . '/2', 0);
     }
 
     public function test_admin_event_type_edit_with_negativeId()
@@ -131,13 +137,13 @@ class BAdminEventTypeTest extends TestCase
             'msg' => self::MSG,
             'data' => [],
         ];
-        $this->jsonGet(self::ADDTYPE . '/-200', 1, $data);
+        $this->jsonGet($this->addType . '/-200', 1, $data);
     }
 
     public function test_admin_event_type_edit_with_empty_data()
     {
 
-        $this->jsonGet(self::ADDTYPE . '/200', 0);
+        $this->jsonGet($this->addType . '/200', 0);
     }
 
     public function test_admin_event_type_save()
@@ -156,7 +162,7 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANITYPE, $data, $res);
+        $this->jsonPost($this->maniType, $data, $res);
     }
 
     public function test_admin_event_type_delete()
@@ -170,7 +176,7 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::DELETETYPE, $data, $res);
+        $this->jsonPost($this->deleteType, $data, $res);
     }
 
     public function test_admin_event_type_delete_with_eventExist()
@@ -184,7 +190,7 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::DELETETYPE, $data, $res);
+        $this->jsonPost($this->deleteType, $data, $res);
     }
 
     public function test_admin_event_type_delete_without_id()
@@ -196,7 +202,7 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::DELETETYPE, $data, $res);
+        $this->jsonPost($this->deleteType, $data, $res);
     }
 
     public function test_admin_event_type_delete_with_emptyId()
@@ -210,6 +216,6 @@ class BAdminEventTypeTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::DELETETYPE, $data, $res);
+        $this->jsonPost($this->deleteType, $data, $res);
     }
 }

@@ -6,8 +6,8 @@ use Tests\TestCase;
 
 class BAdminMobileTest extends TestCase
 {
-    const ADD = '/6ucwfN@Bt/addMobile';
-    const DELETE = '/6ucwfN@Bt/deleteMobile';
+    public $ADD = '/'.$this->prefix.'/addMobile';
+    public $DELETE = '/'.$this->prefix.'/deleteMobile';
 
     public function test_admin_add_mobile()
     {

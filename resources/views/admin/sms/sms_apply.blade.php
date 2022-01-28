@@ -18,7 +18,7 @@
                                 <div class="layui-input-inline">
                                     <select name="is_match">
                                         <option value="">请选择</option>
-                                        @foreach (($is_match ?? []) as $ind => $item)
+                                        @foreach ($is_match ?? [] as $ind => $item)
                                             <option value="{{ $ind ?? '' }}">{{ $item ?? '' }}</option>
                                         @endforeach
                                     </select>
@@ -29,7 +29,7 @@
                                 <div class="layui-input-inline">
                                     <select name="state">
                                         <option value="">请选择</option>
-                                        @foreach (($state ?? []) as $ind => $item)
+                                        @foreach ($state ?? [] as $ind => $item)
                                             <option value="{{ $ind }}">{{ $item }}</option>
                                         @endforeach
                                     </select>
@@ -40,7 +40,7 @@
                                 <div class="layui-input-inline">
                                     <select name="is_send">
                                         <option value="">请选择</option>
-                                        @foreach (($is_send ?? []) as $ind => $item)
+                                        @foreach ($is_send ?? [] as $ind => $item)
                                             <option value="{{ $ind }}">{{ $item }}</option>
                                         @endforeach
                                     </select>
@@ -97,10 +97,11 @@
                         <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
                     @endif
                     @if (checkAuth('sms_export'))
-                    <a href="{{route('sms_export')}}" target=_blank style="float:right"><button class="layui-btn layui-btn-sm data-add-btn"> 导出数据 </button></a>
+                        <a href="{{ route('sms_export') }}" target=_blank style="float:right"><button
+                                class="layui-btn layui-btn-sm data-add-btn"> 导出数据 </button></a>
                     @endif
                     @if (checkAuth('sms_import'))
-                    <button class="layui-btn  layui-btn-sm data-add-btn" lay-event="import" style="float:right"> 导入数据 </button>
+                        <button class="layui-btn  layui-btn-sm data-add-btn" lay-event="import" style="float:right"> 导入数据 </button>
                     @endif
 
                 </div>
@@ -124,7 +125,7 @@
         var deleteUser = "{{ route('admin_delete_sms') }}";
         var refuse = "{{ route('admin_sms_refuse') }}";
         var pass = "{{ route('admin_sms_pass') }}";
-        var importer = "{{route('sms_import_index')}}";
+        var importer = "{{ route('sms_import_index') }}";
 
         layui.use(['form', 'table', 'laydate'], function() {
             var $ = layui.jquery,
@@ -210,10 +211,22 @@
                         }
                     ]
                 ],
-                limits: [10, 15, 20, 25, 50, 100],
+                limits: [10, 15, 20, 25, 50, 100, 500],
                 limit: 15,
                 page: true,
+                done: function(res, curr, count) {
+                    if (res.data.length != 0) {
+                        res.data.forEach(function(item, index) {
+                            $('div[lay-id="currentTableId"]').find('tr[data-index="' + index +
+                                '"]').find('td[data-field="is_match"]').filter(function(){
+                                    return $(this).text() == '不匹配';
+                                }).css('color', 'red');
+                        })
+                    }
+
+                }
             });
+
             //日期
             laydate.render({
                 elem: '#created_at',
@@ -238,7 +251,6 @@
             });
 
             table.on('toolbar(currentTableFilter)', function(obj) {
-                console.log(obj);
                 var data = form.val("data-search-filter");
                 var searchParams = JSON.stringify(data);
                 switch (obj.event) {
@@ -382,14 +394,14 @@
                         });
                         break;
                     case 'import':
-                    var index = layer.open({
+                        var index = layer.open({
                             title: '数据导入',
                             type: 2,
                             shade: 0.2,
                             maxmin: true,
                             shadeClose: true,
                             area: ['50%', '50%'],
-                            content : importer,
+                            content: importer,
                         });
                         break;
                         break;
@@ -444,19 +456,19 @@
                                 method: 'POST',
                                 success: function(data) {
                                     if (data.expire == 1) {
-                            layer.msg(data.msg, {
-                                icon: 6,
-                                time: LOGOUT_TIME,
-                                shade: 0.2
-                            });
-                            setTimeout(function() {
+                                        layer.msg(data.msg, {
+                                            icon: 6,
+                                            time: LOGOUT_TIME,
+                                            shade: 0.2
+                                        });
+                                        setTimeout(function() {
 
-                                parent.location.reload(1);
+                                            parent.location.reload(1);
 
 
-                            }, LOGOUT_TIME)
+                                        }, LOGOUT_TIME)
 
-                        } 
+                                    }
                                     if (data.code == 1) {
                                         layer.msg(res.msg);
                                         location.reload();

@@ -5,12 +5,19 @@ namespace Tests\Feature;
 use Tests\TestCase;
 
 class BAdminBulkConfigTest extends TestCase
-{
-    const REFUSESAVE = '/6ucwfN@Bt/refuse_save';
-    const PASSSAVE = '/6ucwfN@Bt/pass_save';
-    const LINKSAVE = '/6ucwfN@Bt/link_save';
-    const GAMESAVE = '/6ucwfN@Bt/game_save';
-    const ANNAVE = '/6ucwfN@Bt/announcement_save';
+{   
+
+    public function __construct()
+    {
+        $this->prefix = config('admin.url_prefix');
+        $this->refuseSave = '/'.$this->prefix.'/refuse_save';    
+        $this->passwordSave = '/'.$this->prefix.'/pass_save';
+        $this->linkSave = '/'.$this->prefix.'/link_save';
+        $this->gameSave = '/'.$this->prefix.'/game_save';
+        $this->anNave = '/'.$this->prefix.'/announcement_save';
+    }
+
+
 
     public function test_admin_refuse_save()
     {
@@ -24,7 +31,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => true,
         ];
 
-        $this->jsonPost(self::REFUSESAVE, $data, $res);
+        $this->jsonPost($this->refuseSave, $data, $res);
     }
 
     public function test_admin_refuse_save_withInvalidInput()
@@ -39,7 +46,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::REFUSESAVE, $data, $res);
+        $this->jsonPost($this->refuseSave, $data, $res);
     }
 
     public function test_admin_refuse_save_withNotProperJsoned()
@@ -54,7 +61,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::REFUSESAVE, $data, $res);
+        $this->jsonPost($this->refuseSave, $data, $res);
     }
 
     public function test_admin_refuse_save_with_empty_input()
@@ -67,7 +74,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::REFUSESAVE, $data, $res);
+        $this->jsonPost($this->refuseSave, $data, $res);
     }
 
     public function test_admin_pass_save()
@@ -82,7 +89,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => true,
         ];
 
-        $this->jsonPost(self::PASSSAVE, $data, $res);
+        $this->jsonPost($this->passwordSave, $data, $res);
     }
 
     public function test_admin_pass_save_withInvalidInput()
@@ -97,7 +104,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::PASSSAVE, $data, $res);
+        $this->jsonPost($this->passwordSave, $data, $res);
     }
 
     public function test_admin_pass_save_withNotProperJsoned()
@@ -112,7 +119,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::PASSSAVE, $data, $res);
+        $this->jsonPost($this->passwordSave, $data, $res);
     }
 
     public function test_admin_pass_save_with_empty_input()
@@ -125,7 +132,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::PASSSAVE, $data, $res);
+        $this->jsonPost($this->passwordSave, $data, $res);
     }
 
     public function test_admin_link_save()
@@ -140,7 +147,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => true,
         ];
 
-        $this->jsonPost(self::LINKSAVE, $data, $res);
+        $this->jsonPost($this->linkSave, $data, $res);
     }
 
     public function test_admin_link_save_withInvalidInput()
@@ -155,7 +162,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::LINKSAVE, $data, $res);
+        $this->jsonPost($this->linkSave, $data, $res);
     }
 
     public function test_admin_link_save_withNotProperJsoned()
@@ -170,7 +177,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::LINKSAVE, $data, $res);
+        $this->jsonPost($this->linkSave, $data, $res);
     }
 
     public function test_admin_link_save_with_empty_input()
@@ -183,7 +190,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::LINKSAVE, $data, $res);
+        $this->jsonPost($this->linkSave, $data, $res);
     }
 
     public function test_admin_game_save()
@@ -198,7 +205,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => true,
         ];
 
-        $this->jsonPost(self::GAMESAVE, $data, $res);
+        $this->jsonPost($this->gameSave, $data, $res);
     }
 
     public function test_admin_game_save_withInvalidInput()
@@ -213,7 +220,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::GAMESAVE, $data, $res);
+        $this->jsonPost($this->gameSave, $data, $res);
     }
 
     public function test_admin_game_save_withNotProperJsoned()
@@ -228,7 +235,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::GAMESAVE, $data, $res);
+        $this->jsonPost($this->gameSave, $data, $res);
     }
 
     public function test_admin_game_save_with_empty_input()
@@ -241,7 +248,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::GAMESAVE, $data, $res);
+        $this->jsonPost($this->gameSave, $data, $res);
     }
 
     public function test_admin_ann_save()
@@ -256,7 +263,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => true,
         ];
 
-        $this->jsonPost(self::ANNAVE, $data, $res);
+        $this->jsonPost($this->anNave, $data, $res);
     }
 
     public function test_admin_ann_save_withInvalidInput()
@@ -271,7 +278,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ANNAVE, $data, $res);
+        $this->jsonPost($this->anNave, $data, $res);
     }
 
     public function test_admin_ann_save_withNotProperJsoned()
@@ -286,7 +293,7 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ANNAVE, $data, $res);
+        $this->jsonPost($this->anNave, $data, $res);
     }
 
     public function test_admin_ann_save_with_empty_input()
@@ -299,6 +306,6 @@ class BAdminBulkConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ANNAVE, $data, $res);
+        $this->jsonPost($this->anNave, $data, $res);
     }
 }

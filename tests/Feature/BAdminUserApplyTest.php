@@ -8,13 +8,13 @@ use Tests\TestCase;
 
 class BAdminUserApplyTest extends TestCase
 {
-    const AUDIT = '/6ucwfN@Bt/userAuditIndex';
-    const APPLY = '/applyForm';
-    const SAVE = '/6ucwfN@Bt/save_audit_user';
-    const REFUSE = '/6ucwfN@Bt/bulk_refuse';
-    const PASS = '/6ucwfN@Bt/bulk_pass';
-    const DELETE = '/6ucwfN@Bt/bulk_delete';
-    const EXPORT = '/6ucwfN@Bt/exportList';
+    public $AUDIT = '/'.$this->prefix.'/userAuditIndex';
+    public $APPLY = '/applyForm';
+    public $SAVE = '/'.$this->prefix.'/save_audit_user';
+    public $REFUSE = '/'.$this->prefix.'/bulk_refuse';
+    public $PASS = '/'.$this->prefix.'/bulk_pass';
+    public $DELETE = '/'.$this->prefix.'/bulk_delete';
+    public $EXPORT = '/'.$this->prefix.'/exportList';
 
     public function test_admin_audit_index()
     {

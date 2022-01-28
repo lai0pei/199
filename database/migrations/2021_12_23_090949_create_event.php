@@ -23,6 +23,7 @@ class CreateEvent extends Migration
             $table->unsignedMediumInteger('sort')->comment('排序');
             $table->unsignedTinyInteger('status')->comment('0 关闭, 1 开启')->default(1);
             $table->unsignedTinyInteger('display')->comment('0 屏蔽, 1 显示')->default(1);
+            $table->unsignedTinyInteger('is_auth')->comment('0 不审核, 1 审核')->default(1);
             $table->unsignedTinyInteger('is_sms')->comment('是否短信活动 0 不是, 1 是')->default(0);
             $table->unsignedTinyInteger('need_sms')->comment('活动是否需要短信申请 0 不是, 1 是')->default(0);
             $table->string('description',200)->comment('活动注释')->nullable();

@@ -5,14 +5,19 @@ namespace Tests\Feature;
 use Tests\TestCase;
 
 class BAdminIpTest extends TestCase
-{
-    const ADD = '/6ucwfN@Bt/add_ip';
-    const MANI = '/6ucwfN@Bt/mani_ip';
-    const DELETE = '/6ucwfN@Bt/delete_ip';
+{   
+
+    public function __construct()
+    {
+        $this->prefix = config('admin.url_prefix');
+        $this->add = '/'.$this->prefix.'/add_ip';
+        $this->mani = '/'.$this->prefix.'/mani_ip';
+        $this->detele = '/'.$this->prefix.'/delete_ip';
+    }
 
     public function test_admin_ip_add_index()
     {
-        $this->jsonGet(self::ADD . '/-1', 0);
+        $this->jsonGet($this->add . '/-1', 0);
     }
 
     public function test_admin_ip_add_overflow_negative_id()
@@ -23,12 +28,12 @@ class BAdminIpTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonGet(self::ADD . '/-100', 1, $data);
+        $this->jsonGet($this->add . '/-100', 1, $data);
     }
 
     public function test_admin_ip_edit_index_with_no_data()
     {
-        $this->jsonGet(self::ADD . '/100', 0);
+        $this->jsonGet($this->add . '/100', 0);
     }
 
     public function test_admin_ip_add_data()
@@ -44,7 +49,7 @@ class BAdminIpTest extends TestCase
             'msg' => '操作成功',
             'data' => [],
         ];
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost($this->mani, $data, $res);
     }
 
     public function test_admin_ip_add_data_with_invalidInput()
@@ -60,7 +65,7 @@ class BAdminIpTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost($this->mani, $data, $res);
     }
 
     public function test_admin_ip_add_data_with_overflow_id()
@@ -77,7 +82,7 @@ class BAdminIpTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost($this->mani, $data, $res);
     }
 
     
@@ -95,7 +100,7 @@ class BAdminIpTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost($this->mani, $data, $res);
     }
 
     public function test_admin_ip_edit_data_with_invalidId()
@@ -112,7 +117,7 @@ class BAdminIpTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost($this->mani, $data, $res);
     }
 
     public function test_admin_delete_with_invalidInput(){
@@ -128,7 +133,7 @@ class BAdminIpTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->detele, $data, $res);
 
     }
 
@@ -146,7 +151,7 @@ class BAdminIpTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->detele, $data, $res);
 
     }
 
@@ -163,7 +168,7 @@ class BAdminIpTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->detele, $data, $res);
 
     }
 

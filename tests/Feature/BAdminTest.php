@@ -6,11 +6,11 @@ use Tests\TestCase;
 
 class AdminTest extends TestCase
 {
-    const URL = '/6ucwfN@Bt/add_person';
-    const EDIT = '/6ucwfN@Bt/edit_person';
-    const VIEW = '/6ucwfN@Bt/view_person';
-    const SAVE = '/6ucwfN@Bt/save_admin';
-    const DELETE = '/6ucwfN@Bt/delete_admin';
+    public $URL = '/'.$this->prefix.'/add_person';
+    public $EDIT = '/'.$this->prefix.'/edit_person';
+    public $VIEW = '/'.$this->prefix.'/view_person';
+    public $SAVE = '/'.$this->prefix.'/save_admin';
+    public $DELETE = '/'.$this->prefix.'/delete_admin';
 
     public function test_add_new_admin()
     {

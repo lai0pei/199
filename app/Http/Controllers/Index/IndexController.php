@@ -105,7 +105,6 @@ class IndexController extends Controller
                 $smsModel->smsForm();
             } else {
                 $applyModel = new ApplyModel($input);
-
                 $applyModel->applyForm();
             }
 

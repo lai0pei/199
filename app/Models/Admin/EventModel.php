@@ -65,6 +65,7 @@ class EventModel extends CommonModel
         }
 
         $event['need_sms'] === 1 ? $event['need_sms_check'] = 'checked' : 0;
+        $event['is_auth'] === 1 ? $event['is_auth_check'] = 'checked' : 0;
         $event['content'] = preg_replace('/[\t\n\r]/u', '', $event['content']);
 
         return $event;
@@ -87,6 +88,7 @@ class EventModel extends CommonModel
             'sort' => $data['sort'] ?? 0,
             'status' => ($data['status'] ?? '') === 'on' ? 1 : 0,
             'display' => ($data['display'] ?? '') === 'on' ? 1 : 0,
+            'is_auth' => ($data['is_auth'] ?? '') === 'on' ? 1 : 0,
             'start_time' => $data['start'],
             'end_time' => $data['end'],
             'description' => $data['description'] ?? '',
@@ -154,10 +156,17 @@ class EventModel extends CommonModel
 
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
-
+        
         $where = [];
+        $admin = new AdminModel();
+        $is_admin = $admin::where('id',session('user_id'))->value('role_id');
 
+        if($is_admin !== 1){
+            $where['is_auth'] = 1;
+        }
+        
         if (! empty($data['searchParams'])) {
+            
             $param = json_decode($data['searchParams'], true);
             if ($param['name'] !== '') {
                 $where['name'] = $where['name'] = $param['name'];

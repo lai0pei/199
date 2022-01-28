@@ -20,17 +20,22 @@ namespace Tests\Feature;
 use Tests\TestCase;
 
 class BAdminGroupTest extends TestCase
-{
-    const INDEX = '/6ucwfN@Bt/group_add_index';
-    const ADD = '/6ucwfN@Bt/group_add';
-    const DELETE = '/6ucwfN@Bt/group_delete';
-    const PERMISSION = '/6ucwfN@Bt/permission';
-    const SUBMIT = '/6ucwfN@Bt/submitList';
-    const LIST = '/6ucwfN@Bt/permissionList';
+{   
+    public function __construct()
+    {
+        $this->prefix = config('admin.url_prefix');
+        $this->index = '/'.$this->prefix.'/group_add_index';
+        $this->add = '/'.$this->prefix.'/group_add';
+        $this->delete = '/'.$this->prefix.'/group_delete';
+        $this->permission = '/'.$this->prefix.'/permission';
+        $this->submit = '/'.$this->prefix.'/submitList';
+        $this->list = '/'.$this->prefix.'/permissionList';
+    }
+  
 
     public function test_admin_group_index_with_invalidId()
     {
-        $this->jsonGet(self::INDEX . '/1000', 0);
+        $this->jsonGet($this->index . '/1000', 0);
     }
 
     public function test_admin_group_index_without_Id()
@@ -40,7 +45,7 @@ class BAdminGroupTest extends TestCase
             'msg' => 'ID必须',
             'data' => [],
         ];
-        $this->jsonGet(self::INDEX, 1, $data);
+        $this->jsonGet($this->index, 1, $data);
     }
 
     public function test_admin_group_add()
@@ -52,7 +57,7 @@ class BAdminGroupTest extends TestCase
         ];
 
         $res = ['code' => 1, 'msg' => '操作成功', 'data' => []];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add , $data, $res);
     }
 
     public function test_admin_group_add_invalidInput()
@@ -63,7 +68,7 @@ class BAdminGroupTest extends TestCase
         ];
 
         $res = ['code' => 0, 'msg' => '请求数据有误', 'data' => []];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add , $data, $res);
     }
 
     public function test_admin_group_add_with_negative_id()
@@ -75,7 +80,7 @@ class BAdminGroupTest extends TestCase
         ];
 
         $res = ['code' => 0, 'msg' => '请求数据有误', 'data' => []];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add , $data, $res);
     }
 
     public function test_admin_group_add_with_invalid_status()
@@ -87,7 +92,7 @@ class BAdminGroupTest extends TestCase
         ];
 
         $res = ['code' => 0, 'msg' => '请求数据有误', 'data' => []];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add , $data, $res);
     }
 
     public function test_admin_group_add_fail_with_same_name()
@@ -99,7 +104,7 @@ class BAdminGroupTest extends TestCase
         ];
 
         $res = ['code' => 0, 'msg' => '同名称已存在', 'data' => []];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add , $data, $res);
     }
 
     public function test_admin_group_save_pass_with_same_name()
@@ -111,7 +116,7 @@ class BAdminGroupTest extends TestCase
         ];
 
         $res = ['code' => 1, 'msg' => '操作成功', 'data' => []];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add , $data, $res);
     }
 
     public function test_admin_group_save_fail_with_same_name()
@@ -123,7 +128,7 @@ class BAdminGroupTest extends TestCase
         ];
 
         $res = ['code' => 0, 'msg' => '同名称已存在', 'data' => []];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add , $data, $res);
     }
 
     public function test_admin_group_delete_without_id()
@@ -131,7 +136,7 @@ class BAdminGroupTest extends TestCase
         $data = [];
 
         $res = ['code' => 0, 'msg' => '请求数据有误', 'data' => []];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_admin_group_delete_with_empty_group()
@@ -141,7 +146,7 @@ class BAdminGroupTest extends TestCase
         ];
 
         $res = ['code' => 0, 'msg' => '此管理员组不存在', 'data' => []];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_admin_group_delete_with_master_group()
@@ -151,18 +156,18 @@ class BAdminGroupTest extends TestCase
         ];
 
         $res = ['code' => 0, 'msg' => '总管理组不可删除', 'data' => []];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_admin_group_permission_index()
     {
-        $this->jsonGet(self::PERMISSION . '/1', 0);
+        $this->jsonGet($this->permission . '/1', 0);
     }
 
     public function test_admin_group_permission_index_without_id()
     {
 
-        $this->jsonGet(self::PERMISSION, 0);
+        $this->jsonGet($this->permission, 0);
     }
 
     public function test_admin_group_permission_submit()
@@ -172,7 +177,7 @@ class BAdminGroupTest extends TestCase
             'checked' => '[{"id":0,"title":"管理员","checked":false,"spread":true,"field":"node","type":1,"children":[{"checked":true,"id":29,"title":"添加","field":"node","type":1},{"checked":true,"id":30,"title":"编辑","field":"node","type":1},{"checked":true,"id":31,"title":"删除","field":"node","type":1},{"checked":true,"id":32,"title":"查看身份","field":"node","type":1}]}]',
         ];
         $res = ['code' => 1, 'msg' => '操作成功', 'data' => []];
-        $this->jsonPost(self::SUBMIT, $data, $res);
+        $this->jsonPost($this->submit, $data, $res);
     }
 
     public function test_admin_group_permission_submit_without_validInput()
@@ -181,7 +186,7 @@ class BAdminGroupTest extends TestCase
             'id' => 2,
         ];
         $res = ['code' => 0, 'msg' => '请求数据有误', 'data' => []];
-        $this->jsonPost(self::SUBMIT, $data, $res);
+        $this->jsonPost($this->submit, $data, $res);
     }
 
     public function test_admin_group_delete(){
@@ -189,7 +194,7 @@ class BAdminGroupTest extends TestCase
             'id' => 2,
         ];
         $res = ['code' => 1, 'msg' => '删除成功', 'data' => []];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_admin_group_permissionList(){
@@ -197,13 +202,13 @@ class BAdminGroupTest extends TestCase
             'id' => 1,
         ];
         $res = ['code' => 1, 'msg' => '操作成功'];
-        $this->jsonPost(self::LIST, $data, $res);
+        $this->jsonPost($this->list, $data, $res);
     }
 
     public function test_admin_group_permissionList_without_id(){
         $data = [  ];
         $res = ['code' => 0, 'msg' => '请求数据有误'];
-        $this->jsonPost(self::LIST, $data, $res);
+        $this->jsonPost($this->list, $data, $res);
     }
 
     

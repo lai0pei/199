@@ -6,16 +6,22 @@ use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 
 class BAdminAddEventTest extends TestCase
-{
-    const ADD = '/6ucwfN@Bt/add_event';
-    const MANI = '/6ucwfN@Bt/mani_event';
-    const DELETE = '/6ucwfN@Bt/delete_event';
-    const UPLOAD = '/6ucwfN@Bt/uploadPhoto';
-    const EDITOR = '/ueditor';
-
+{   
+    public function __construct()
+    {
+        $this->prefix = config('admin.url_prefix');
+        $this->add = '/'.$this->prefix.'/add_event';
+        $this->mani = '/'.$this->prefix.'/mani_event';
+        $this->delete = '/'.$this->prefix.'/delete_event';
+        $this->upload = '/'.$this->prefix.'/uploadPhoto';
+        $this->editor = '/ueditor';
+    
+    }
+    
+  
     public function test_admin_add_event_index()
     {
-        $this->jsonGet(self::ADD . '/-1', 0);
+        $this->jsonGet( $this->add . '/-1', 0);
     }
 
     public function test_admin_add_event_index_with_negativeId()
@@ -25,17 +31,17 @@ class BAdminAddEventTest extends TestCase
             'msg' => self::MSG,
             'data' => [],
         ];
-        $this->jsonGet(self::ADD . '/-100', 1, $data);
+        $this->jsonGet( $this->add . '/-100', 1, $data);
     }
 
     public function test_admin_save_event_index()
     {
-        $this->jsonGet(self::ADD . '/1', 0);
+        $this->jsonGet( $this->add . '/1', 0);
     }
 
     public function test_admin_save_event_index_with_emptyData()
     {
-        $this->jsonGet(self::ADD . '/1000', 0);
+        $this->jsonGet( $this->add . '/1000', 0);
     }
 
     public function test_admin_add_event_mani()
@@ -56,7 +62,7 @@ class BAdminAddEventTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost( $this->mani, $data, $res);
     }
 
     public function test_admin_add_event_mani_with_invalidInput()
@@ -74,7 +80,7 @@ class BAdminAddEventTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost( $this->mani, $data, $res);
     }
 
     public function test_admin_save_event_mani()
@@ -93,7 +99,7 @@ class BAdminAddEventTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost( $this->mani, $data, $res);
     }
 
     public function test_admin_save_event_mani_with_emptyData()
@@ -113,7 +119,7 @@ class BAdminAddEventTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost( $this->mani, $data, $res);
     }
 
     public function test_admin_save_event_mani_with_sms_on()
@@ -138,7 +144,7 @@ class BAdminAddEventTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::MANI, $data, $res);
+        $this->jsonPost( $this->mani, $data, $res);
     }
 
     public function test_event_delete(){
@@ -150,7 +156,7 @@ class BAdminAddEventTest extends TestCase
             'msg' => '固定活动不能删除!',
             'data' => [],
         ];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_event_delete_with_invalidInput(){
@@ -162,7 +168,7 @@ class BAdminAddEventTest extends TestCase
             'msg' => self::MSG,
             'data' => [],
         ];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
     public function test_event_delete_with_negative_input(){
         $data = [
@@ -173,7 +179,7 @@ class BAdminAddEventTest extends TestCase
             'msg' => self::MSG,
             'data' => [],
         ];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_event_delete_with_empty_data(){
@@ -185,7 +191,7 @@ class BAdminAddEventTest extends TestCase
             'msg' => '删除失败',
             'data' => [],
         ];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_admin_event_pic_upload_pass()
@@ -202,7 +208,7 @@ class BAdminAddEventTest extends TestCase
             'msg' => '上传成功',
         ];
 
-        $this->jsonPost(self::UPLOAD, $data, $res);
+        $this->jsonPost($this->upload, $data, $res);
 
     }
 
@@ -222,7 +228,7 @@ class BAdminAddEventTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::UPLOAD, $data, $res);
+        $this->jsonPost($this->upload, $data, $res);
 
     }
 
@@ -241,7 +247,7 @@ class BAdminAddEventTest extends TestCase
             'original' => 'test.jpg',
         ];
 
-        $this->jsonPost(self::EDITOR, $data, $res);
+        $this->jsonPost($this->editor, $data, $res);
 
     }
 

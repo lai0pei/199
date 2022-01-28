@@ -95,7 +95,7 @@ export default {
 
 <style scoped>
 .van-tabbar{
-  max-width : 27rem;
+  max-width : 38rem;
 }
 .van-tabbar-item{
   background : black;

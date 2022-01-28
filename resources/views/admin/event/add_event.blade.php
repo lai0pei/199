@@ -125,6 +125,13 @@
                     </div>
                     @endif
                 </div>
+                <div class="layui-col-md3 layui-col-xs12 layui-col-sm12 ">
+                    <label class="layui-form-label">是否审核</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox" name="is_auth" lay-skin="switch" lay-text="是|否"
+                            {{ $type['is_auth_check'] ?? '' }}>
+                    </div>
+                </div>
                 @if ((int)($type['is_sms'] ?? 0) !== 1 )
                 <div class="layui-form-item">
                     <label class="layui-form-label required">限制次数</label>
@@ -134,6 +141,7 @@
                     </div>
                 </div>
                 @endif
+               
                 <div class="layui-form-item">
                     <label class="layui-form-label required">注释</label>
                     <div class="layui-input-inline">

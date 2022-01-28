@@ -74,6 +74,11 @@ class ApplyModel extends Model
 
         $limit = $eventModel::where('id', $eventId)->value('daily_limit');
         $is_daily = $eventModel::where('id', $eventId)->value('is_daily');
+        $is_sms = $eventModel::where('id', $eventId)->value('is_sms');
+
+        if ($is_sms === 1) {
+            throw new LogicException('申请有误');
+        }
 
         $count = self::where('username', $username)->where('event_id', $eventId)->count();
 
@@ -109,13 +114,13 @@ class ApplyModel extends Model
             ];
 
             $status = self::insert($insert);
-            if (! $status) {
+            if (!$status) {
                 throw new LogicException('申请失败');
             }
         } catch (LogicException $e) {
             throw new LogicException($e->getMessage());
         }
-        if (! $status) {
+        if (!$status) {
             DB::rollBack();
             throw new LogicException('申请失败，请联系客服');
         }
@@ -134,13 +139,13 @@ class ApplyModel extends Model
     {
         $data = [];
 
-        if (empty($form) || ! is_array($form)) {
+        if (empty($form) || !is_array($form)) {
             return [];
         }
         $i = 0;
         foreach ($form as &$subForm) {
             foreach ($subForm as $k => $v) {
-                if (! empty($v)) {
+                if (!empty($v)) {
                     $data[$i]['name'] = $this->formModel::where('id', $k)->value('name');
                     $data[$i]['value'] = $v;
                 }
@@ -156,21 +161,55 @@ class ApplyModel extends Model
         $data = $this->data;
         $eventId = $data['eventId'];
         $username = $data['username'];
-        $column = ['username', 'apply_time', 'status', 'description'];
-        $res = self::where('event_id', $eventId)->where('username', $username)->select($column)->get()->toArray();
-        foreach ($res as &$v) {
-            switch (true) {
-                case $v['status'] === 1:
-                    $v['status'] = '通过';
-                    break;
-                case $v['status'] === 2:
-                    $v['status'] = '拒绝';
-                    break;
-                default:
-                    $v['status'] = '未审核';
+        
+
+        $event = new EventModel();
+        $is_sms = $event::where('id', $eventId)->value('is_sms');
+
+        if ($is_sms === 1) {
+            $column = ['user_name', 'apply_time', 'state', 'send_remark'];
+            $smsModel = new SmsApplyModel();
+            $res = $smsModel::where('event_id', $eventId)->where('user_name', $username)->select($column)->get()->toArray();
+            foreach ($res as &$v) {
+                $v['username'] = $v['user_name'];
+                switch (true) {
+                    case $v['state'] === 1:
+                        $v['status'] = '通过';
+                        break;
+                    case $v['state'] === 2:
+                        $v['status'] = '拒绝';
+                        break;
+                    default:
+                        $v['status'] = '未审核';
+                }
+                $v['description'] = (empty($v['send_remark'])) ? '暂无回复' : $v['send_remark'];
+                $v['apply_time'] = Carbon::parse($v['apply_time'])->format('Y年-m月-d日 | H时:i分:s秒');
             }
-            $v['apply_time'] = Carbon::parse($v['apply_time'])->format('Y年-m月-d日 | H时:i分:s秒');
+        } else {
+            $column = ['username', 'apply_time', 'status', 'description'];
+            $res = self::where('event_id', $eventId)->where('username', $username)->select($column)->get()->toArray();
+            foreach ($res as &$v) {
+                switch (true) {
+                    case $v['status'] === 1:
+                        $v['status'] = '通过';
+                        break;
+                    case $v['status'] === 2:
+                        $v['status'] = '拒绝';
+                        break;
+                    default:
+                        $v['status'] = '未审核';
+                }
+                $v['description'] = (empty($v['description'])) ? '暂无回复' : $v['description'];
+                $v['apply_time'] = Carbon::parse($v['apply_time'])->format('Y年-m月-d日 | H时:i分:s秒');
+            }
         }
+
+        unset($v);
         return $res;
+    }
+
+    public function __destruct()
+    {
+        unset($this->data);
     }
 }

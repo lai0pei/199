@@ -6,8 +6,13 @@ use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class BAdminCommonSettingTest extends TestCase
-{
-    const LOGO = '/6ucwfN@Bt/logo_upload';
+{   
+
+    public function __construct()
+    {
+        $this->prefix = config('admin.url_prefix');
+        $this->logo = '/'.$this->prefix.'/logo_upload';    
+    }
 
     public function test_admin_upload()
     {
@@ -18,7 +23,7 @@ class BAdminCommonSettingTest extends TestCase
             'file' => $file,
         ];
 
-        $this->uploadPost(self::LOGO, $data);
+        $this->uploadPost($this->logo, $data);
 
     }
 
@@ -37,7 +42,7 @@ class BAdminCommonSettingTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::LOGO, $data, $res);
+        $this->jsonPost($this->logo, $data, $res);
 
     }
 
@@ -57,7 +62,7 @@ class BAdminCommonSettingTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::LOGO, $data, $res);
+        $this->jsonPost($this->logo, $data, $res);
 
     }
 }

@@ -188,7 +188,7 @@ class FormModel extends CommonModel
 
             if (! $status) {
                 DB::rollBack();
-
+            
                 throw new LogicException('添加失败');
             }
 

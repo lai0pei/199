@@ -89,8 +89,10 @@ class LogModel extends CommonModel
 
         if ($param['start'] === '') {
             $query = self::where($where);
+            $count = self::where($where)->count();
         } else {
             $query = self::whereBetween('created_at', [$param['start'], $param['end']])->where($where);
+            $count = self::whereBetween('created_at', [$param['start'], $param['end']])->where($where)->count();
         }
 
         $item = $query->orderbydesc('id')->paginate($limit, '*', 'page', $page);
@@ -104,8 +106,9 @@ class LogModel extends CommonModel
             $result[$k]['admin_name'] = $this->getName($v['admin_id']);
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
         }
+    
         $res['data'] = $result;
-        $res['count'] = $query->count();
+        $res['count'] = $count;
 
         return $res;
     }

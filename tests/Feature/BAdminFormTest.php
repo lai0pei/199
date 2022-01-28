@@ -5,22 +5,29 @@ namespace Tests\Feature;
 use Tests\TestCase;
 
 class BAdminFormTest extends TestCase
-{
-    const GET = '/6ucwfN@Bt/form';
-    const ADD = '/6ucwfN@Bt/form_add';
-    const DETAIL = '/6ucwfN@Bt/form_detail';
-    const DELETE = '/6ucwfN@Bt/delete_form';
+{   
+
+    public function __construct()
+    {
+        $this->prefix = config('admin.url_prefix');
+        $this->get = '/'.$this->prefix.'/form';
+        $this->add = '/'.$this->prefix.'/form_add';
+        $this->detail = '/'.$this->prefix.'/form_detail';
+        $this->delete = '/'.$this->prefix.'/delete_form'; 
+    }
+
+  
 
     public function test_admin_form_get_with_negative_id()
     {
 
-        $this->jsonGet(self::GET . '/-100', 0);
+        $this->jsonGet($this->get . '/-100', 0);
     }
 
     public function test_admin_form_get_with_empty_data()
     {
 
-        $this->jsonGet(self::GET . '/100', 0);
+        $this->jsonGet($this->get . '/100', 0);
     }
 
     public function test_admin_form_add()
@@ -39,7 +46,7 @@ class BAdminFormTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_form_add_for_save()
@@ -58,7 +65,7 @@ class BAdminFormTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_form_add_double_pic()
@@ -77,7 +84,7 @@ class BAdminFormTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_form_add_with_invalidInput()
@@ -95,7 +102,7 @@ class BAdminFormTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_form_save()
@@ -114,7 +121,7 @@ class BAdminFormTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_form_save_double_pic()
@@ -133,7 +140,7 @@ class BAdminFormTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_form_save_empty_data()
@@ -152,36 +159,36 @@ class BAdminFormTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_form_detail()
     {
-        $this->jsonGet(self::DETAIL, '/1/1', 0);
+        $this->jsonGet($this->detail, '/1/1', 0);
     }
 
     public function test_admin_form_detail_without_event_id()
     {
-        $this->jsonGet(self::DETAIL, 0);
+        $this->jsonGet($this->detail, 0);
     }
     public function test_admin_form_detail_without_form_id()
     {
-        $this->jsonGet(self::DETAIL . '/1', 0);
+        $this->jsonGet($this->detail . '/1', 0);
     }
 
     public function test_admin_form_detail_without_invalid_event_id()
     {
-        $this->jsonGet(self::DETAIL . '/1000/1', 0);
+        $this->jsonGet($this->detail . '/1000/1', 0);
     }
 
     public function test_admin_form_detail_without_invalid_form_id()
     {
-        $this->jsonGet(self::DETAIL . '/1/10000', 0);
+        $this->jsonGet($this->detail . '/1/10000', 0);
     }
 
     public function test_admin_form_detail_without_invalid_form_id_and_event_id()
     {
-        $this->jsonGet(self::DETAIL . '/1000/10000', 0);
+        $this->jsonGet($this->detail . '/1000/10000', 0);
     }
 
     public function test_admin_delete_form_with_invalid_input()
@@ -194,7 +201,7 @@ class BAdminFormTest extends TestCase
             'msg' => self::MSG,
             'data' => [],
         ];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_admin_delete_form_with_empty_id()
@@ -207,7 +214,7 @@ class BAdminFormTest extends TestCase
             'msg' => '删除失败',
             'data' => [],
         ];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_admin_delete_form()
@@ -220,6 +227,6 @@ class BAdminFormTest extends TestCase
             'msg' => '操作成功',
             'data' => [],
         ];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 }

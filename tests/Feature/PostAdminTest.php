@@ -7,9 +7,9 @@ use Tests\TestCase;
 class PostAdminTest extends TestCase
 {
 
-    const LOGOUT = '/6ucwfN@Bt/logout';
-    const INIT = '/6ucwfN@Bt/init';
-    const CLEAR = '/6ucwfN@Bt/clear';
+    public $LOGOUT = '/'.$this->prefix.'/logout';
+    public $INIT = '/'.$this->prefix.'/init';
+    public $CLEAR = '/'.$this->prefix.'/clear';
 
     public function test_admin_logout_test()
     {

@@ -8,12 +8,12 @@ use Tests\TestCase;
 
 class BAdminSmsTest extends TestCase
 {
-    const INDEX = '/6ucwfN@Bt/smsAuditIndex';
-    const SAVE = '/6ucwfN@Bt/save_audit_sms';
-    const SMS = '/applyForm';
-    const REFUSE = '/6ucwfN@Bt/bulksms_refuse';
-    const PASS = '/6ucwfN@Bt/bulksms_pass';
-    const DELETE = '/6ucwfN@Bt/bulksms_delete';
+    public $INDEX = '/'.$this->prefix.'/smsAuditIndex';
+    public $SAVE = '/'.$this->prefix.'/save_audit_sms';
+    public $SMS = '/applyForm';
+    public $REFUSE = '/'.$this->prefix.'/bulksms_refuse';
+    public $PASS = '/'.$this->prefix.'/bulksms_pass';
+    public $DELETE = '/'.$this->prefix.'/bulksms_delete';
     
 
     public function test_admin_sms()

@@ -260,7 +260,7 @@ export default {
       captcha: '',
       userCaptcha: '',
       mobileNumber: '',
-      timeOut: 15 * 1000,
+      timeOut: 60 * 1000,
       counting: false,
       timeWrap: null,
       messageText: '获取验证码',
@@ -360,6 +360,10 @@ export default {
         return true;
       }
 
+      // if (this.validateUser()) {
+      //   return true;
+      // }
+
       if (this.validateForm() || this.validateUser()) {
         return true;
       }
@@ -413,6 +417,57 @@ export default {
       }).length;
     },
     validateForm: function() {
+      const form = this.formName;
+      const list = this.formList;
+      let res = false;
+      
+      list.forEach((element) => {
+        if (res) {
+          return true;
+        }
+        switch (true) {
+          case element.type == 0:
+            if (this.removeNull(form['inputForm']) !== this.formCount) {
+              this.$toast('请填写' + this.getFormNameById(list, element.type, form['inputForm']));
+              res = true;
+            }
+
+            break;
+          case element.type == 1:
+
+            if (this.removeNull(form['numberForm']) === this.numberCount) {
+              this.$toast('请填写' + this.getFormNameById(list, element.type, form['numberForm']));
+              res = true;
+            }
+            break;
+          case element.type == 2:
+
+            if (this.removeNull(form['phoneForm']) === this.phoneCount) {
+              this.$toast('请填写' + this.getFormNameById(list, element.type, form['phoneForm']));
+              res = true;
+            }
+
+            break;
+          case element.type == 3:
+
+            if (this.removeNull(form['timeForm']) === this.timeCount) {
+              this.$toast('请填写' + this.getFormNameById(list, element.type, form['timeForm']));
+              res = true;
+            }
+            break;
+          case element.type == 4:
+            if (this.imageUrl == '') {
+              this.$toast('请上传' + element.name);
+              res = true;
+            }
+            break;
+        }
+      });
+      // 0 文本框, 1数字类型, 2手机号码, 3时间框, 4图片框, 5下拉框
+
+      return res;
+    },
+    validateForm_BAK: function() {
       const form = this.formName;
       const list = this.formList;
       let res = false;

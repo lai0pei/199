@@ -7,6 +7,7 @@ use App\Models\Admin\MobileModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class SmsApplyModel extends Model
 {
@@ -30,10 +31,18 @@ class SmsApplyModel extends Model
         $pic_url = $data['imageUrl'] ?? [];
         $game = $data['gameName'] ?? '';
         $mobile = $data['mobile'] ?? '';
+        $time = now();
         $form = [];
 
+        $mobileModel = new MobileModel();
         $event = new EventModel();
         $isMonthly = $event::where('id', $eventId)->value('is_monthly');
+        
+        $isMobile = self::where('mobile',$mobile)->value('id');
+        
+        if(!empty($isMobile)){
+            throw new LogicException('本月申请次数 已超过1次');
+        }
 
         if ((int) $isMonthly === 1) {
             $startOfmonth = Carbon::now()->startOfMonth();
@@ -42,17 +51,18 @@ class SmsApplyModel extends Model
             if (! isset($mobile)) {
                 throw new LogicException('填写手机号码');
             }
-
+            
             $isAllow = self::where('event_id', $eventId)
                 ->where('mobile', $mobile)
                 ->whereBetween('apply_time', [$startOfmonth, $endOfmonth])
                 ->count();
 
-            if ((int) $isAllow > 1) {
-                throw new LogicException('本月申请次数 已超过2次');
+            if ((int) $isAllow > 0) {
+                throw new LogicException('本月申请次数 已超过1次');
             }
         }
 
+        
         $form = (new ApplyModel())->removeNull($data['form'] ?? '');
 
         if (is_array($pic_url)) {
@@ -63,10 +73,10 @@ class SmsApplyModel extends Model
             unset($v);
             $form = array_merge($form, $pic_url);
         }
-
+        Cache::forget($mobile);
         try {
             DB::beginTransaction();
-            $mobileModel = new MobileModel();
+           
             $isMatch = $mobileModel::where('mobile', $mobile)->value('id');
 
             $insert = [
@@ -75,17 +85,17 @@ class SmsApplyModel extends Model
                 'game' => (new EventTypeModel())::where('id',$game)->value('name'),
                 'value' => serialize($form),
                 'mobile' => $mobile,
-                'apply_time' => now(),
+                'apply_time' => $time,
                 'state' => 0,
                 'is_match' => empty($isMatch) ? 0 : 1,
                 'is_delete' => 0,
                 'ip' => request()->ip(),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => $time,
+                'updated_at' => $time,
             ];
 
             $status = self::insert($insert);
-
+            unset($insert);
             if (! $status) {
                 throw new LogicException('申请失败，请联系客服');
             }
@@ -97,5 +107,10 @@ class SmsApplyModel extends Model
         DB::commit();
 
         return true;
+    }
+
+    public function __destruct()
+    {
+        unset($this->data);
     }
 }

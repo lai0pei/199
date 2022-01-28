@@ -7,12 +7,18 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class BAdminLogTest extends TestCase
-{
-    const LOG = '/6ucwfN@Bt/detailLog';
+{   
+    public function __construct()
+    {
+        $this->prefix = config('admin.url_prefix');
+        $this->log = '/'.$this->prefix.'/detailLog';
+    }
+
+   
 
     public function test_log_index_with_empty()
     {
-        $this->jsonGet(self::LOG.'/1',0);
+        $this->jsonGet($this->log.'/1',0);
     }
 
     public function test_log_index_with_invalidInput()
@@ -23,6 +29,6 @@ class BAdminLogTest extends TestCase
             'data'=>[],
         ];
 
-        $this->jsonGet(self::LOG,1,$res);
+        $this->jsonGet($this->log,1,$res);
     }
 }

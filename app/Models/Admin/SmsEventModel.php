@@ -201,12 +201,20 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
                 'updated_at' => now(),
             ];
             if ($status === self::PASS) {
+                $pass = (new ConfigModel())->getConfig('bulkPass');
+                $msg = $pass['pass'] ?? '';
                 $tx = '通过';
+                $audit['send_remark'] = $msg;
                 $audit['is_send'] = 1;
             } elseif ($status === self::REFUSE) {
+                $deny = (new ConfigModel())->getConfig('bulkDeny');
+                $msg = $deny['refuse'] ?? '';
+                $audit['send_remark'] = $msg;
                 $tx = '拒绝';
                 $audit['is_send'] = 0;
             } else {
+                $msg = '';
+                $audit['send_remark'] = $msg;
                 $tx = '未审核';
                 $audit['is_send'] = 0;
             }

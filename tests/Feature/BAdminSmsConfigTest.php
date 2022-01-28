@@ -8,8 +8,8 @@ use Tests\TestCase;
 
 class BAdminSmsConfigTest extends TestCase
 {
-    const CONFIG = '/6ucwfN@Bt/sms_config';
-    const SAVE = '/6ucwfN@Bt/save_sms';
+    public $CONFIG = '/'.$this->prefix.'/sms_config';
+    public $SAVE = '/'.$this->prefix.'/save_sms';
 
     public function test_admin_smsConfig()
     {

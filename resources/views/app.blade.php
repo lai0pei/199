@@ -20,7 +20,7 @@
 </html>
 <style>
 html{
- max-width: 27rem;
+ max-width: 38rem;
 }
 body{
     scrollbar-width: none;

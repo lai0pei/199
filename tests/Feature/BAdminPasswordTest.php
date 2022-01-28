@@ -21,7 +21,7 @@ use Tests\TestCase;
 
 class BAdminPasswordTest extends TestCase
 {
-    const PASSWORD = '/6ucwfN@Bt/change_password';
+    public $PASSWORD = '/'.$this->prefix.'/change_password';
 
     public function test_password_index()
     {
