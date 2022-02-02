@@ -8,11 +8,7 @@ use Tests\TestCase;
 class BAdminCommonSettingTest extends TestCase
 {   
 
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-        $this->logo = '/'.$this->prefix.'/logo_upload';    
-    }
+        public $logo = '/'.self::PREFIX.'/logo_upload';    
 
     public function test_admin_upload()
     {

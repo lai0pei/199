@@ -29,13 +29,13 @@ use App\Http\Controllers\Admin\FormController;
 use App\Http\Controllers\Admin\IpController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\UploadLogoController;
 use App\Http\Controllers\Admin\MobileController;
 use App\Http\Controllers\Admin\PermissionMenuController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SmsConfigController;
 use App\Http\Controllers\Admin\SmsController;
 use App\Http\Controllers\Admin\UploadController;
+use App\Http\Controllers\Admin\UploadLogoController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -61,8 +61,7 @@ Route::get($prefix.'/captcha', [LoginController::class, 'captcha'])->name('admin
 
 Route::get('/ueditor', [UploadController::class, 'ueditor'])->name('admin_upload_content');
 
-
-Route::middleware('adminApi')->prefix($prefix)->group(function() {
+Route::middleware('adminApi')->prefix($prefix)->group(function () {
     Route::post('/getChart', [ControlController::class, 'getChart'])->name('admin_getChart');
     Route::post('/add_person', [AdminController::class, 'addNewAdmin'])->name('admin_add_person');
     Route::post('/save_admin', [AdminController::class, 'saveAdmin'])->name('admin_save_admin');
@@ -111,16 +110,12 @@ Route::middleware('adminApi')->prefix($prefix)->group(function() {
     Route::get('/event_lists', [EventController::class, 'list']);
     Route::get('/form_list', [FormController::class, 'getFormList'])->name('admin_form_list');
     Route::get('/user_apply_list', [UserController::class, 'userList'])->name('admin_user_list');
-  
+
     Route::get('/sms_list', [SmsController::class, 'smsEventList'])->name('admin_sms_list');
     Route::get('/getMobile', [MobileController::class, 'getMobile'])->name('admin_get_mobile');
     Route::get('/type_list', [EventTypeController::class, 'typeList'])->name('admin_type_list');
     Route::get('/get_role_permission', [RoleController::class, 'getRoleByPermission'])->name('admin_get_role_permission');
-     Route::get('/get_list', [EventController::class, 'getEventList'])->name('admin_get_event');
-
-
-
-
+    Route::get('/get_list', [EventController::class, 'getEventList'])->name('admin_get_event');
 });
 
 /*
@@ -137,13 +132,11 @@ Route::middleware(['admin'])->prefix($prefix)->group(function () {
     Route::get('/edit_person/{id?}', [AdminController::class, 'editPerson'])->name('admin_person_edit');
     Route::get('/view_person/{id?}', [AdminController::class, 'viewPerson'])->name('admin_person_view');
 
-    
-
     //管理组
     Route::get('/admin_group', [AdminGroupController::class, 'group']);
     Route::get('/group_add_index/{id?}', [AdminGroupController::class, 'groupAdd'])->name('group_add_index');
     Route::get('/permission/{role_id?}', [PermissionMenuController::class, 'getPermission'])->name('admin_permission');
-  
+
     Route::get('/get_role', [RoleController::class, 'getRole'])->name('admin_get_role');
 
     //修改密码
@@ -187,7 +180,6 @@ Route::middleware(['admin'])->prefix($prefix)->group(function () {
     //活动类型
     Route::get('/event_type', [EventTypeController::class, 'type']);
     Route::get('/add_type/{id?}', [EventTypeController::class, 'addType'])->name('admin_add_type');
-   
 
     //活动add_event
     Route::get('/add_event/{id?}', [EventController::class, 'event'])->name('admin_add_event');
@@ -201,21 +193,18 @@ Route::middleware(['admin'])->prefix($prefix)->group(function () {
 
     //手机管理
     Route::get('/mobile_management', [MobileController::class, 'mobile']);
-    
+
     Route::get('/Mobile', [MobileController::class, 'addMobile'])->name('mobile_add');
 
     //用户申请记录
     Route::get('/user_apply', [UserController::class, 'user']);
     Route::get('/userAuditIndex/{id?}', [UserController::class, 'userAuditIndex'])->name('admin_user_audit');
 
-
     //短信申请记录
     Route::get('/sms_apply', [SmsController::class, 'sms']);
     Route::get('/smsAuditIndex/{id?}', [SmsController::class, 'smsAuditIndex'])->name('admin_sms_audit');
 
     Route::get('/sms_import_index', [SmsController::class, 'importIndex'])->name('sms_import_index');
-
-
 
     // |------------------------------------------------------------------------------------------------------------------------------------------------------
 

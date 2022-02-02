@@ -169,7 +169,7 @@ class FormModel extends CommonModel
             }
         }
 
-        if ((int) $data['type'] === 5) {        
+        if ((int) $data['type'] === 5) {
             $data['option'] = trim($data['option']);
         }
 
@@ -181,14 +181,14 @@ class FormModel extends CommonModel
             'sort' => $data['sort'],
             'updated_at' => $time,
         ];
-    
+
         if ((int) $data['id'] === -1) {
             $formData['created_at'] = $time;
             $status = self::insert($formData);
 
             if (! $status) {
                 DB::rollBack();
-            
+
                 throw new LogicException('添加失败');
             }
 

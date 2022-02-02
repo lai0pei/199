@@ -63,7 +63,7 @@ class UploadLogoController extends Controller
         $size = config('admin.crousel_size');
         $file = $request->file('file');
         try {
-            $this->checkSize($file, $size);
+            // $this->checkSize($file, $size);
 
             $result = $this->storePic($file, $crousel);
         } catch (LogicException $e) {
@@ -108,7 +108,7 @@ class UploadLogoController extends Controller
         $size = config('admin.event_size');
         $file = $request->file('file');
         try {
-            $this->checkSize($file, $size);
+            // $this->checkSize($file, $size);
 
             $result = $this->storePic($file, $event);
         } catch (LogicException $e) {

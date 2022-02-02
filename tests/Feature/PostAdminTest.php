@@ -7,9 +7,13 @@ use Tests\TestCase;
 class PostAdminTest extends TestCase
 {
 
-    public $LOGOUT = '/'.$this->prefix.'/logout';
-    public $INIT = '/'.$this->prefix.'/init';
-    public $CLEAR = '/'.$this->prefix.'/clear';
+
+    public $logout = '/'.self::PREFIX.'/logout';
+    public $init = '/'.self::PREFIX.'/init';
+    public $clear = '/'.self::PREFIX.'/clear';
+
+
+ 
 
     public function test_admin_logout_test()
     {
@@ -19,7 +23,7 @@ class PostAdminTest extends TestCase
             'msg' => '成功登出',
             'data' => [],
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::LOGOUT);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->logout);
         $response
             ->assertStatus(200)
             ->assertJson($res);
@@ -33,7 +37,7 @@ class PostAdminTest extends TestCase
             'msg' => '成功登出',
             'data' => [],
         ];
-        $response = $this->postJson(self::LOGOUT);
+        $response = $this->postJson($this->logout);
         $response
             ->assertStatus(200)
             ->assertJson($res);
@@ -47,7 +51,7 @@ class PostAdminTest extends TestCase
             'msg' => '成功登出',
             'data' => [],
         ];
-        $response = $this->withSession(['user_id' => 100])->postJson(self::LOGOUT);
+        $response = $this->withSession(['user_id' => 100])->postJson($this->logout);
         $response
             ->assertStatus(200)
             ->assertJson($res);
@@ -55,7 +59,7 @@ class PostAdminTest extends TestCase
 
     public function test_admin_init_wrong_session()
     {
-        $this->jsonGet(self::CLEAR);
-        $this->jsonGet(self::INIT);
+        $this->jsonGet($this->clear);
+        $this->jsonGet($this->init);
     }
 }

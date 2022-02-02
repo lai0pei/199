@@ -9,14 +9,14 @@
                 <img
                   src="199/images/img01.png"
                   alt="左边图标"
-                  class="float-left ml-14 mt-2.5 w-5"
-                /><span class="text-amber-400 text-xl ml-4">{{
+                  class="float-left ml-8 mt-2.5 w-5"
+                /><span class="text-amber-400 text-xl ml-8">{{
                   head_text
                 }}</span
                 ><img
                   src="199/images/img02.png"
                   alt="右边图标"
-                  class="float-right w-5 mr-14 mt-2.5"
+                  class="float-right w-5 mr-14 mt-2.5 mr-8"
                 />
               </div>
             </slot>
@@ -60,11 +60,13 @@
                     </tr>
                     <tr v-for="(data, index) in tableData" :key="index">
                       <td>{{ data.username }}</td>
-                      <td>{{ data.apply_time }}</td>
-                      <td class="status">{{ data.status }}</td>
-                      <td @click="showMsg(data)" class="description">
-                        点击查看
-                      </td>
+                      <td class="apply_time">{{ data.apply_time }}</td>
+                      <td v-if="data.status == '拒绝'" class="deny">{{ data.status}}</td>
+                      <td v-else-if="data.status == '通过'" class="pass">{{ data.status}}</td>
+                      <td v-else>{{ data.status}}</td>
+                      <td v-if="data.status == '拒绝'" class="deny" @click="showMsg(data)">点击查看</td>
+                      <td v-else-if="data.status == '通过'" class="pass" @click="showMsg(data)">点击查看</td>
+                      <td v-else @click="showMsg(data)">点击查看</td>
                     </tr>
                   </thead>
                 </table>
@@ -84,7 +86,7 @@
                     class="btnSubmit bg-eventBtn block m-auto font-bold"
                     v-if="showButton"
                   >
-                    点击申请
+                    点击查询
                   </button></span
                 >
               </div>
@@ -136,6 +138,7 @@ export default {
     clearForm: function() {
       this.username = '';
     },
+   
     submit: async function() {
       if (this.username == '') {
         this.$toast('请填写会员账号');
@@ -196,8 +199,11 @@ td,th {
 .description {
   color: red;
 }
-.status {
+.pass {
   color: green;
+}
+.deny {
+  color: red;
 }
 .allForms {
   padding: 0 0.7rem;
@@ -218,6 +224,10 @@ td,th {
   border: 1px solid #000;
   background: #000;
   box-sizing: border-box;
+}
+
+.apply_time{
+  font-size : 0.8em;
 }
 
 .getMessage {

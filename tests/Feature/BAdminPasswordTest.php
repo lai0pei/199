@@ -20,12 +20,14 @@ namespace Tests\Feature;
 use Tests\TestCase;
 
 class BAdminPasswordTest extends TestCase
-{
-    public $PASSWORD = '/'.$this->prefix.'/change_password';
+{   
+
+    public $password = '/'.self::PREFIX.'/change_password';
+   
 
     public function test_password_index()
     {
-        $this->jsonGet(self::PASSWORD,0);
+        $this->jsonGet($this->password,0);
     }
 
     public function test_password_change()
@@ -40,7 +42,7 @@ class BAdminPasswordTest extends TestCase
             'msg' => '修改成功',
             'data' => [],
         ];
-        $this->jsonPost(self::PASSWORD, $data, $res);
+        $this->jsonPost($this->password, $data, $res);
     }
 
     public function test_password_change_with_invalidInput()
@@ -53,7 +55,7 @@ class BAdminPasswordTest extends TestCase
             'msg' => '请求数据有误',
             'data' => [],
         ];
-        $this->jsonPost(self::PASSWORD, $data, $res);
+        $this->jsonPost($this->password, $data, $res);
     }
 
     public function test_password_change_not_the_same_userInput()
@@ -68,7 +70,7 @@ class BAdminPasswordTest extends TestCase
             'msg' => '密码不一致',
             'data' => [],
         ];
-        $this->jsonPost(self::PASSWORD, $data, $res);
+        $this->jsonPost($this->password, $data, $res);
     }
 
     public function test_password_change_old_one_not_correct()
@@ -83,6 +85,6 @@ class BAdminPasswordTest extends TestCase
             'msg' => '老密码不正确',
             'data' => [],
         ];
-        $this->jsonPost(self::PASSWORD, $data, $res);
+        $this->jsonPost($this->password, $data, $res);
     }
 }

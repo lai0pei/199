@@ -17,7 +17,9 @@
 
 use App\Models\Admin\AuthMenuModel;
 use Illuminate\Support\Facades\Cache;
-use Spatie\ImageOptimizer\OptimizerChain as ImageOptimizer;
+use Spatie\ImageOptimizer\OptimizerChain;
+use Spatie\ImageOptimizer\Optimizers\Jpegoptim;
+use Spatie\ImageOptimizer\Optimizers\Pngquant;
 
 function checkAuth($name = '')
 {
@@ -40,8 +42,21 @@ function checkAuth($name = '')
     return 0;
 }
 
-function checkSmsCode($mobile, $code)
+function idAsKey($array, $key): array
 {
+    $res = [];
+    if (! isset($array)) {
+        return $res;
+    }
+    foreach ($array as $v) {
+        $res[$v[$key]] = $v;
+    }
+
+    return $res;
+}
+
+function checkSmsCode($mobile, $code)
+{   
     return (int) Cache::get($mobile) === (int) $code;
 }
 
@@ -56,6 +71,14 @@ function stripUrl($data)
 
 function optimizeImg($path)
 {
-    $optimize = new ImageOptimizer();
+    $optimize = (new OptimizerChain())
+        ->addOptimizer(new Jpegoptim([
+            '--strip-all',
+            '--all-progressive',
+        ]))
+
+        ->addOptimizer(new Pngquant([
+            '--force',
+        ]));
     $optimize->optimize(public_path('storage/' . $path));
 }

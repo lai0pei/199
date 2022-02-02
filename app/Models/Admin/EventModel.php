@@ -156,17 +156,10 @@ class EventModel extends CommonModel
 
         $limit = $data['limit'] ?? 15;
         $page = $data['page'] ?? 1;
-        
-        $where = [];
-        $admin = new AdminModel();
-        $is_admin = $admin::where('id',session('user_id'))->value('role_id');
 
-        if($is_admin !== 1){
-            $where['is_auth'] = 1;
-        }
-        
+        $where = [];
+
         if (! empty($data['searchParams'])) {
-            
             $param = json_decode($data['searchParams'], true);
             if ($param['name'] !== '') {
                 $where['name'] = $where['name'] = $param['name'];

@@ -5,12 +5,14 @@ namespace Tests\Feature;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
-{
-    public $URL = '/'.$this->prefix.'/add_person';
-    public $EDIT = '/'.$this->prefix.'/edit_person';
-    public $VIEW = '/'.$this->prefix.'/view_person';
-    public $SAVE = '/'.$this->prefix.'/save_admin';
-    public $DELETE = '/'.$this->prefix.'/delete_admin';
+{   
+
+    public $url = '/'.self::PREFIX.'/add_person';
+    public $edit = '/'.self::PREFIX.'/edit_person';
+    public $view = '/'.self::PREFIX.'/view_person';
+    public $save = '/'.self::PREFIX.'/save_admin';
+    public $delete = '/'.self::PREFIX.'/delete_admin';
+    
 
     public function test_add_new_admin()
     {
@@ -21,7 +23,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 1,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::URL, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->url, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -40,7 +42,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 1,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::URL, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->url, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -59,7 +61,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 1,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::URL, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->url, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -78,7 +80,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 3,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::URL, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->url, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -90,13 +92,13 @@ class AdminTest extends TestCase
 
     public function test_edit_admin()
     {
-        $response = $this->withSession(['user_id' => 1])->get(self::EDIT . '/1');
+        $response = $this->withSession(['user_id' => 1])->get($this->edit . '/1');
         $response->assertSuccessful();
     }
 
     public function test_edit_admin_without_id()
     {
-        $response = $this->withSession(['user_id' => 1])->get(self::EDIT);
+        $response = $this->withSession(['user_id' => 1])->get($this->edit);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -108,19 +110,19 @@ class AdminTest extends TestCase
 
     public function test_edit_admin_with_invalidId()
     {
-        $response = $this->withSession(['user_id' => 1])->get(self::EDIT . '/1000');
+        $response = $this->withSession(['user_id' => 1])->get($this->edit . '/1000');
         $response->assertSuccessful();
     }
 
     public function test_view_admin()
     {
-        $response = $this->withSession(['user_id' => 1])->get(self::VIEW . '/1');
+        $response = $this->withSession(['user_id' => 1])->get($this->view . '/1');
         $response->assertSuccessful();
     }
 
     public function test_view_admin_without_id()
     {
-        $response = $this->withSession(['user_id' => 1])->get(self::VIEW);
+        $response = $this->withSession(['user_id' => 1])->get($this->view);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -132,7 +134,7 @@ class AdminTest extends TestCase
 
     public function test_view_admin_with_invalidId()
     {
-        $response = $this->withSession(['user_id' => 1])->get(self::VIEW . '/1000');
+        $response = $this->withSession(['user_id' => 1])->get($this->view . '/1000');
         $response->assertSuccessful();
     }
 
@@ -146,7 +148,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 1,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::SAVE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->save, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -166,7 +168,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 1,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::SAVE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->save, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -186,7 +188,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 1,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::SAVE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->save, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -206,7 +208,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 1,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::SAVE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->save, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -226,7 +228,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 1,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::SAVE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->save, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -246,7 +248,7 @@ class AdminTest extends TestCase
             'role' => 1,
             'status' => 0,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::SAVE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->save, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -261,7 +263,7 @@ class AdminTest extends TestCase
         $data = [
             'id' => 200,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::DELETE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->delete, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -276,7 +278,7 @@ class AdminTest extends TestCase
         $data = [
             'id' => 1,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::DELETE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->delete, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -289,7 +291,7 @@ class AdminTest extends TestCase
     public function test_delete_admin_without_id()
     {
         $data = [];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::DELETE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->delete, $data);
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -304,7 +306,7 @@ class AdminTest extends TestCase
         $data = [
             'id' => 3,
         ];
-        $response = $this->withSession(['user_id' => 1])->postJson(self::DELETE, $data);
+        $response = $this->withSession(['user_id' => 1])->postJson($this->delete, $data);
         $response
             ->assertStatus(200)
             ->assertJson([

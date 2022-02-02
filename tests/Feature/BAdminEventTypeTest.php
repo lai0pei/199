@@ -22,13 +22,9 @@ use Tests\TestCase;
 class BAdminEventTypeTest extends TestCase
 {   
 
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-        $this->maniType = '/'.$this->prefix.'/mani_type';
-        $this->addType = '/'.$this->prefix.'/add_type';
-        $this->deleteType = '/'.$this->prefix.'/delete_type';   
-    }
+        public $maniType = '/'.self::PREFIX.'/mani_type';
+        public $addType = '/'.self::PREFIX.'/add_type';
+        public $deleteType = '/'.self::PREFIX.'/delete_type';   
  
 
     public function test_admin_event_type_add()

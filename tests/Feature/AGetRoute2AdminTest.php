@@ -24,91 +24,86 @@ use Tests\TestCase;
 class AGetRoute2AdminTest extends TestCase
 {   
 
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-    }
-
     public function test_admin_sms_config(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/sms_config');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/sms_config');
         $response->assertSuccessful();
     }
 
     public function test_admin_get_allow_ip(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/allow_ip');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/allow_ip');
         $response->assertSuccessful();
     }
 
     public function test_admin_bulk_pass(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/bulk_pass');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/bulk_pass');
         $response->assertSuccessful();
     }
 
     public function test_admin_common_settings(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/common_settings');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/common_settings');
         $response->assertSuccessful();
     }
 
     public function test_admin_bulk_refuse(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/bulk_refuse');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/bulk_refuse');
         $response->assertSuccessful();
     }
     public function test_admin_link_management(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/link_management');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/link_management');
         $response->assertSuccessful();
     }
     public function test_admin_game_management(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/game_management');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/game_management');
         $response->assertSuccessful();
     }
 
     public function test_admin_announcement(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/announcement');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/announcement');
         $response->assertSuccessful();
     }
 
     public function test_admin_event_type(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/event_type');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/event_type');
         $response->assertSuccessful();
     }
     public function test_admin_type_list(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/type_list');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/type_list');
         $response->assertSuccessful();
     }
     public function test_admin_event_lists(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/event_lists');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/event_lists');
         $response->assertSuccessful();
     }
     public function test_admin_get_list(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/get_list');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/get_list');
         $response->assertSuccessful();
     }
 
     public function test_admin_form_list(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/form_list');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/form_list');
         $response->assertSuccessful();
     }
     public function test_admin_mobile_management(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/mobile_management');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/mobile_management');
         $response->assertSuccessful();
     }
     public function test_admin_getMobile(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/getMobile');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/getMobile');
         $response->assertSuccessful();
     }
 
     public function test_admin_Mobile(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/Mobile');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/Mobile');
         $response->assertSuccessful();
     }
 
     public function test_admin_user_apply(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/user_apply');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/user_apply');
         $response->assertSuccessful();
     }
 
     public function test_admin_user_apply_list(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/user_apply_list');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/user_apply_list');
         $response->assertSuccessful();
     }
 

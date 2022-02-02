@@ -94,7 +94,7 @@ class AuthMenuModel extends CommonModel
     {
         $this->adminId = session('user_id');
 
-        $key = 'admin_menu_' . session('user_id');
+        $key = 'admin_menu_' . $this->adminId. request()->getHost();
 
         $menus = Cache::get($key);
 
@@ -224,7 +224,7 @@ class AuthMenuModel extends CommonModel
             'title' => $data['title'],
             'icon' => $data['icon'],
             'target' => $data['target'],
-            'href' => ($data['href'] === '')? '':$this->prefix.$data['href'],
+            'href' => $data['href'] === '' ? '' : $this->prefix.$data['href'],
             'is_shorcut' => $data['is_shortcut'],
         ];
     }

@@ -7,14 +7,10 @@ use Tests\TestCase;
 class BAdminFormTest extends TestCase
 {   
 
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-        $this->get = '/'.$this->prefix.'/form';
-        $this->add = '/'.$this->prefix.'/form_add';
-        $this->detail = '/'.$this->prefix.'/form_detail';
-        $this->delete = '/'.$this->prefix.'/delete_form'; 
-    }
+    public $get = '/'.self::PREFIX.'/form';
+    public $add = '/'.self::PREFIX.'/form_add';
+    public $detail = '/'.self::PREFIX.'/form_detail';
+    public $delete = '/'.self::PREFIX.'/delete_form'; 
 
   
 

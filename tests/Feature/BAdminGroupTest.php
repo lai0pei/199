@@ -21,16 +21,13 @@ use Tests\TestCase;
 
 class BAdminGroupTest extends TestCase
 {   
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-        $this->index = '/'.$this->prefix.'/group_add_index';
-        $this->add = '/'.$this->prefix.'/group_add';
-        $this->delete = '/'.$this->prefix.'/group_delete';
-        $this->permission = '/'.$this->prefix.'/permission';
-        $this->submit = '/'.$this->prefix.'/submitList';
-        $this->list = '/'.$this->prefix.'/permissionList';
-    }
+
+    public $index = '/'.self::PREFIX.'/group_add_index';
+    public $add = '/'.self::PREFIX.'/group_add';
+    public $delete = '/'.self::PREFIX.'/group_delete';
+    public $permission = '/'.self::PREFIX.'/permission';
+    public $submit = '/'.self::PREFIX.'/submitList';
+    public $list = '/'.self::PREFIX.'/permissionList';
   
 
     public function test_admin_group_index_with_invalidId()

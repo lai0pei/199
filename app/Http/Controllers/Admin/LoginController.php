@@ -65,8 +65,8 @@ class LoginController extends Controller
         ], );
         if ($validator->fails()) {
             throw new LogicException('登录失败');
-        }   
-      
+        }
+
         if (! captcha_check($input['captcha'])) {
             return self::json_fail([], '验证码不正确');
         }

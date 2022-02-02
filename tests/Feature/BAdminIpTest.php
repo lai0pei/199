@@ -7,13 +7,9 @@ use Tests\TestCase;
 class BAdminIpTest extends TestCase
 {   
 
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-        $this->add = '/'.$this->prefix.'/add_ip';
-        $this->mani = '/'.$this->prefix.'/mani_ip';
-        $this->detele = '/'.$this->prefix.'/delete_ip';
-    }
+    public $add = '/'.self::PREFIX.'/add_ip';
+        public $mani = '/'.self::PREFIX.'/mani_ip';
+        public $detele = '/'.self::PREFIX.'/delete_ip';
 
     public function test_admin_ip_add_index()
     {

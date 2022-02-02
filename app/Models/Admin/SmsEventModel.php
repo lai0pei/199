@@ -132,19 +132,13 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
     {
         $data = $this->data;
 
-        if ($data['state'] === (0 || 2)) {
-            $save['is_send'] = 0;
-        } else {
-            $save['is_send'] = 1;
-        }
-
         $save = [
             'state' => $data['state'],
             'send_remark' => $data['send_remark'],
             'updated_at' => now(),
         ];
 
-        if ($data['state'] === (0 || 2)) {
+        if ((int) $data['state'] === 0 || (int) $data['state'] === 2) {
             $save['is_send'] = 0;
         } else {
             $save['is_send'] = 1;

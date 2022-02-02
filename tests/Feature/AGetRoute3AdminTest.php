@@ -21,49 +21,44 @@ use Tests\TestCase;
 
 class AGetRoute3AdminTest extends TestCase
 {   
-
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-    }
     
     public function test_admin_exportList(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/exportList');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/exportList');
         $response->assertSuccessful();
     }
 
     public function test_admin_sms_apply(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/sms_apply');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/sms_apply');
         $response->assertSuccessful();
     }
 
     public function test_admin_sms_list(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/sms_list');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/sms_list');
         $response->assertSuccessful();
     }
 
     public function test_admin_exportSmsList(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/exportSmsList');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/exportSmsList');
         $response->assertSuccessful();
     }
 
     public function test_admin_sms_import_index(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/sms_import_index');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/sms_import_index');
         $response->assertSuccessful();
     }
 
     public function test_admin_init(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/init');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/init');
         $response->assertSuccessful();
     }
 
     public function test_add_event(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/add_event');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/add_event');
         $response->assertSuccessful();
     }
 
     public function test_edit_type(){
-        $response = $this->withSession(['user_id'=>1])->get('/'.$this->prefix.'/add_type/1');
+        $response = $this->withSession(['user_id'=>1])->get('/'.self::PREFIX.'/add_type/1');
         $response->assertSuccessful();
     }
 

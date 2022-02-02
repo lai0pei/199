@@ -18,15 +18,15 @@
 namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
     
     public const MSG = '请求数据有误';
-
+ 
+    public const PREFIX = '';
+ 
     public function jsonGet($url, $isJson = 1, $data = [])
     {
 

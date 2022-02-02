@@ -22,11 +22,7 @@ use Tests\TestCase;
 class BAdminAuthTest extends TestCase
 {
 
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-        $this->view = '/'.$this->prefix.'/view_permission';    
-    }
+        public $view = '/'.self::PREFIX.'/view_permission';    
 
     
     public function test_admin_view_permission()

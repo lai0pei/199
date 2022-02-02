@@ -65,11 +65,25 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
             }
         }
 
+        $admin = new AdminModel();
+        $role = $admin::where('id', session('user_id'))->value('role_id');
+
+        $event = (new EventModel())::select('is_auth', 'id')->get();
+
+        if ($event !== null) {
+            $eventAuth = idAsKey($event->toArray(), 'id');
+        } else {
+            $eventAuth = [];
+        }
+
         $item = self::where($where)->orderBy('id', 'desc')->paginate($limit, '*', 'page', $page);
 
         $result = [];
 
         foreach ($item->items() as $k => $v) {
+            if ($role !== 1 && ! $this->eventAuth($v['event_id'], $eventAuth)) {
+                continue;
+            }
             $result[$k]['id'] = $v['id'];
             $result[$k]['event'] = $this->getEventName($v['event_id']);
             $result[$k]['apply_time'] = $v['apply_time'];
@@ -265,6 +279,17 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
             '状态',
             'ip',
         ];
+    }
+
+    private function eventAuth($eventId, $eventAuth)
+    {
+        if (! is_array($eventAuth)) {
+            return false;
+        }
+        if (! array_key_exists($eventId, $eventAuth)) {
+            return false;
+        }
+        return (int) $eventAuth[$eventId]['is_auth'] === 1;
     }
 
     private function getEventName($id)

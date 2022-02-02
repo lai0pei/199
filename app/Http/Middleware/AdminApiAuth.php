@@ -18,8 +18,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Support\Facades\Cache;
 
 class AdminApiAuth extends Middleware
 {
@@ -32,9 +32,8 @@ class AdminApiAuth extends Middleware
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle($request, Closure $next, ...$guards)
-    {   
-     
-        if (session('admin_id') !== session()->getId()) {  
+    {
+        if (session('admin_id') !== session()->getId()) {
             $res['expire'] = 1;
             $res['msg'] = '登录过期, 请刷新页面';
             Cache::forget('admin_menu_' . session('user_id'));

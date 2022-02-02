@@ -5,9 +5,10 @@ namespace Tests\Feature;
 use Tests\TestCase;
 
 class BAdminMobileTest extends TestCase
-{
-    public $ADD = '/'.$this->prefix.'/addMobile';
-    public $DELETE = '/'.$this->prefix.'/deleteMobile';
+{   
+
+    public $add = '/'.self::PREFIX.'/addMobile';
+    public $delete= '/'.self::PREFIX.'/deleteMobile';
 
     public function test_admin_add_mobile()
     {
@@ -19,7 +20,7 @@ class BAdminMobileTest extends TestCase
             'msg' => '添加、成功',
             'data' => [],
         ];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_add_mobile_with_invalidPhoneNo()
@@ -32,7 +33,7 @@ class BAdminMobileTest extends TestCase
             'msg' => '手机格式不对',
             'data' => [],
         ];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_add_mobile_with_invalid_input()
@@ -44,7 +45,7 @@ class BAdminMobileTest extends TestCase
             'msg' => self::MSG,
             'data' => [],
         ];
-        $this->jsonPost(self::ADD, $data, $res);
+        $this->jsonPost($this->add, $data, $res);
     }
 
     public function test_admin_delete_mobile()
@@ -57,7 +58,7 @@ class BAdminMobileTest extends TestCase
             'msg' => '操作成功',
             'data' => [],
         ];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
     public function test_admin_delete_mobile_with_invalid_input()
@@ -68,7 +69,7 @@ class BAdminMobileTest extends TestCase
             'msg' => '删除失败',
             'data' => [],
         ];
-        $this->jsonPost(self::DELETE, $data, $res);
+        $this->jsonPost($this->delete, $data, $res);
     }
 
 }

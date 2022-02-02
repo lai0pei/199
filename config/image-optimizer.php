@@ -21,7 +21,9 @@ return [
         ],
 
         Pngquant::class => [
-            '--force', // required parameter for this package
+            '-m85', // set maximum quality to 85%
+            '--strip-all',  // this strips out all text information such as comments and EXIF data
+            '--all-progressive',  // this will make sure the resulting image is a progressive one
         ],
 
         Optipng::class => [

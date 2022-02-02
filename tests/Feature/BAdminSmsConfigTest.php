@@ -7,13 +7,14 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class BAdminSmsConfigTest extends TestCase
-{
-    public $CONFIG = '/'.$this->prefix.'/sms_config';
-    public $SAVE = '/'.$this->prefix.'/save_sms';
+{   
+    public $config = '/'.self::PREFIX.'/sms_config';
+        public $save = '/'.self::PREFIX.'/save_sms';
+   
 
     public function test_admin_smsConfig()
     {
-        $this->jsonGet(self::CONFIG, 0);
+        $this->jsonGet($this->config, 0);
     }
 
     public function test_admin_smsConfig_save()
@@ -27,7 +28,7 @@ class BAdminSmsConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::SAVE, $data,$res);
+        $this->jsonPost($this->save, $data,$res);
     }
 
     public function test_admin_smsConfig_save_with_empty_input()
@@ -39,6 +40,6 @@ class BAdminSmsConfigTest extends TestCase
             'data' => [],
         ];
 
-        $this->jsonPost(self::SAVE, $data,$res);
+        $this->jsonPost($this->save, $data,$res);
     }
 }

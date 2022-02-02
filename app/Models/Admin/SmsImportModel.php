@@ -38,6 +38,12 @@ class SmsImportModel extends CommonModel implements ToCollection, WithChunkReadi
         try {
             $status = $this->data['status'] ?? 0;
 
+            $pass = (new ConfigModel())->getConfig('bulkPass');
+            $passMsg = $pass['pass'] ?? '';
+
+            $deny = (new ConfigModel())->getConfig('bulkDeny');
+            $denyMsg = $deny['refuse'] ?? '';
+
             $error = 0;
             $time = now();
             foreach ($collection as $v) {
@@ -57,8 +63,10 @@ class SmsImportModel extends CommonModel implements ToCollection, WithChunkReadi
                 if ((int) $status === 1) {
                     $update['is_send'] = 1;
                     $update['send_time'] = $time;
+                    $update['send_remark'] = $passMsg;
                 } elseif ((int) $status === 2) {
                     $update['is_send'] = 0;
+                    $update['send_remark'] = $denyMsg;
                 }
 
                 self::where('id', $v[0])->update($update);

@@ -8,11 +8,8 @@ use Tests\TestCase;
 
 class BAdminLogTest extends TestCase
 {   
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-        $this->log = '/'.$this->prefix.'/detailLog';
-    }
+
+    public $log = '/'.self::PREFIX.'/detailLog';
 
    
 

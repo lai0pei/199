@@ -6,8 +6,8 @@ use App\Exceptions\LogicException;
 use App\Models\Admin\MobileModel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class SmsApplyModel extends Model
 {
@@ -21,6 +21,11 @@ class SmsApplyModel extends Model
     public function __construct($data = [])
     {
         $this->data = $data;
+    }
+
+    public function __destruct()
+    {
+        unset($this->data);
     }
 
     public function smsForm()
@@ -37,12 +42,12 @@ class SmsApplyModel extends Model
         $mobileModel = new MobileModel();
         $event = new EventModel();
         $isMonthly = $event::where('id', $eventId)->value('is_monthly');
-        
-        $isMobile = self::where('mobile',$mobile)->value('id');
-        
-        if(!empty($isMobile)){
-            throw new LogicException('本月申请次数 已超过1次');
-        }
+
+        // $isMobile = self::where('mobile', $mobile)->value('id');
+
+        // if (! empty($isMobile)) {
+        //     throw new LogicException('本月申请次数 已超过1次');
+        // }
 
         if ((int) $isMonthly === 1) {
             $startOfmonth = Carbon::now()->startOfMonth();
@@ -51,7 +56,7 @@ class SmsApplyModel extends Model
             if (! isset($mobile)) {
                 throw new LogicException('填写手机号码');
             }
-            
+
             $isAllow = self::where('event_id', $eventId)
                 ->where('mobile', $mobile)
                 ->whereBetween('apply_time', [$startOfmonth, $endOfmonth])
@@ -62,7 +67,6 @@ class SmsApplyModel extends Model
             }
         }
 
-        
         $form = (new ApplyModel())->removeNull($data['form'] ?? '');
 
         if (is_array($pic_url)) {
@@ -76,13 +80,13 @@ class SmsApplyModel extends Model
         Cache::forget($mobile);
         try {
             DB::beginTransaction();
-           
+
             $isMatch = $mobileModel::where('mobile', $mobile)->value('id');
 
             $insert = [
                 'user_name' => $username,
                 'event_id' => $data['eventId'],
-                'game' => (new EventTypeModel())::where('id',$game)->value('name'),
+                'game' => (new EventTypeModel())::where('id', $game)->value('name'),
                 'value' => serialize($form),
                 'mobile' => $mobile,
                 'apply_time' => $time,
@@ -107,10 +111,5 @@ class SmsApplyModel extends Model
         DB::commit();
 
         return true;
-    }
-
-    public function __destruct()
-    {
-        unset($this->data);
     }
 }

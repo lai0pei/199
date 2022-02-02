@@ -106,7 +106,7 @@ class LogModel extends CommonModel
             $result[$k]['admin_name'] = $this->getName($v['admin_id']);
             $result[$k]['created_at'] = $this->toTime($v['created_at']);
         }
-    
+
         $res['data'] = $result;
         $res['count'] = $count;
 

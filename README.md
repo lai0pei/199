@@ -45,6 +45,12 @@ sudo yum install webp
 sudo npm install -g svgo@1.3.2  ->  这个不需要，npm 是nodejs 指令 所有系统 都一致。
 ```
 
+## 关闭禁用php 函数
+```bash
+putenv
+proc_open
+```
+
 ## 本地测试安装 
 <ol>
 <li>进入 项目 目录， 打开terminal.</li>

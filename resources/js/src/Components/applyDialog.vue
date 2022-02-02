@@ -335,16 +335,16 @@ export default {
     getFormCount: function(form) {
       form.forEach((element) => {
         if (element.type === 0) {
-          this.formCount ++;
+          ++this.formCount;
         }
         if (element.type === 1) {
-          this.numberCount ++;
+          ++this.numberCount;
         }
         if (element.type === 2) {
-          this.phoneCount ++;
+          ++this.phoneCount;
         }
         if (element.type === 3) {
-          this.timeCount ++;
+          ++ this.timeCount;
         }
         if (element.type === 5) {
           this.formName.selectForm[element.id] = element['option'][0];
@@ -360,13 +360,13 @@ export default {
         return true;
       }
 
-      // if (this.validateUser()) {
-      //   return true;
-      // }
-
-      if (this.validateForm() || this.validateUser()) {
+      if (this.validateUser()) {
         return true;
       }
+
+      // if (this.validateForm() || this.validateUser()) {
+      //   return true;
+      // }
 
       const that = this;
       await axios
@@ -420,46 +420,41 @@ export default {
       const form = this.formName;
       const list = this.formList;
       let res = false;
-      
+      console.log('form',form);
+      console.log('list',list);
       list.forEach((element) => {
         if (res) {
           return true;
         }
         switch (true) {
           case element.type == 0:
-            if (this.removeNull(form['inputForm']) !== this.formCount) {
-              this.$toast('请填写' + this.getFormNameById(list, element.type, form['inputForm']));
+           if(form.inputForm.length == 0){
+              this.$toast('请填写全部数据');
               res = true;
-            }
+           }
 
             break;
           case element.type == 1:
 
-            if (this.removeNull(form['numberForm']) === this.numberCount) {
-              this.$toast('请填写' + this.getFormNameById(list, element.type, form['numberForm']));
+             if(form.numberForm.length == 0){
+              this.$toast('请填写全部数据');
               res = true;
-            }
+           }
             break;
           case element.type == 2:
 
-            if (this.removeNull(form['phoneForm']) === this.phoneCount) {
-              this.$toast('请填写' + this.getFormNameById(list, element.type, form['phoneForm']));
+            if(form.phoneForm.length == 0){
+              this.$toast('请填写全部数据');
               res = true;
-            }
+           }
 
             break;
           case element.type == 3:
 
-            if (this.removeNull(form['timeForm']) === this.timeCount) {
-              this.$toast('请填写' + this.getFormNameById(list, element.type, form['timeForm']));
+             if(form.timeForm.length == 0){
+              this.$toast('请填写全部数据');
               res = true;
-            }
-            break;
-          case element.type == 4:
-            if (this.imageUrl == '') {
-              this.$toast('请上传' + element.name);
-              res = true;
-            }
+           }
             break;
         }
       });
@@ -467,7 +462,7 @@ export default {
 
       return res;
     },
-    validateForm_BAK: function() {
+    validateForm_bak: function() {
       const form = this.formName;
       const list = this.formList;
       let res = false;
@@ -476,6 +471,7 @@ export default {
         if (res) {
           return true;
         }
+        
         switch (true) {
           case element.type == 0:
             if (this.removeNull(form['inputForm']) !== this.formCount) {
@@ -503,12 +499,6 @@ export default {
 
             if (this.removeNull(form['timeForm']) === this.timeCount) {
               this.$toast('请填写' + this.getFormNameById(list, element.type, form['timeForm']));
-              res = true;
-            }
-            break;
-          case element.type == 4:
-            if (this.imageUrl == '') {
-              this.$toast('请上传' + element.name);
               res = true;
             }
             break;

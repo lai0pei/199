@@ -7,15 +7,13 @@ use Tests\TestCase;
 class BAdminBulkConfigTest extends TestCase
 {   
 
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-        $this->refuseSave = '/'.$this->prefix.'/refuse_save';    
-        $this->passwordSave = '/'.$this->prefix.'/pass_save';
-        $this->linkSave = '/'.$this->prefix.'/link_save';
-        $this->gameSave = '/'.$this->prefix.'/game_save';
-        $this->anNave = '/'.$this->prefix.'/announcement_save';
-    }
+
+        public $refuseSave = '/'.self::PREFIX.'/refuse_save';    
+        public $passwordSave = '/'.self::PREFIX.'/pass_save';
+        public $linkSave = '/'.self::PREFIX.'/link_save';
+        public $gameSave = '/'.self::PREFIX.'/game_save';
+        public $anNave = '/'.self::PREFIX.'/announcement_save';
+    
 
 
 

@@ -7,20 +7,17 @@ use Illuminate\Http\UploadedFile;
 
 class BAdminAddEventTest extends TestCase
 {   
-    public function __construct()
-    {
-        $this->prefix = config('admin.url_prefix');
-        $this->add = '/'.$this->prefix.'/add_event';
-        $this->mani = '/'.$this->prefix.'/mani_event';
-        $this->delete = '/'.$this->prefix.'/delete_event';
-        $this->upload = '/'.$this->prefix.'/uploadPhoto';
-        $this->editor = '/ueditor';
-    
-    }
+
+    public $add = '/'.self::PREFIX.'/add_event';
+    public $mani = '/'.self::PREFIX.'/mani_event';
+    public $delete = '/'.self::PREFIX.'/delete_event';
+    public $upload = '/'.self::PREFIX.'/uploadPhoto';
+    public $editor = '/ueditor';
+
     
   
     public function test_admin_add_event_index()
-    {
+    {   
         $this->jsonGet( $this->add . '/-1', 0);
     }
 
