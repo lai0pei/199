@@ -41,4 +41,3 @@ Route::get('/', [IndexController::class, 'index']);
 
 Route::get('/detail', [IndexController::class, 'detail'])->name('detail');
 
-Route::get('/test', [TestController::class, 'test']);

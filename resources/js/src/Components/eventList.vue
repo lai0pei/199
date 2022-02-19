@@ -87,7 +87,6 @@ export default {
   props: {passedEventList: Array},
   data() {
     return {
-      selectedIndex: 3,
       loading: true,
       showModal: false,
       eventType: [],
@@ -112,7 +111,6 @@ export default {
       this.eventTypeId = eventId;
     }
     this.selectEvent(this.eventTypeId);
-    this.selectedIndex = 3;
     this.loading = false;
   },
   methods: {

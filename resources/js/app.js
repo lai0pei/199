@@ -16,12 +16,15 @@ Vue.prototype.$toast = function ($message) {
 Vue.use(Vant);
 InertiaProgress.init(); 
 
-createInertiaApp({
-  resolve: name => require(`./src/${name}`),
-  setup({ el, App, props }) {
-    new Vue({
-      render: h => h(App, props),
-    }).$mount(el)
-  },
-})
+  createInertiaApp({
+    resolve: name => require(`./src/${name}`),
+    setup({ el, App, props }) {
+      new Vue({
+        render: h => h(App, props),
+      }).$mount(el)
+    },
+  })
+  
+
+
 

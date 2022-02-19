@@ -29,14 +29,14 @@
             <form class="layui-form" action="">
                 <div>
                     <em class="layui-icon layui-icon-username admin-icon"></em>
-                    <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" value="admin" class="layui-input admin-input admin-input-username">
+                    <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input admin-input admin-input-username">
                 </div>
                 <div>
                     <em class="layui-icon layui-icon-password admin-icon"></em>
-                    <input type="password" name="password" placeholder="请输入密码" autocomplete="off" value="123456" class="layui-input admin-input">
+                    <input type="password" name="password" placeholder="请输入密码" autocomplete="off"  class="layui-input admin-input">
                 </div>
                 <div>
-                    <input type="text" name="captcha" placeholder="请输入验证码" value="12" autocomplete="off" class="layui-input admin-input admin-input-verify"> 
+                    <input type="text" name="captcha" placeholder="请输入验证码"  autocomplete="off" class="layui-input admin-input admin-input-verify"> 
                     <img id="admin-captcha" class="admin-captcha" width="90" alt="验证码" height="30" src="{{route ('admin.login.captcha')}}">
                 </div>
                 <button class="layui-btn admin-button" lay-submit="" lay-filter="login">登 陆</button>
