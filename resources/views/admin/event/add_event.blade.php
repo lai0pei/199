@@ -23,7 +23,7 @@
 @section('content')
     <div class="layui-container">
         <div class="layui-form layuimini-form">
-            <form class="layui-form" action="" id="addGoodsForm" onsubmit="return false">
+            <form class="layui-form" action="" id="addGoodsForm" onsubmit="return false" lay-filter="event_form">
                 <div class="layui-row">
                     <div class="layui-col-md6 layui-col-xs12 layui-col-sm12">
                         <input type="hidden" name="id" value="{{ $type['id'] ?? -1 }}" class="layui-input">
@@ -38,12 +38,12 @@
                         <div class="layui-input-inline">
                             <select name="type_id" lay-verify="required" lay-reqtext="请选择活动类型" id="selectId">
                                 @foreach ($event as $key => $value)
-                                @php $selected = '';
-                                if(($type['type_id'] ?? '') == $key + 1){
-                                    $selected = 'selected="selected"';
-                                }
-                                @endphp
-                                    <option value="{{ $key + 1 }}" {{$selected}}>{{ $value['name'] }}</option>
+                                    @php $selected = '';
+                                        if (($type['type_id'] ?? '') == $key + 1) {
+                                            $selected = 'selected="selected"';
+                                            }
+                                    @endphp ?>
+                                    <option value="{{ $key + 1 }}" {{ $selected }}>{{ $value['name'] }}</option>
                                 @endforeach
 
                             </select>
@@ -55,7 +55,7 @@
                     <div class="layui-col-md6 layui-col-xs12 layui-col-sm12 ">
                         <label class="layui-form-label required">活动排序</label>
                         <div class="layui-input-inline">
-                            <input type="number" name="sort" lay-verify="required" lay-reqtext="活动排序不能为空"
+                            <input type="number" name="sort" lay-verify="required" lay-reqtext="活动排序不能为空" 
                                 placeholder="排序小排前" value="{{ $type['sort'] ?? '' }}" class="layui-input sort">
                         </div>
                     </div>
@@ -74,31 +74,30 @@
                     <label class="layui-form-label">活动时间</label>
                     <div class="layui-inline" id="eventTime">
                         <div class="layui-input-inline">
-                            <input type="text" autocomplete="off" name="start" id="start" class="layui-input" lay-verify="required" lay-reqtext="活动开始时间不能为空"
-                                placeholder="开始日期" value="{{ $type['start_time'] ?? '' }}">
+                            <input type="text" autocomplete="off" name="start" id="start" class="layui-input"
+                                lay-verify="required" lay-reqtext="活动开始时间不能为空" placeholder="开始日期"
+                                value="{{ $type['start_time'] ?? '' }}">
                         </div>
-                      
+
                         <div class="layui-input-inline">
-                            <input type="text" autocomplete="off" id="end" name="end" class="layui-input" lay-verify="required" lay-reqtext="活动结束时间不能为空"
-                                placeholder="结束日期" value="{{ $type['end_time'] ?? '' }}">
+                            <input type="text" autocomplete="off" id="end" name="end" class="layui-input"
+                                lay-verify="required" lay-reqtext="活动结束时间不能为空" placeholder="结束日期"
+                                value="{{ $type['end_time'] ?? '' }}">
                         </div>
                     </div>
                 </div>
-                <div class="layui-row">
-                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12 ">
-                        <label class="layui-form-label">开启活动</label>
-                        <div class="layui-input-inline">
-                            <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|关闭"
-                                {{ $type['status_check'] ?? '' }}>
-                        </div>
+                <br>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">活动选项</label>
+                    <div class="layui-input-inline">
+                        <select name="is_sms" id="is_sms" lay-filter="event_filter">
+                            <option value="0" selected>VIP优惠活动</option>
+                            <option value="1">新人短信活动</option>
+                        </select>
                     </div>
-                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
-                        <label class="layui-form-label">前台显示</label>
-                        <div class="layui-input-inline">
-                            <input type="checkbox" name="display" lay-skin="switch" id='display' lay-text="显示|屏蔽"
-                                {{ $type['display_check'] ?? '' }}>
-                        </div>
-                    </div>
+                </div>
+                <div class="layui-row vip_select">
+
                     <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
                         <label class="layui-form-label">短信验证码</label>
                         <div class="layui-input-inline">
@@ -106,8 +105,37 @@
                                 {{ $type['need_sms_check'] ?? '' }}>
                         </div>
                     </div>
-                    <input type='hidden' value="{{($type['is_sms'] ?? 0)}}" name="is_sms"/>
-                    @if ((int)($type['is_sms'] ?? 0) === 1 )
+
+
+                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
+                        <label class="layui-form-label">每日限制</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_daily" lay-skin="switch" id='is_daily' lay-filter="is_daily"
+                                lay-text="限制|不限" {{ $type['is_daily_check'] ?? '' }}>
+                        </div>
+                    </div>
+
+                    
+                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12 ">
+                        <label class="layui-form-label">是否审核</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_auth" lay-skin="switch" lay-text="是|否"
+                                {{ $type['is_auth_check'] ?? '' }}>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">限制次数</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="daily_limit" lay-filter="daily_limit" placeholder="不限时,次数无效" maxlength="6"
+                                value="{{ $type['daily_limit'] ?? '' }}" class="layui-input">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="layui-row sms_select">
                     <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
                         <label class="layui-form-label">每月限制</label>
                         <div class="layui-input-inline">
@@ -115,33 +143,22 @@
                                 {{ $type['is_monthly_check'] ?? '' }}>
                         </div>
                     </div>
-                    @else
-                    <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
-                        <label class="layui-form-label">每日限制</label>
-                        <div class="layui-input-inline">
-                            <input type="checkbox" name="is_daily" lay-skin="switch" id='is_daily' lay-text="限制|不限"
-                                {{ $type['is_daily_check'] ?? '' }}>
-                        </div>
-                    </div>
-                    @endif
+
                 </div>
                 <div class="layui-col-md3 layui-col-xs12 layui-col-sm12 ">
-                    <label class="layui-form-label">是否审核</label>
+                    <label class="layui-form-label">开启活动</label>
                     <div class="layui-input-inline">
-                        <input type="checkbox" name="is_auth" lay-skin="switch" lay-text="是|否"
-                            {{ $type['is_auth_check'] ?? '' }}>
+                        <input type="checkbox" name="status" lay-skin="switch" lay-text="开启|关闭"
+                            {{ $type['status_check'] ?? '' }}>
                     </div>
                 </div>
-                @if ((int)($type['is_sms'] ?? 0) !== 1 )
-                <div class="layui-form-item">
-                    <label class="layui-form-label required">限制次数</label>
+                <div class="layui-col-md3 layui-col-xs12 layui-col-sm12">
+                    <label class="layui-form-label">前台显示</label>
                     <div class="layui-input-inline">
-                        <input type="number" name="daily_limit" placeholder="不限时,次数无效"
-                            value="{{ $type['daily_limit'] ?? '' }}" class="layui-input ">
+                        <input type="checkbox" name="display" lay-skin="switch" id='display' lay-text="显示|屏蔽"
+                            {{ $type['display_check'] ?? '' }}>
                     </div>
                 </div>
-                @endif
-               
                 <div class="layui-form-item">
                     <label class="layui-form-label required">注释</label>
                     <div class="layui-input-inline">
@@ -156,7 +173,8 @@
                     <div class="layui-upload-drag" id="type_url">
                         <i class="layui-icon"></i>
                         <p>点击上传，或将文件拖拽到此处</p>
-                        <input type='hidden' id="type_pic" name="type_pic" value="{{ $type['type_pic'] ?? '' }}" lay-verify="required" lay-reqtext="活动图片不能为空">
+                        <input type='hidden' id="type_pic" name="type_pic" value="{{ $type['type_pic'] ?? '' }}"
+                            lay-verify="required" lay-reqtext="活动图片不能为空">
                         <div class="layui-hide" id='uploadView'>
                             <hr>
                             <img src="{{ $type['type_pic'] ?? '' }}" alt="活动图片" style="max-width: 196px">
@@ -202,8 +220,7 @@
             }
         }
 
-
-
+      
         var ue = UE.getEditor('editor');
         //对编辑器的操作最好在编辑器ready之后再做
         ue.ready(function() {
@@ -211,6 +228,7 @@
             ue.setContent('');
 
         });
+
 
 
         var mani_type = "{{ route('admin_mani_event') }}";
@@ -226,13 +244,43 @@
                 element = layui.element,
                 laydate = layui.laydate;
 
-            //编辑 赋值
+                
+        $( document ).ready(function() {
+            var is_sms = "{{ $type['is_sms'] ?? -1 }}";
+            console.log("ready", is_sms);
+            if( is_sms == 1){
+                $('.sms_select').css("display","block");
+                    $('.vip_select').css("display","none");
+                    form.val('event_form', {"is_sms": 1});
+                }else{
+                    $('.vip_select').css("display","block");
+                    $('.sms_select').css("display","none");
+                    form.val('event_form', {"is_sms": 0});
+                }
+         });
+
+              //编辑 赋值
             var content = "{{ $type['content'] ?? '' }}";
             var isEventPic = "{{ $type['type_pic'] ?? '' }}";
-          
+
             if ('' !== isEventPic) {
                 layui.$('#uploadView').removeClass('layui-hide');
             }
+
+            form.on('switch(is_daily)', function(data) {
+                "{{ $type['is_sms'] = 1 }}";
+            })
+
+            form.on('select(event_filter)', function(data){
+                console.log("select", data);
+                if(data.value === '0'){
+                    $('.vip_select').css("display","block");
+                    $('.sms_select').css("display","none");
+                }else{
+                    $('.sms_select').css("display","block");
+                    $('.vip_select').css("display","none");
+                }
+            })
 
             //开启公历节日
             laydate.render({

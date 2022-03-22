@@ -12,11 +12,12 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run()
-    {
-        $this->call([
-            DefaultAdmin::class,
+    {   
+        //admin 循序必须在 Permission 后
+        $this->call([  
             DefaultMenu::class,
             DefaultPermission::class,
+            DefaultAdmin::class,
             DefaultRole::class,
             DefaultAuthGroup::class,
             DefaultConfig::class,

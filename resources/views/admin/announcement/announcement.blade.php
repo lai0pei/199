@@ -15,7 +15,7 @@
                     </div>
                   </div>
                   <div class="layui-form-item">
-                    @if (checkAuth('accouncement_edit'))
+                    @if (checkAuth('announcement_edit'))
                     <button class="layui-btn" lay-submit="" lay-filter="save">提交</button>
                     @endif
                   </div>

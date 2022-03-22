@@ -130,7 +130,7 @@ class EventTypeModel extends CommonModel
         $where = [];
 
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
             if ($param['name'] !== '') {
                 $where['name'] = $param['name'];
             }
@@ -209,12 +209,6 @@ class EventTypeModel extends CommonModel
      */
     private function getStatus($status): string
     {
-        if ($status === 1) {
-            $name = '正常';
-        } else {
-            $name = '禁用';
-        }
-
-        return $name;
+        return $status === 1 ? '正常' : '禁用';
     }
 }

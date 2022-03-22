@@ -23,6 +23,8 @@ use App\Models\Admin\MobileImModel;
 use App\Models\Admin\SmsEventModel;
 use App\Models\Admin\SmsImportModel;
 use App\Models\Admin\UserApplyModel;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -57,18 +59,27 @@ class UploadController extends Controller
     }
 
     public function smsExport()
-    {
+    {   
+        $input = $this->request->all();
+        $validator = Validator::make($input, [
+            'id' => 'required|numeric|min:0',
+        ], );
         try {
+            if ($validator->fails()) {
+                throw new LogicException('ID必须');
+            }
             return Excel::download(new SmsEventModel(), '会员短信申请.csv');
-        } catch (LogicException $e) {
-            return self::json_fail([], $e);
+        } catch (LogicException $logicException) {
+            return self::json_fail([], $logicException);
         }
     }
 
     public function smsImportMani()
-    {
+    {   
+     
         try {
-            Excel::import(new SmsImportModel($this->request->all()), $this->request->file('file'));
+            $format = $this->request->file->extension();           
+            Excel::import(new SmsImportModel($this->request->all()), $this->request->file('file'), $format);
             return self::json_success([], '导入成功');
         } catch (LogicException $e) {
             return self::json_fail([], $e);
@@ -78,40 +89,39 @@ class UploadController extends Controller
     public function ueditor()
     {
         $config = File::get(public_path(config('admin.ueditor_json')));
-        if (! empty($config)) {
-            $myDomain = request()->getSchemeAndHttpHost();
-            $replaced = str_replace('#url#', $myDomain, $config);
+        if (!empty($config)) {
+            $schemeAndHttpHost = request()->getSchemeAndHttpHost();
+            $replaced = str_replace('#url#', $schemeAndHttpHost, $config);
             $replaced = str_replace('#imgPath#', 'storage', $replaced);
-            return self::json(json_decode($replaced, true));
+            return self::json(json_decode($replaced, true, 512, JSON_THROW_ON_ERROR));
         }
     }
-
     public function ueditorUpload()
     {
+        $result = [];
         $common = config('filesystems.common');
-
         $request = $this->request;
         try {
-            $name = $request->file('upfile')->getClientOriginalName();
-
+            $file = $request->file('upfile');
+            if ($file == null){
+                return self::json_fail([],'图片错误');
+            }     
+            $name = $file->getClientOriginalName();
             $time = Carbon::now()->format('Y-m-d');
-
             $path = $common . '/' . $time;
-
-            if (! Storage::exists($path)) {
-                Storage::makeDirectory($path, 7777, true, true);
+            if (!Storage::exists($path)) {
+                Storage::makeDirectory($path);
             }
-            $url = Storage::disk('public')->put($path, $request->file('upfile'));
+            $url = Storage::disk('public')->put($path, $file);
             optimizeImg($url);
             $result['state'] = 'SUCCESS';
             $result['url'] = '/storage/' . $url;
             $result['title'] = $name;
             $result['original'] = $name;
-        } catch (LogicException $e) {
-            Log::channel('upload')->error($e->getMessage());
+        } catch (LogicException $logicException) {
+            Log::channel('upload')->error($logicException->getMessage());
             return self::json_fail([]);
         }
-
         return self::json($result);
     }
 }

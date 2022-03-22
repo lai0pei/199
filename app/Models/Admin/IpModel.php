@@ -100,7 +100,7 @@ class IpModel extends CommonModel
         $where = [];
 
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
             if ($param['ip'] !== '') {
                 $where['ip'] = $param['ip'];
             }

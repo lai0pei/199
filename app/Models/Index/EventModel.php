@@ -55,7 +55,9 @@ class EventModel extends Model
     public function getContent()
     {
         $data = $this->data;
-
+        if(empty($data['event_id'])){
+            return [];
+        }
         $res['content'] = self::where('id', $data['event_id'])->value('content');
         $res['name'] = self::where('id', $data['event_id'])->value('name');
 

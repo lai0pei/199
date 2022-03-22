@@ -23,7 +23,7 @@ class UploadController extends Controller
         $path = $userApply . '/' . $time;
 
         if (! Storage::exists($path)) {
-            Storage::makeDirectory($path, 7777, true, true);
+            Storage::makeDirectory($path);
         }
         $url = Storage::disk('public')->put($path, $this->request->file('applyUser'));
         optimizeImg($url);

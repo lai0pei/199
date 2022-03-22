@@ -44,13 +44,13 @@ class EventModel extends CommonModel
         $data = $this->data;
 
         if (empty($data['id'])) {
-            return [];
+            return $this->default();
         }
 
         $check = self::where('id', $data['id'])->first();
 
         if (empty($check)) {
-            return [];
+            return $this->default();
         }
 
         $event = $check->toArray();
@@ -66,9 +66,13 @@ class EventModel extends CommonModel
 
         $event['need_sms'] === 1 ? $event['need_sms_check'] = 'checked' : 0;
         $event['is_auth'] === 1 ? $event['is_auth_check'] = 'checked' : 0;
-        $event['content'] = preg_replace('/[\t\n\r]/u', '', $event['content']);
+        $event['content'] = preg_replace('#[\t\n\r]#u', '', $event['content']);
 
         return $event;
+    }
+
+    function default() {
+        return ['status_check' => 'checked', 'display_check' => 'checked'];
     }
 
     public function maniEvent()
@@ -89,6 +93,7 @@ class EventModel extends CommonModel
             'status' => ($data['status'] ?? '') === 'on' ? 1 : 0,
             'display' => ($data['display'] ?? '') === 'on' ? 1 : 0,
             'is_auth' => ($data['is_auth'] ?? '') === 'on' ? 1 : 0,
+            'is_sms' => $data['is_sms'] ?? 0,
             'start_time' => $data['start'],
             'end_time' => $data['end'],
             'description' => $data['description'] ?? '',
@@ -109,7 +114,7 @@ class EventModel extends CommonModel
 
             $status = self::insert($mani);
 
-            if (! $status) {
+            if (!$status) {
                 DB::rollBack();
                 throw new LogicException('添加失败');
             }
@@ -136,7 +141,7 @@ class EventModel extends CommonModel
 
             $status = self::where('id', $data['id'])->update($mani);
 
-            if (! $status) {
+            if (!$status) {
                 DB::rollBack();
 
                 throw new LogicException('保存失败');
@@ -159,8 +164,8 @@ class EventModel extends CommonModel
 
         $where = [];
 
-        if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+        if (!empty($data['searchParams'])) {
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
             if ($param['name'] !== '') {
                 $where['name'] = $where['name'] = $param['name'];
             }

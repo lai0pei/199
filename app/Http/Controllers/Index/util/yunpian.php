@@ -45,23 +45,24 @@ trait YunPian
 
     private function post($url, $params)
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36');
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 12);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $response = curl_exec($ch);
+        $curlHandle = curl_init();
+        curl_setopt($curlHandle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($curlHandle, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.118 Safari/537.36');
+        curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($curlHandle, CURLOPT_TIMEOUT, 12);
+        curl_setopt($curlHandle, CURLOPT_POSTFIELDS, http_build_query($params));
+        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curlHandle, CURLOPT_POST, true);
+        curl_setopt($curlHandle, CURLOPT_URL, $url);
+        curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($curlHandle);
         if ($response === false) {
-            Log::channel('sms')->error(curl_error($ch));
+            Log::channel('sms')->error(curl_error($curlHandle));
             return false;
         }
-        curl_close($ch);
+        
+        curl_close($curlHandle);
 
-        return json_decode($response, true);
+        return json_decode($response, true, 512, JSON_THROW_ON_ERROR);
     }
 }

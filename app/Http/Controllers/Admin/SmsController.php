@@ -22,6 +22,10 @@ class SmsController extends Controller
         return view('admin.sms.sms_apply', ['is_match' => $data['is_match'], 'state' => $data['state'], 'is_send' => $data['is_send']]);
     }
 
+    public function exportIndex(){
+        return view('admin.sms.export_sms');
+    }
+
     public function smsEventList()
     {
         $data = (new SmsEventModel($this->request->all()))->smsList();

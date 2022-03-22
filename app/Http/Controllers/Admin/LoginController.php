@@ -72,8 +72,8 @@ class LoginController extends Controller
         }
 
         try {
-            $admin = new AdminModel($input);
-            if ($admin->adminLogin()) {
+            $adminModel = new AdminModel($input);
+            if ($adminModel->adminLogin()) {
                 return self::json_success([], '登录成功');
             }
         } catch (LogicException $e) {

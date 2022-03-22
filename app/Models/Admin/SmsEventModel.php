@@ -50,7 +50,7 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
         $where = [];
 
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
             if ($param['is_match'] !== '') {
                 $where['is_match'] = $param['is_match'];
             }
@@ -166,7 +166,7 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
             throw new LogicException($e->getMessage());
         }
 
-        if (! $status) {
+        if (!$status) {
             DB::rollBack();
 
             throw new LogicException('删除失败');
@@ -224,7 +224,7 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
             throw new LogicException($e->getMessage());
         }
 
-        if (! $status) {
+        if (!$status) {
             throw new LogicException('审核失败');
         }
 
@@ -254,8 +254,22 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
 
     public function collection()
     {
+        $type = $this->data['id'];
+
         try {
-            return self::all();
+            $where = match (true) {
+                $type == 0 => [],
+                $type == 1 => ['is_match'=>1],
+                $type == 2 => ['is_match'=>0],
+                $type == 3 => ['is_send'=>0],
+                $type == 4 => ['is_send'=> 1],
+                $type == 5 => ['state'=>0],
+                $type == 6 => ['state'=>1],
+                $type == 7 => ['state'=>2],
+                default => [],
+            };
+
+            return self::where($where)->get();
         } catch (LogicException $e) {
             Log::channel('sms_export')->error($e->getMessage());
         }
@@ -266,22 +280,13 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
      */
     public function map($apply): array
     {
-        switch (true) {
-            case $apply->state === 1:
-                $apply->state = '通过';
-                break;
-            case $apply->state === 2:
-                $apply->state = '拒绝';
-                break;
-            default:
-                $apply->state = '未审核';
-        }
+        $apply->state = match (true) {
+            $apply->state === 1 => '通过',
+            $apply->state === 2 => '拒绝',
+            default => '未审核',
+        };
 
-        if ($apply->is_match === 1) {
-            $apply->is_match = '匹配';
-        } else {
-            $apply->is_match = '不匹配';
-        }
+        $apply->is_match = $apply->is_match === 1 ? '匹配' : '不匹配';
 
         return [
             $apply->id,
@@ -313,46 +318,28 @@ class SmsEventModel extends CommonModel implements WithMapping, FromCollection, 
 
     private function matchName($id)
     {
-        switch (true) {
-            case $id === 1:
-                $name = '匹配';
-                break;
-            case $id === 0:
-                $name = '不匹配';
-                break;
-            default:
-                $name = '无';
-        }
-        return $name;
+        return match (true) {
+            $id === 1 => '匹配',
+            $id === 0 => '不匹配',
+            default => '无',
+        };
     }
 
     private function sendName($id)
     {
-        switch (true) {
-            case $id === 1:
-                $name = '已发';
-                break;
-            case $id === 0:
-                $name = '未发';
-                break;
-            default:
-                $name = '无';
-        }
-        return $name;
+        return match (true) {
+            $id === 1 => '已发',
+            $id === 0 => '未发',
+            default => '无',
+        };
     }
 
     private function stateName($id)
     {
-        switch (true) {
-            case $id === 1:
-                $name = '通过';
-                break;
-            case $id === 2:
-                $name = '失败';
-                break;
-            default:
-                $name = '未审核';
-        }
-        return $name;
+        return match (true) {
+            $id === 1 => '通过',
+            $id === 2 => '失败',
+            default => '未审核',
+        };
     }
 }

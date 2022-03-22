@@ -67,7 +67,7 @@ class RoleModel extends CommonModel
 
         $where = [];
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
             if (! empty($param['title'])) {
                 $where['role_name'] = $param['title'];
             }

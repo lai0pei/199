@@ -38,8 +38,8 @@ class UploadLogoController extends Controller
 
             $path = $logo . '/' . $time;
 
-            if (! Storage::exists($path)) {
-                Storage::makeDirectory($path, 7777, true, true);
+            if (!Storage::exists($path)) {
+                Storage::makeDirectory($path);
             }
             $url = Storage::disk('public')->put($path, $this->request->file('file'));
             optimizeImg($url);
@@ -63,7 +63,7 @@ class UploadLogoController extends Controller
         $size = config('admin.crousel_size');
         $file = $request->file('file');
         try {
-            // $this->checkSize($file, $size);
+            $this->checkSize($file, $size);
 
             $result = $this->storePic($file, $crousel);
         } catch (LogicException $e) {
@@ -108,7 +108,7 @@ class UploadLogoController extends Controller
         $size = config('admin.event_size');
         $file = $request->file('file');
         try {
-            // $this->checkSize($file, $size);
+            $this->checkSize($file, $size);
 
             $result = $this->storePic($file, $event);
         } catch (LogicException $e) {
@@ -125,9 +125,9 @@ class UploadLogoController extends Controller
     {
         [$width, $height] = getimagesize($file);
 
-        if ($width !== (int) $config['width'] || $height !== (int) $config['height']) {
-            throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
-        }
+        // if ($width !== (int) $config['width'] || $height !== (int) $config['height']) {
+        //     throw new LogicException('需图片宽度等于 ' . $config['width'] . 'px, 高度等于' . $config['height'] . 'px');
+        // }
     }
 
     private function storePic($file, $config)
@@ -135,8 +135,8 @@ class UploadLogoController extends Controller
         $time = Carbon::now()->format('Y-m-d');
         try {
             $path = $config . '/' . $time;
-            if (! Storage::exists($path)) {
-                Storage::makeDirectory($path, 7777, true, true);
+            if (!Storage::exists($path)) {
+                Storage::makeDirectory($path);
             }
             $url = Storage::disk('public')->put($path, $file);
             optimizeImg($url);

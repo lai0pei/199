@@ -105,8 +105,8 @@ class DefaultPermission extends Seeder
             ['name' => 'game_edit', 'title' => '编辑', 'grand_auth_id' => '2', 'parent_auth_id' => '11', 'content'=>'添加此权限, 管理员可 预览 和 编辑游戏链接','current_auth_id' => '15', 'created_at' => now(), 'updated_at' => now()],
 
             //公告通知
-            ['name' => 'accouncement', 'title' => '预览', 'grand_auth_id' => '2', 'parent_auth_id' => '11', 'content'=>'添加此权限, 管理员可 预览 前台公告通知','current_auth_id' => '16', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'accouncement_edit', 'title' => '编辑', 'grand_auth_id' => '2', 'parent_auth_id' => '11','content'=>'添加此权限, 管理员可 预览 和 编辑前台公告通知', 'current_auth_id' => '16', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'announcement', 'title' => '预览', 'grand_auth_id' => '2', 'parent_auth_id' => '11', 'content'=>'添加此权限, 管理员可 预览 前台公告通知','current_auth_id' => '16', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'announcement_edit', 'title' => '编辑', 'grand_auth_id' => '2', 'parent_auth_id' => '11','content'=>'添加此权限, 管理员可 预览 和 编辑前台公告通知', 'current_auth_id' => '16', 'created_at' => now(), 'updated_at' => now()],
 
             //用户申请记录
             ['name' => 'apply_export', 'title' => '导出', 'grand_auth_id' => '2', 'parent_auth_id' => '7', 'content'=>'添加此权限, 管理员仅可 预览 导出用户申请记录','current_auth_id' => '9', 'created_at' => now(), 'updated_at' => now()],
@@ -118,7 +118,7 @@ class DefaultPermission extends Seeder
         );
 
         //设置 auth_menu 最大之后的 编号 不然 layui tree 插件出现 问题
-        $index = 29;
+        $index = 100;
 
         foreach ($config as &$configValue) {
             $configValue['id'] = $index;

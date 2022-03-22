@@ -18,6 +18,7 @@
 namespace App\Models\Index;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class FormModel extends Model
 {

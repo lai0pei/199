@@ -33,7 +33,7 @@ class AuthGroupModel extends CommonModel
 
         DB::beginTransaction();
         try {
-            $menus = json_decode($data['checked'], true);
+            $menus = json_decode($data['checked'], true, 512, JSON_THROW_ON_ERROR);
 
             if (empty($data)) {
                 return false;
@@ -44,7 +44,7 @@ class AuthGroupModel extends CommonModel
             foreach ($menus as $v) {
                 foreach ($v['children'] as $vv) {
                     $ids[$i] = $vv['id'];
-                    $i++;
+                    ++$i;
                 }
             }
             $auth_id = implode(',', $ids);

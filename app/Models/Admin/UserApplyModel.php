@@ -50,7 +50,7 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
         $where = [];
 
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
             if ($param['event_id'] !== '') {
                 $where['event_id'] = (int) $param['event_id'];
             }
@@ -247,16 +247,11 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
      */
     public function map($apply): array
     {
-        switch (true) {
-            case $apply->status === 1:
-                $apply->status = '通过';
-                break;
-            case $apply->status === 2:
-                $apply->status = '拒绝';
-                break;
-            default:
-                $apply->status = '未审核';
-        }
+        $apply->status = match (true) {
+            $apply->status === 1 => '通过',
+            $apply->status === 2 => '拒绝',
+            default => '未审核',
+        };
 
         return [
             $apply->id,
@@ -299,17 +294,11 @@ class UserApplyModel extends CommonModel implements WithMapping, FromCollection,
 
     private function statusToText($status)
     {
-        $name = '';
-        switch (true) {
-            case $status === 1:
-                $name = '通过';
-                break;
-            case $status === 2:
-                $name = '拒绝';
-                break;
-            default:
-                $name = '未审核';
-        }
+        $name = match (true) {
+            $status === 1 => '通过',
+            $status === 2 => '拒绝',
+            default => '未审核',
+        };
         return $name;
     }
 }

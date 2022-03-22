@@ -42,7 +42,7 @@ class ConfigModel extends CommonModel
     {
         $data = $this->data;
         try {
-            $smsConfig = json_decode($data['data'], true);
+            $smsConfig = json_decode($data['data'], true, 512, JSON_THROW_ON_ERROR);
 
             $update = [
                 'json_data' => serialize($smsConfig),
@@ -66,7 +66,8 @@ class ConfigModel extends CommonModel
     }
 
     public function getConfig($name)
-    {
-        return unserialize(self::where('name', $name)->value('json_data'));
+    {   
+        $res = self::where('name', $name)->value('json_data');
+        return @unserialize($res) ? unserialize($res) : [];
     }
 }

@@ -85,6 +85,7 @@ class AuthMenuController extends Controller
     {
         Cache::forget('admin_menu_' . session('user_id'));
         Cache::forget('permission_' . session('user_id'));
+        session()->forget('permission');
         return self::json_success([], '缓存已清除');
     }
 

@@ -27,8 +27,8 @@ trait GenerateCode
         Cache::forget($key);
         $length = 5;
         $code = '';
-        for ($i = 0; $i < $length; $i++) {
-            $code .= mt_rand(0, 9);
+        for ($i = 0; $i < $length; ++$i) {
+            $code .= random_int(0, 9);
         }
 
         Cache::put($key, $code);

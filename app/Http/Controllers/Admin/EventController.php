@@ -62,10 +62,12 @@ class EventController extends Controller
         $validator = Validator::make($input['data'], [
             'id' => 'required|numeric|min:-1',
             'name' => 'required',
-            'type_id' => 'required',
+            'type_id' => 'required|numeric|min:0',
             'type_pic' => 'required',
             'start' => 'required',
             'end' => 'required',
+            'is_sms' => 'numeric',
+            'sort' => 'numeric',
         ], );
         try {
             if ($validator->fails()) {

@@ -121,7 +121,7 @@ class ConfigsController extends Controller
 
     public function announcement()
     {
-        $data = (new ConfigModel())->getConfig('accouncement');
+        $data = (new ConfigModel())->getConfig('announcement');
         return view('admin.announcement.announcement', ['config' => $data]);
     }
 
@@ -135,7 +135,8 @@ class ConfigsController extends Controller
             if ($validator->fails()) {
                 throw new LogicException(self::MSG);
             }
-            return self::json_success((new ConfigModel($input))->saveConfig('accouncement', '更新了前台公告'));
+            
+            return self::json_success((new ConfigModel($input))->saveConfig('announcement', '更新了前台公告'));
         } catch (LogicException $e) {
             return self::json_fail([], $e->getMessage());
         }

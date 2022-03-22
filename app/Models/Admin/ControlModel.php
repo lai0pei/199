@@ -50,8 +50,8 @@ class ControlModel extends Model
     {
         $day = -9;
         $allDay = [];
-        for ($day; $day < 1; $day++) {
-            array_push($allDay, (date('Y-m-d', strtotime($day . ' day'))));
+        for ($day; $day < 1; ++$day) {
+            $allDay[] = date('Y-m-d', strtotime($day . ' day'));
         }
         return $allDay;
     }
@@ -59,7 +59,7 @@ class ControlModel extends Model
     public function getSeriesData($type, $day)
     {
         $series = [];
-        $length = count($type);
+        $length = is_countable($type) ? count($type) : 0;
         foreach ($type as $k => $v) {
             $series[$k]['name'] = $v['name'];
             $series[$k]['type'] = 'line';
@@ -84,8 +84,8 @@ class ControlModel extends Model
             $applyUser = $eventModel::where('type_id', $data['id'])->select('id')->with('userApply', function ($query) {
                 $query->whereDate('apply_time', $this->currentDate);
             })->get()->toArray();
-            foreach ($applyUser as $user) {
-                $count += count($user['user_apply']);
+            foreach ($applyUser as $singleApplyUser) {
+                $count += is_countable($singleApplyUser['user_apply']) ? count($singleApplyUser['user_apply']) : 0;
             }
             array_push($tmp, $count);
         }

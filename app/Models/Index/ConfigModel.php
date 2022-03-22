@@ -20,6 +20,7 @@ class ConfigModel extends Model
 
     public function getConfig($name)
     {
-        return unserialize(self::where('name', $name)->value('json_data'));
+        $res = self::where('name', $name)->value('json_data');
+        return @unserialize($res) ? unserialize($res) : [];
     }
 }

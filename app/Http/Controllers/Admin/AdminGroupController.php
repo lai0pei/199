@@ -27,7 +27,7 @@ use Illuminate\Validation\Rule;
 class AdminGroupController extends Controller
 {
     public const MSG = '请求数据有误';
-
+    private const FILTER = 'required|numeric|min:-1';
     /**
      * __construct
      *
@@ -59,7 +59,7 @@ class AdminGroupController extends Controller
     {
         $input = $this->request->route()->parameters();
         $validator = Validator::make($input, [
-            'id' => 'required|numeric|min:-1',
+            'id' => self::FILTER ,
         ], );
         try {
             if ($validator->fails()) {
@@ -81,7 +81,7 @@ class AdminGroupController extends Controller
     {
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required|numeric|min:-1',
+            'id' => self::FILTER,
             'role_name' => 'required',
             'status' => ['required', Rule::in(0, 1, 2)],
         ], );
@@ -106,7 +106,7 @@ class AdminGroupController extends Controller
     {
         $input = $this->request->all();
         $validator = Validator::make($input, [
-            'id' => 'required|numeric|min:-1',
+            'id' => self::FILTER,
         ], );
         try {
             if ($validator->fails()) {

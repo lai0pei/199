@@ -27,6 +27,7 @@ use App\Models\Index\FormModel;
 use App\Models\Index\SmsApplyModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Mews\Captcha\Facades\Captcha;
 
@@ -85,7 +86,9 @@ class IndexController extends Controller
         $validator = Validator::make($input, [
             'captcha' => 'required',
             'username' => 'required',
-            'eventId' => 'required',
+            'eventId' => 'required|numeric|min:0',
+            'isSms' => ['required', Rule::in(0, 1)],
+            'needSms' => ['required', Rule::in(0, 1)],
         ], );
         try {
             if ($validator->fails()) {
@@ -157,6 +160,6 @@ class IndexController extends Controller
         $configModel = new ConfigModel();
         $footer = $configModel->getConfig('linkConfig');
         $logo = $configModel->getConfig('logo');
-        return Inertia::render('Components/eventDetail', ['footer' => $footer,'content' => $content['content'],'name' => $content['name'],'logo' => $logo]);
+        return Inertia::render('Components/eventDetail', ['footer' => $footer,'content' => $content['content'] ?? "",'name' => $content['name'] ?? "",'logo' => $logo]);
     }
 }

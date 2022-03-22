@@ -76,7 +76,11 @@ class ApplyModel extends Model
         $form = [];
 
         $eventModel = new EventModel();
-
+        $isExist = $eventModel::where('id', $eventId)->value('id');
+        if($isExist === null){
+            throw new LogicException('活动不存在');
+        }
+        
         $limit = $eventModel::where('id', $eventId)->value('daily_limit');
         $is_daily = $eventModel::where('id', $eventId)->value('is_daily');
         $is_sms = $eventModel::where('id', $eventId)->value('is_sms');
@@ -85,7 +89,9 @@ class ApplyModel extends Model
             throw new LogicException('申请有误');
         }
 
-        $count = self::where('username', $username)->where('event_id', $eventId)->count();
+        $startOfDay = Carbon::now()->startOfDay();
+        $endOfDay = Carbon::now()->endOfDay();
+        $count = self::where('username', $username)->whereBetween('apply_time', [$startOfDay, $endOfDay])->where('event_id', $eventId)->count();
 
         if ((int) $is_daily === 1 && (((int) $limit <= (int) $count) || (int) $limit === 0)) {
             throw new LogicException('今日申请次数，已超过' . $limit . '次');

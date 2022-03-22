@@ -89,7 +89,7 @@ class PermissionMenuModel extends CommonModel
 
         $where = [];
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
             if (! empty($param['name'])) {
                 $where['title'] = trim($param['name']);
             }

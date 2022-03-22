@@ -40,14 +40,14 @@ class SmsApplyModel extends Model
         $form = [];
 
         $mobileModel = new MobileModel();
-        $event = new EventModel();
-        $isMonthly = $event::where('id', $eventId)->value('is_monthly');
-
-        // $isMobile = self::where('mobile', $mobile)->value('id');
-
-        // if (! empty($isMobile)) {
-        //     throw new LogicException('本月申请次数 已超过1次');
-        // }
+        $eventModel = new EventModel();
+        $isExist = $eventModel::where('id',$eventId)->value('id');
+        
+        if($isExist === null){
+            throw new LogicException('活动不存在'); 
+        }
+        
+        $isMonthly = $eventModel::where('id', $eventId)->value('is_monthly');
 
         if ((int) $isMonthly === 1) {
             $startOfmonth = Carbon::now()->startOfMonth();

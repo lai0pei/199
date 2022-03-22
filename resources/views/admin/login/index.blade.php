@@ -26,7 +26,7 @@
             <div class="admin-header">
                 <span>Vip后台登录</span>
             </div>
-            <form class="layui-form" action="">
+            <form class="layui-form" action="" autocomplete="off">
                 <div>
                     <em class="layui-icon layui-icon-username admin-icon"></em>
                     <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input admin-input admin-input-username">
@@ -36,7 +36,7 @@
                     <input type="password" name="password" placeholder="请输入密码" autocomplete="off"  class="layui-input admin-input">
                 </div>
                 <div>
-                    <input type="text" name="captcha" placeholder="请输入验证码"  autocomplete="off" class="layui-input admin-input admin-input-verify"> 
+                    <input type="text" name="captcha" placeholder="请输入验证码" autocomplete="off" class="layui-input admin-input admin-input-verify"> 
                     <img id="admin-captcha" class="admin-captcha" width="90" alt="验证码" height="30" src="{{route ('admin.login.captcha')}}">
                 </div>
                 <button class="layui-btn admin-button" lay-submit="" lay-filter="login">登 陆</button>

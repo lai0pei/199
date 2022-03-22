@@ -50,7 +50,7 @@ class MobileModel extends CommonModel
         $page = $data['page'] ?? 1;
         $where = [];
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
 
             if ($param['mobile'] !== '') {
                 $where['mobile'] = $param['mobile'];

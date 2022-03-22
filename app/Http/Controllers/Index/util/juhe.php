@@ -43,7 +43,8 @@ trait JuHe
             Log::channel('sms')->debug($response);
             throw new LogicException($message);
         }
-        $result = json_decode($response, true);
+        
+        $result = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
 
         if (! $result) {
             Log::channel('sms')->debug($result);
@@ -66,7 +67,7 @@ trait JuHe
      *
      * @return bool|string 返回内容
      */
-    private function juheHttpRequest($url, $params = false, $ispost = 0)
+    private function juheHttpRequest($url, $params = false, $ispost = 0): bool|string
     {
         $ch = curl_init();
 
@@ -75,21 +76,20 @@ trait JuHe
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
         curl_setopt($ch, CURLOPT_TIMEOUT, 12);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        if ($ispost) {
+        if ($ispost !== 0) {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
             curl_setopt($ch, CURLOPT_URL, $url);
+        } elseif ($params) {
+            curl_setopt($ch, CURLOPT_URL, $url . '?' . $params);
         } else {
-            if ($params) {
-                curl_setopt($ch, CURLOPT_URL, $url . '?' . $params);
-            } else {
-                curl_setopt($ch, CURLOPT_URL, $url);
-            }
+            curl_setopt($ch, CURLOPT_URL, $url);
         }
+        
         $response = curl_exec($ch);
         if ($response === false) {
             Log::channel('sms')->error(curl_error($ch));
-            return json_decode(curl_error($ch), true);
+            return json_decode(curl_error($ch), true, 512, JSON_THROW_ON_ERROR);
         }
         curl_close($ch);
         return $response;

@@ -1,6 +1,5 @@
 @extends('common.template')
 @section('style')
-
 @endsection
 
 @section('content')
@@ -85,6 +84,7 @@
                 </div>
             </fieldset>
 
+
             <script type="text/html" id="toolbarFilter">
                 <div class="layui-btn-container">
                     @if (checkAuth('sms_bulk_delete'))
@@ -97,8 +97,8 @@
                         <button class="layui-btn layui-btn-warm layui-btn-sm data-add-btn" lay-event="batch-refuse"> 批量拒绝 </button>
                     @endif
                     @if (checkAuth('sms_export'))
-                        <a href="{{ route('sms_export') }}" target=_blank style="float:right"><button
-                                class="layui-btn layui-btn-sm data-add-btn"> 导出数据 </button></a>
+                        <button class="layui-btn layui-btn-sm data-add-btn" lay-event="export" style="float:right">
+                            导出数据</button>
                     @endif
                     @if (checkAuth('sms_import'))
                         <button class="layui-btn  layui-btn-sm data-add-btn" lay-event="import" style="float:right"> 导入数据 </button>
@@ -126,6 +126,10 @@
         var refuse = "{{ route('admin_sms_refuse') }}";
         var pass = "{{ route('admin_sms_pass') }}";
         var importer = "{{ route('sms_import_index') }}";
+        var exporter = "{{ route('sms_export_index') }}";
+
+
+
 
         layui.use(['form', 'table', 'laydate'], function() {
             var $ = layui.jquery,
@@ -218,9 +222,9 @@
                     if (res.data.length != 0) {
                         res.data.forEach(function(item, index) {
                             $('div[lay-id="currentTableId"]').find('tr[data-index="' + index +
-                                '"]').find('td[data-field="is_match"]').filter(function(){
-                                    return $(this).text() == '不匹配';
-                                }).css('color', 'red');
+                                '"]').find('td[data-field="is_match"]').filter(function() {
+                                return $(this).text() == '不匹配';
+                            }).css('color', 'red');
                         })
                     }
 
@@ -404,6 +408,16 @@
                             content: importer,
                         });
                         break;
+                    case 'export':
+                        var index = layer.open({
+                            title: '数据导出',
+                            type: 2,
+                            shade: 0.2,
+                            maxmin: true,
+                            shadeClose: true,
+                            area: ['50%', '50%'],
+                            content: exporter,
+                        });
                         break;
                     case 'link':
                         setTimeout(function() {

@@ -185,6 +185,7 @@ Route::middleware(['admin'])->prefix($prefix)->group(function () {
     Route::get('/add_event/{id?}', [EventController::class, 'event'])->name('admin_add_event');
 
     Route::get('/exportList', [UploadController::class, 'applyExport'])->name('applyExport');
+    Route::get('/exportSmsIndex',[SmsController::class, 'exportIndex'])->name('sms_export_index');
     Route::get('/exportSmsList', [UploadController::class, 'smsExport'])->name('sms_export');
 
     //活动表单

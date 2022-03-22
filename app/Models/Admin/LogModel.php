@@ -75,7 +75,7 @@ class LogModel extends CommonModel
         $where = [];
         $param['start'] = '';
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
             if ($param['user'] !== '') {
                 $where['admin_id'] = AdminModel::where('account', $param['user'])->value('id');
             }
@@ -134,22 +134,13 @@ class LogModel extends CommonModel
 
     private function typeToName($type)
     {
-        switch (true) {
-            case $type === self::LOGIN_TYPE:
-                $name = '登录相关';
-                break;
-            case $type === self::ADD_TYPE:
-                $name = '添加相关';
-                break;
-            case $type === self::SAVE_TYPE:
-                $name = '保存相关';
-                break;
-            case $type === self::DELETE_TYPE:
-                $name = '删除相关';
-                break;
-            default:
-                $name = '其他操作';
-        }
+        $name = match (true) {
+            $type === self::LOGIN_TYPE => '登录相关',
+            $type === self::ADD_TYPE => '添加相关',
+            $type === self::SAVE_TYPE => '保存相关',
+            $type === self::DELETE_TYPE => '删除相关',
+            default => '其他操作',
+        };
         return $name;
     }
 

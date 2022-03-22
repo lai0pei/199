@@ -54,7 +54,7 @@ class FormModel extends CommonModel
         $page = $data['page'] ?? 1;
 
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
             if ($param['id'] !== '') {
                 $data['id'] = $param['id'];
             }
@@ -229,25 +229,14 @@ class FormModel extends CommonModel
      */
     private function getOptionName($id): string
     {
-        switch (true) {
-            case $id === 1:
-                $name = self::NUM;
-                break;
-            case $id === 2:
-                $name = self::PH;
-                break;
-            case $id === 3:
-                $name = self::TIME;
-                break;
-            case $id === 4:
-                $name = self::PHOTO;
-                break;
-            case $id === 5:
-                $name = self::DROP;
-                break;
-            default:
-                $name = self::TEXT;
-        }
+        $name = match (true) {
+            $id === 1 => self::NUM,
+            $id === 2 => self::PH,
+            $id === 3 => self::TIME,
+            $id === 4 => self::PHOTO,
+            $id === 5 => self::DROP,
+            default => self::TEXT,
+        };
 
         return $name;
     }

@@ -17,7 +17,7 @@ class CreateAuthGroup extends Migration
         Schema::create('auth_group', function (Blueprint $table) {
             $table->id()->comment('编号')->autoIncrement();
             $table->unsignedMediumInteger('role_id')->nullable()->comment('角色编号');
-            $table->string('auth_id',200)->nullable()->comment('权限');
+            $table->string('auth_id',1000)->nullable()->comment('权限');
             $table->dateTime('created_at')->comment('创建时间')->nullable();
             $table->dateTime('updated_at')->comment('更新时间')->nullable();
         });

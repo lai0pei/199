@@ -114,7 +114,7 @@ class MobileController extends Controller
      */
     public function oneClick()
     {
-        (new MobileModel($this->request->all()))->oneClick();
+        // (new MobileModel($this->request->all()))->oneClick();
         return self::json_success([], '操作成功');
     }
 }

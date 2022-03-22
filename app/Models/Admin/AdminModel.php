@@ -84,7 +84,7 @@ class AdminModel extends CommonModel
 
         $this->setAdminSession();
 
-        $admin->login_count += 1;
+        ++$admin->login_count;
 
         $admin->last_date = now();
 
@@ -150,7 +150,7 @@ class AdminModel extends CommonModel
         $where = [];
         $where['is_delete'] = 0;
         if (! empty($data['searchParams'])) {
-            $param = json_decode($data['searchParams'], true);
+            $param = json_decode($data['searchParams'], true, 512, JSON_THROW_ON_ERROR);
 
             if ($param['role_id'] !== '') {
                 $where['role_id'] = $param['role_id'];
