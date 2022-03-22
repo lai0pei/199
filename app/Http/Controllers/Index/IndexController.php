@@ -57,7 +57,7 @@ class IndexController extends Controller
         $applyModel = new ApplyModel();
         $event = $eventModel->getAllEventList();
         $footer = $configModel->getConfig('linkConfig');
-        $announcement = $configModel->getConfig('accouncement');
+        $announcement = $configModel->getConfig('announcement');
         $applyList = $applyModel->getApplyList();
         $logo = $configModel->getConfig('logo');
         return Inertia::render('index', ['event' => $event, 'footer' => $footer, 'announcement' => $announcement, 'applyList' => $applyList, 'logo' => $logo]);

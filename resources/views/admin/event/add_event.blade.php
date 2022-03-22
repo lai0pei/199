@@ -39,11 +39,11 @@
                             <select name="type_id" lay-verify="required" lay-reqtext="请选择活动类型" id="selectId">
                                 @foreach ($event as $key => $value)
                                     @php $selected = '';
-                                        if (($type['type_id'] ?? '') == $key + 1) {
+                                        if (($type['type_id'] ?? '') == $value['id']) {
                                             $selected = 'selected="selected"';
                                             }
                                     @endphp ?>
-                                    <option value="{{ $key + 1 }}" {{ $selected }}>{{ $value['name'] }}</option>
+                                    <option value="{{ $value['id'] }}" {{ $selected }}>{{ $value['name'] }}</option>
                                 @endforeach
 
                             </select>
